@@ -112,6 +112,7 @@ public final class PessoaService {
             pessoaSalva.setSenha(pessoaDeEntrada.getSenha());
         }
 
+    // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoPessoa) {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
