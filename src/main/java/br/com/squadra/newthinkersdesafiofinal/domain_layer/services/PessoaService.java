@@ -8,6 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 @Service
 public final class PessoaService {
@@ -22,18 +25,23 @@ public final class PessoaService {
     private PessoaDtoSaida pessoaDtoSaida;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
-    public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada) {
+    public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         this.pessoaDtoEntrada = pessoaDtoEntrada;
 
         converterPessoaDtoEntradaParaPessoa();
+        setarStatusAtivado();
         salvarPessoa();
         converterPessoaParaPessoaDtoSaida();
 
-        return ResponseEntity.ok().body(pessoaDtoSaida);
+        URI uri = uriComponentsBuilder.path("/pessoas/{codigoPessoa}").buildAndExpand(pessoaDtoSaida.getCodigoPessoa()).toUri();
+        return ResponseEntity.created(uri).body(pessoaDtoSaida);
     }
 
         private void converterPessoaDtoEntradaParaPessoa() {
             pessoaSalva = modelMapper.map(pessoaDtoEntrada, Pessoa.class);
+        }
+
+        private void setarStatusAtivado() {
             pessoaSalva.setStatus(1);
         }
 

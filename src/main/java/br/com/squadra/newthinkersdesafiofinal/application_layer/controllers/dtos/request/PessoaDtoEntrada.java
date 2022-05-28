@@ -1,14 +1,21 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request;
 
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.*;
+
 public final class PessoaDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @NotBlank @Length(max = 256)
     private String nome;
+    @NotBlank @Length(max = 256)
     private String sobrenome;
+    @NotNull @Max(150)
     private Integer idade;
+    @NotBlank @Length(max = 50)
     private String login;
+    @NotBlank @Length(max = 50)
     private String senha;
-    private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoEntrada() {}
@@ -52,13 +59,5 @@ public final class PessoaDtoEntrada {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 }

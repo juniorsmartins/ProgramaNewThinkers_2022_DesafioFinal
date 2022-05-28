@@ -5,6 +5,9 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.PessoaServic
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -14,8 +17,8 @@ public class PessoaController {
     private PessoaService pessoaService;
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody PessoaDtoEntrada pessoaDtoEntrada) {
-        return pessoaService.cadastrar(pessoaDtoEntrada);
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+        return pessoaService.cadastrar(pessoaDtoEntrada, uriComponentsBuilder);
     }
 
     @PutMapping
