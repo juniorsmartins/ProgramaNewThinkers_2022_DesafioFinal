@@ -96,6 +96,12 @@ public final class MunicipioService {
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoMunicipio) {
-        return null;
+
+        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
+        if(!municipioDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+
+        municipioRepository.deleteById(codigoMunicipio);
+        return ResponseEntity.ok().body("Deletado Município com Chave Identificadora: " + codigoMunicipio + ".");
     }
 }
