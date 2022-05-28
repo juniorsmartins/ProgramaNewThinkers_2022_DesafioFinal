@@ -1,5 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response;
 
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class PessoaDtoSaida {
@@ -16,6 +17,15 @@ public final class PessoaDtoSaida {
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoSaida() {}
+    public PessoaDtoSaida(Pessoa pessoa) {
+        setCodigoPessoa(pessoa.getCodigoPessoa());
+        setNome(pessoa.getNome());
+        setSobrenome(pessoa.getSobrenome());
+        setIdade(pessoa.getIdade());
+        setLogin(pessoa.getLogin());
+        setSenha(pessoa.getSenha());
+        setStatus(pessoa.getStatus());
+    }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public Long getCodigoPessoa() {

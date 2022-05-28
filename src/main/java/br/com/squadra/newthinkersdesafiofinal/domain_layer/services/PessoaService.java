@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class PessoaService {
@@ -20,25 +22,27 @@ public final class PessoaService {
     @Autowired
     private ModelMapper modelMapper;
 
-    private PessoaDtoEntrada pessoaDtoEntrada;
+    private PessoaDtoEntrada pessoaDeEntrada;
     private Pessoa pessoaSalva;
-    private PessoaDtoSaida pessoaDtoSaida;
+    private PessoaDtoSaida pessoaDeSaida;
+    private List<Pessoa> listaDePessoasSalvas;
+    private List<PessoaDtoSaida> listaDePessoasDeSaida;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        this.pessoaDtoEntrada = pessoaDtoEntrada;
+        pessoaDeEntrada = pessoaDtoEntrada;
 
         converterPessoaDtoEntradaParaPessoa();
         setarStatusAtivado();
         salvarPessoa();
         converterPessoaParaPessoaDtoSaida();
 
-        URI uri = uriComponentsBuilder.path("/pessoas/{codigoPessoa}").buildAndExpand(pessoaDtoSaida.getCodigoPessoa()).toUri();
-        return ResponseEntity.created(uri).body(pessoaDtoSaida);
+        URI uri = uriComponentsBuilder.path("/pessoas/{codigoPessoa}").buildAndExpand(pessoaDeSaida.getCodigoPessoa()).toUri();
+        return ResponseEntity.created(uri).body(pessoaDeSaida);
     }
 
         private void converterPessoaDtoEntradaParaPessoa() {
-            pessoaSalva = modelMapper.map(pessoaDtoEntrada, Pessoa.class);
+            pessoaSalva = modelMapper.map(pessoaDeEntrada, Pessoa.class);
         }
 
         private void setarStatusAtivado() {
@@ -50,12 +54,24 @@ public final class PessoaService {
         }
 
         private void converterPessoaParaPessoaDtoSaida() {
-            pessoaDtoSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
+            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
         }
 
-    public ResponseEntity<?> listar(String sobrenome) {
-        return null;
+    public ResponseEntity<?> listar() {
+
+        buscarTodasAsPessoasDoDatabase();
+        converterListaDePessoasParaListaDePessoasDeSaida();
+
+        return ResponseEntity.ok().body(listaDePessoasDeSaida);
     }
+
+        private void buscarTodasAsPessoasDoDatabase() {
+            listaDePessoasSalvas = pessoaRepository.findAll();
+        }
+
+        private void converterListaDePessoasParaListaDePessoasDeSaida() {
+            listaDePessoasDeSaida = listaDePessoasSalvas.stream().map(PessoaDtoSaida::new).collect(Collectors.toList());
+        }
 
     public ResponseEntity<?> consultar(Long codigoPessoa) {
 
@@ -66,11 +82,11 @@ public final class PessoaService {
 
         converterPessoaParaPessoaDtoSaida();
 
-        return ResponseEntity.ok().body(pessoaDtoSaida);
+        return ResponseEntity.ok().body(pessoaDeSaida);
     }
 
     public ResponseEntity<?> atualizar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
-        this.pessoaDtoEntrada = pessoaDtoEntrada;
+        pessoaDeEntrada = pessoaDtoEntrada;
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
@@ -80,15 +96,15 @@ public final class PessoaService {
         atualizarPessoa();
         converterPessoaParaPessoaDtoSaida();
 
-        return ResponseEntity.ok().body(pessoaDtoSaida);
+        return ResponseEntity.ok().body(pessoaDeSaida);
     }
 
         private void atualizarPessoa() {
-            pessoaSalva.setNome(pessoaDtoEntrada.getNome());
-            pessoaSalva.setSobrenome(pessoaDtoEntrada.getSobrenome());
-            pessoaSalva.setIdade(pessoaDtoEntrada.getIdade());
-            pessoaSalva.setLogin(pessoaDtoEntrada.getLogin());
-            pessoaSalva.setSenha(pessoaDtoEntrada.getSenha());
+            pessoaSalva.setNome(pessoaDeEntrada.getNome());
+            pessoaSalva.setSobrenome(pessoaDeEntrada.getSobrenome());
+            pessoaSalva.setIdade(pessoaDeEntrada.getIdade());
+            pessoaSalva.setLogin(pessoaDeEntrada.getLogin());
+            pessoaSalva.setSenha(pessoaDeEntrada.getSenha());
             pessoaRepository.saveAndFlush(pessoaSalva);
         }
 

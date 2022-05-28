@@ -22,8 +22,8 @@ public class PessoaController {
     }
 
     @GetMapping
-    public ResponseEntity<?> listar(String sobrenome) {
-        return null;
+    public ResponseEntity<?> listar() {
+        return pessoaService.listar();
     }
 
     @GetMapping("/{id}")
