@@ -8,7 +8,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
@@ -82,7 +81,7 @@ public final class PessoaService {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
         pessoaSalva = pessoaDoDatabase.get();
 
         converterPessoaParaPessoaDtoSaida();
@@ -96,7 +95,7 @@ public final class PessoaService {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
         pessoaSalva = pessoaDoDatabase.get();
 
         atualizarPessoa();
@@ -111,7 +110,6 @@ public final class PessoaService {
             pessoaSalva.setIdade(pessoaDeEntrada.getIdade());
             pessoaSalva.setLogin(pessoaDeEntrada.getLogin());
             pessoaSalva.setSenha(pessoaDeEntrada.getSenha());
-            pessoaRepository.saveAndFlush(pessoaSalva);
         }
 
     public ResponseEntity<?> deletar(Long codigoPessoa) {

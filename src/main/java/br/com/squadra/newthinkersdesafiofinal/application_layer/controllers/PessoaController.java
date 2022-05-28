@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
@@ -32,6 +33,7 @@ public class PessoaController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> atualizar(@PathVariable(name = "id") Long codigoPessoa, @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
         return pessoaService.atualizar(codigoPessoa, pessoaDtoEntrada);
     }
