@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class UfService {
@@ -61,8 +61,20 @@ public final class UfService {
 
     // ---------- Listar
     public ResponseEntity<?> listar() {
-        return null;
+
+        buscarTodasAsUfsDoDatabase();
+        converterListaDeUfsParaListaDeUfsDeSaida();
+
+        return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
+
+        private void buscarTodasAsUfsDoDatabase() {
+            listaDeUfsSalvas = ufRepository.findAll();
+        }
+
+        private void converterListaDeUfsParaListaDeUfsDeSaida() {
+            listaDeUfsDeSaida = listaDeUfsSalvas.stream().map(UfDtoSaida::new).collect(Collectors.toList());
+        }
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUf) {
