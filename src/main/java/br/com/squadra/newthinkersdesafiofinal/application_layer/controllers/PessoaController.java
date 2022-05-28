@@ -31,9 +31,9 @@ public class PessoaController {
         return null;
     }
 
-    @GetMapping("/{codigoPessoa}")
-    public ResponseEntity<?> buscar(Long codigoPessoa) {
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<?> consultar(@PathVariable(name = "id") Long codigoPessoa) {
+        return pessoaService.consultar(codigoPessoa);
     }
 
     @DeleteMapping

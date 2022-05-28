@@ -56,4 +56,16 @@ public final class PessoaService {
     public ResponseEntity<?> listar(String sobrenome) {
         return null;
     }
+
+    public ResponseEntity<?> consultar(Long codigoPessoa) {
+
+        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
+        if(!pessoaDoDatabase.isPresent())
+            return ResponseEntity.notFound().build();
+        pessoaSalva = pessoaDoDatabase.get();
+
+        converterPessoaParaPessoaDtoSaida();
+
+        return ResponseEntity.ok().body(pessoaDtoSaida);
+    }
 }
