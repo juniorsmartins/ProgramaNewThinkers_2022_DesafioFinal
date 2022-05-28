@@ -78,7 +78,15 @@ public final class MunicipioService {
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoMunicipio) {
-        return null;
+
+        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
+        if(!municipioDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        municipioSalvo = municipioDoDatabase.get();
+
+        converterMunicipioParaMunicipioDtoSaida();
+
+        return ResponseEntity.ok().body(municipioDeSaida);
     }
 
     // ---------- Atualizar
