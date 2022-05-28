@@ -8,8 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public final class PessoaService {
 
+    // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    // ---------- Atributos Injetados automaticamente
     @Autowired
     private PessoaRepository pessoaRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    // ---------- Atributos p/estilo pessoal de Clean Code
     private PessoaDtoEntrada pessoaDeEntrada;
     private Pessoa pessoaSalva;
     private PessoaDtoSaida pessoaDeSaida;
@@ -29,6 +31,7 @@ public final class PessoaService {
     private List<PessoaDtoSaida> listaDePessoasDeSaida;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
+    // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         pessoaDeEntrada = pessoaDtoEntrada;
 
@@ -57,6 +60,7 @@ public final class PessoaService {
             pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
         }
 
+    // ---------- Listar
     public ResponseEntity<?> listar() {
 
         buscarTodasAsPessoasDoDatabase();
@@ -73,6 +77,7 @@ public final class PessoaService {
             listaDePessoasDeSaida = listaDePessoasSalvas.stream().map(PessoaDtoSaida::new).collect(Collectors.toList());
         }
 
+    // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoPessoa) {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
@@ -85,6 +90,7 @@ public final class PessoaService {
         return ResponseEntity.ok().body(pessoaDeSaida);
     }
 
+    // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
         pessoaDeEntrada = pessoaDtoEntrada;
 
@@ -109,6 +115,12 @@ public final class PessoaService {
         }
 
     public ResponseEntity<?> deletar(Long codigoPessoa) {
-        return null;
+
+        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
+        if(!pessoaDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+
+        pessoaRepository.deleteById(codigoPessoa);
+        return ResponseEntity.ok().body("Deletada Pessoa com Chave Identificadora:" + codigoPessoa + ".");
     }
 }

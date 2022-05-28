@@ -36,8 +36,8 @@ public class PessoaController {
         return pessoaService.atualizar(codigoPessoa, pessoaDtoEntrada);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deletar() {
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletar(@PathVariable(name = "id") Long codigoPessoa) {
+        return pessoaService.deletar(codigoPessoa);
     }
 }
