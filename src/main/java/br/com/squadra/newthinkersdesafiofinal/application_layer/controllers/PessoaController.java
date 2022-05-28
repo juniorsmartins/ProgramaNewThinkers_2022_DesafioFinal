@@ -21,11 +21,6 @@ public class PessoaController {
         return pessoaService.cadastrar(pessoaDtoEntrada, uriComponentsBuilder);
     }
 
-    @PutMapping
-    public ResponseEntity<?> atualizar() {
-        return null;
-    }
-
     @GetMapping
     public ResponseEntity<?> listar(String sobrenome) {
         return null;
@@ -34,6 +29,11 @@ public class PessoaController {
     @GetMapping("/{id}")
     public ResponseEntity<?> consultar(@PathVariable(name = "id") Long codigoPessoa) {
         return pessoaService.consultar(codigoPessoa);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable(name = "id") Long codigoPessoa, @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
+        return pessoaService.atualizar(codigoPessoa, pessoaDtoEntrada);
     }
 
     @DeleteMapping

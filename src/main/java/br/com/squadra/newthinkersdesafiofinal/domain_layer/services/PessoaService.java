@@ -68,4 +68,31 @@ public final class PessoaService {
 
         return ResponseEntity.ok().body(pessoaDtoSaida);
     }
+
+    public ResponseEntity<?> atualizar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
+        this.pessoaDtoEntrada = pessoaDtoEntrada;
+
+        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
+        if(!pessoaDoDatabase.isPresent())
+            return ResponseEntity.notFound().build();
+        pessoaSalva = pessoaDoDatabase.get();
+
+        atualizarPessoa();
+        converterPessoaParaPessoaDtoSaida();
+
+        return ResponseEntity.ok().body(pessoaDtoSaida);
+    }
+
+        private void atualizarPessoa() {
+            pessoaSalva.setNome(pessoaDtoEntrada.getNome());
+            pessoaSalva.setSobrenome(pessoaDtoEntrada.getSobrenome());
+            pessoaSalva.setIdade(pessoaDtoEntrada.getIdade());
+            pessoaSalva.setLogin(pessoaDtoEntrada.getLogin());
+            pessoaSalva.setSenha(pessoaDtoEntrada.getSenha());
+            pessoaRepository.saveAndFlush(pessoaSalva);
+        }
+
+    public ResponseEntity<?> deletar(Long codigoPessoa) {
+        return null;
+    }
 }
