@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class MunicipioService {
@@ -61,7 +61,19 @@ public final class MunicipioService {
 
     // ---------- Listar
     public ResponseEntity<?> listar() {
-        return null;
+
+        buscarTodosOsMunicipiosDoDatabase();
+        converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+
+        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
+    }
+
+    private void buscarTodosOsMunicipiosDoDatabase() {
+        listaDeMunicipiosSalvos = municipioRepository.findAll();
+    }
+
+    private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
+        listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos.stream().map(MunicipioDtoSaida::new).collect(Collectors.toList());
     }
 
     // ---------- Consultar
