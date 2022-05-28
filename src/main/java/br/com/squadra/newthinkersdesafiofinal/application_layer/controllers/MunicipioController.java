@@ -33,7 +33,7 @@ public class MunicipioController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> atualizar(@PathVariable(name = "id") Long codigoMunicipio, MunicipioDtoEntrada municipioDtoEntrada) {
+    public ResponseEntity<?> atualizar(@PathVariable(name = "id") Long codigoMunicipio, @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada) {
         return municipioService.atualizar(codigoMunicipio, municipioDtoEntrada);
     }
 
