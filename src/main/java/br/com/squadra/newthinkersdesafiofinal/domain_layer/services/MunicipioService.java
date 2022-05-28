@@ -91,8 +91,22 @@ public final class MunicipioService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoMunicipio, MunicipioDtoEntrada municipioDtoEntrada) {
-        return null;
+        municipioDeEntrada = municipioDtoEntrada;
+
+        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
+        if(!municipioDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        municipioSalvo = municipioDoDatabase.get();
+
+        atualizarMunicipio();
+        converterMunicipioParaMunicipioDtoSaida();
+
+        return ResponseEntity.ok().body(municipioDeSaida);
     }
+
+        private void atualizarMunicipio() {
+            municipioSalvo.setNome(municipioDeEntrada.getNome());
+        }
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoMunicipio) {
