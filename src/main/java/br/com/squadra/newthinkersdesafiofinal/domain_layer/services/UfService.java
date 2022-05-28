@@ -91,8 +91,23 @@ public final class UfService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
-        return null;
+        ufDeEntrada = ufDtoEntrada;
+
+        var ufDoDatabase = ufRepository.findById(codigoUf);
+        if(!ufDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        ufSalva = ufDoDatabase.get();
+
+        atualizarUf();
+        converterUfParaUfDtoSaida();
+
+        return ResponseEntity.ok().body(ufDeSaida);
     }
+
+        private void atualizarUf() {
+            ufSalva.setNome(ufDeEntrada.getNome());
+            ufSalva.setSigla(ufDeEntrada.getSigla());
+        }
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoUf) {
