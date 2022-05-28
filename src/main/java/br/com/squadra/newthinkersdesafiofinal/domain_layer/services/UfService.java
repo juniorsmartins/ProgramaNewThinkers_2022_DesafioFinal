@@ -33,6 +33,10 @@ public final class UfService {
         return null;
     }
 
+        private void converterUfParaUfDtoSaida() {
+            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
+        }
+
     // ---------- Listar
     public ResponseEntity<?> listar() {
         return null;
@@ -40,7 +44,15 @@ public final class UfService {
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUf) {
-        return null;
+
+        var ufDoDatabase = ufRepository.findById(codigoUf);
+        if(!ufDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        ufSalva = ufDoDatabase.get();
+
+        converterUfParaUfDtoSaida();
+
+        return ResponseEntity.ok().body(ufDeSaida);
     }
 
     // ---------- Atualizar
