@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 import java.util.List;
 
 @Service
@@ -30,8 +32,28 @@ public final class UfService {
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return null;
+        ufDeEntrada = ufDtoEntrada;
+
+        converterUfDtoEntradaParaUf();
+        setarStatusAtivado();
+        salvarUf();
+        converterUfParaUfDtoSaida();
+
+        URI uri = uriComponentsBuilder.path("/ufs/{codigoPessoa}").buildAndExpand(ufDeSaida.getCodigoUf()).toUri();
+        return ResponseEntity.created(uri).body(ufDeSaida);
     }
+
+        private void converterUfDtoEntradaParaUf() {
+            ufSalva = modelMapper.map(ufDeEntrada, Uf.class);
+        }
+
+        private void setarStatusAtivado() {
+            ufSalva.setStatus(1);
+        }
+
+        private void salvarUf() {
+            ufSalva = ufRepository.saveAndFlush(ufSalva);
+        }
 
         private void converterUfParaUfDtoSaida() {
             ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
