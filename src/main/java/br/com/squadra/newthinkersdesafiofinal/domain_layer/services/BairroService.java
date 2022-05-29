@@ -78,6 +78,17 @@ public final class BairroService {
         }
 
     // ---------- Consultar
+    public ResponseEntity<?> consultar(Long codigoBairro) {
+
+        var bairroDoDatabase = bairroRepository.findById(codigoBairro);
+        if(!bairroDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        bairroSalvo = bairroDoDatabase.get();
+
+        converterBairroParaBairroDtoSaida();
+
+        return ResponseEntity.ok().body(bairroDeSaida);
+    }
 
     // ---------- Atualizar
 
