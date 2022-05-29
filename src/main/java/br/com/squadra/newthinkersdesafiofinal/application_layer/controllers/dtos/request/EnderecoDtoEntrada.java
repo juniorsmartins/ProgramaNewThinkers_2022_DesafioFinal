@@ -15,7 +15,7 @@ public final class EnderecoDtoEntrada {
     private String cep;
     @NotBlank @Length(max = 256)
     private String nomeRua;
-    @NotNull @Length(max = 10)
+    @NotNull @Max(99999)
     private Integer numero;
     @Length(max = 20)
     private String complemento;

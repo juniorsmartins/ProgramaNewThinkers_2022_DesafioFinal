@@ -17,3 +17,9 @@ INSERT INTO tb_bairro(nome, status)
     VALUES('Centro', 1);
 INSERT INTO tb_bairro(nome, status)
     VALUES('Primavera', 1);
+
+INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, status)
+    VALUES('78020-400', 'Rua Comandante Costa', 1550, 'Use interfone', 1);
+INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, status)
+    VALUES('78020-400', 'Rua Outono Cinza', 2684, 'Entrada lateral', 1);
+
