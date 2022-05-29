@@ -78,6 +78,17 @@ public final class EnderecoService {
         }
 
     // ---------- Consultar
+    public ResponseEntity<?> consultar(Long codigoEndereco) {
+
+        var enderecoDoDatabase = enderecoRepository.findById(codigoEndereco);
+        if(!enderecoDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        enderecoSalvo = enderecoDoDatabase.get();
+
+        converterEnderecoParaEnderecoDtoSaida();
+
+        return ResponseEntity.ok().body(enderecoDeSaida);
+    }
 
     // ---------- Atualizar
 
