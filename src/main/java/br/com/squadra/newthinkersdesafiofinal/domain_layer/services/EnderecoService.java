@@ -9,7 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.util.UriComponentsBuilder;
+import java.net.URI;
 import java.util.List;
 
 @Service
@@ -30,6 +31,33 @@ public final class EnderecoService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
+    public ResponseEntity<?> cadastrar(EnderecoDtoEntrada enderecoDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+        enderecoDeEntrada = enderecoDtoEntrada;
+
+        converterEnderecoDtoEntradaParaEndereco();
+        setarStatusAtivado();
+        salvarEndereco();
+        converterEnderecoParaEnderecoDtoSaida();
+
+        URI uri = uriComponentsBuilder.path("/enderecos/{codigoEndereco}").buildAndExpand(enderecoDeSaida.getCodigoEndereco()).toUri();
+        return ResponseEntity.created(uri).body(enderecoDeSaida);
+    }
+
+        private void converterEnderecoDtoEntradaParaEndereco() {
+            enderecoSalvo = modelMapper.map(enderecoDeEntrada, Endereco.class);
+        }
+
+        private void setarStatusAtivado() {
+            enderecoSalvo.setStatus(1);
+        }
+
+        private void salvarEndereco() {
+         enderecoSalvo = enderecoRepository.saveAndFlush(enderecoSalvo);
+        }
+
+        private void converterEnderecoParaEnderecoDtoSaida() {
+            enderecoDeSaida = modelMapper.map(enderecoSalvo, EnderecoDtoSaida.class);
+        }
 
     // ---------- Listar
 
