@@ -1,8 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request;
 
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.EnderecoDtoSaida;
 import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -19,6 +17,9 @@ public final class EnderecoDtoEntrada {
     private Integer numero;
     @Length(max = 20)
     private String complemento;
+    @NotNull
+    private Long codigoBairro;
+    private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoEntrada() {}
@@ -54,5 +55,21 @@ public final class EnderecoDtoEntrada {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public Long getCodigoBairro() {
+        return codigoBairro;
+    }
+
+    public void setCodigoBairro(Long codigoBairro) {
+        this.codigoBairro = codigoBairro;
+    }
+
+    public Long getCodigoPessoa() {
+        return codigoPessoa;
+    }
+
+    public void setCodigoPessoa(Long codigoPessoa) {
+        this.codigoPessoa = codigoPessoa;
     }
 }

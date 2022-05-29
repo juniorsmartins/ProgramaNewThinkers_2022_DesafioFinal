@@ -24,6 +24,13 @@ public final class Endereco implements Serializable {
     private String complemento;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
+    // ----- Relacionamento Bidirecional
+    @ManyToOne
+    @JoinColumn(name = "codigo_bairro", referencedColumnName = "codigo_bairro", nullable = false)
+    private Bairro bairro;
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JoinColumn(name = "codigo_pessoa", referencedColumnName = "codigo_pessoa", nullable = false)
+    private Pessoa pessoa;
 
     // ---------- CONSTRUTORES ---------- //
     public Endereco() {}
@@ -75,5 +82,21 @@ public final class Endereco implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Bairro getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(Bairro bairro) {
+        this.bairro = bairro;
+    }
+
+    public Pessoa getPessoa() {
+        return pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
     }
 }

@@ -26,6 +26,9 @@ public final class Pessoa implements Serializable {
     private String senha;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
+    // ----- Relacionamento Bidirecional
+    @OneToOne(mappedBy = "pessoa")
+    private Endereco endereco;
 
     // ---------- CONSTRUTORES ---------- //
     public Pessoa() {}
@@ -85,5 +88,13 @@ public final class Pessoa implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 }

@@ -3,8 +3,12 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.EnderecoDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.EnderecoDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Endereco;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.EnderecoRepository;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +26,17 @@ public final class EnderecoService {
     @Autowired
     private EnderecoRepository enderecoRepository;
     @Autowired
+    private BairroRepository bairroRepository;
+    @Autowired
+    private PessoaRepository pessoaRepository;
+    @Autowired
     private ModelMapper modelMapper;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private EnderecoDtoEntrada enderecoDeEntrada;
     private Endereco enderecoSalvo;
     private EnderecoDtoSaida enderecoDeSaida;
+    private Bairro bairroVerificado;
+    private Pessoa pessoaVerificada;
     private List<Endereco> listaDeEnderecosSalvos;
     private List<EnderecoDtoSaida> listaDeEnderecosDeSaida;
 
@@ -34,6 +44,16 @@ public final class EnderecoService {
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(EnderecoDtoEntrada enderecoDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         enderecoDeEntrada = enderecoDtoEntrada;
+
+        var pessoaDoDatabase = pessoaRepository.findById(enderecoDeEntrada.getCodigoPessoa());
+        if(!pessoaDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        pessoaVerificada = pessoaDoDatabase.get();
+
+        var bairroDoDatabase = bairroRepository.findById(enderecoDeEntrada.getCodigoBairro());
+        if(!bairroDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        bairroVerificado = bairroDoDatabase.get();
 
         converterEnderecoDtoEntradaParaEndereco();
         setarStatusAtivado();
@@ -45,7 +65,13 @@ public final class EnderecoService {
     }
 
         private void converterEnderecoDtoEntradaParaEndereco() {
-            enderecoSalvo = modelMapper.map(enderecoDeEntrada, Endereco.class);
+            enderecoSalvo = new Endereco();
+            enderecoSalvo.setCep(enderecoDeEntrada.getCep());
+            enderecoSalvo.setNomeRua(enderecoDeEntrada.getNomeRua());
+            enderecoSalvo.setNumero(enderecoDeEntrada.getNumero());
+            enderecoSalvo.setComplemento(enderecoDeEntrada.getComplemento());
+            enderecoSalvo.setBairro(bairroVerificado);
+            enderecoSalvo.setPessoa(pessoaVerificada);
         }
 
         private void setarStatusAtivado() {
@@ -99,6 +125,11 @@ public final class EnderecoService {
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         enderecoSalvo = enderecoDoDatabase.get();
 
+        var bairroDoDatabase = bairroRepository.findById(enderecoDeEntrada.getCodigoBairro());
+        if(!bairroDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        bairroVerificado = bairroDoDatabase.get();
+
         atualizarEndereco();
         converterEnderecoParaEnderecoDtoSaida();
 
@@ -110,6 +141,7 @@ public final class EnderecoService {
             enderecoSalvo.setNomeRua(enderecoDeEntrada.getNomeRua());
             enderecoSalvo.setNumero(enderecoDeEntrada.getNumero());
             enderecoSalvo.setComplemento(enderecoDeEntrada.getComplemento());
+            enderecoSalvo.setBairro(bairroVerificado);
         }
 
     // ---------- Deletar

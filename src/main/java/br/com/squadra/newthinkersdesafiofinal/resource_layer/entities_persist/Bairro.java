@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_bairro")
@@ -22,6 +23,8 @@ public final class Bairro implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
     private Municipio municipio;
+    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Endereco> endereco;
 
     // ---------- CONSTRUTORES ---------- //
     public Bairro() {}
@@ -57,5 +60,13 @@ public final class Bairro implements Serializable {
 
     public void setMunicipio(Municipio municipio) {
         this.municipio = municipio;
+    }
+
+    public List<Endereco> getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(List<Endereco> endereco) {
+        this.endereco = endereco;
     }
 }

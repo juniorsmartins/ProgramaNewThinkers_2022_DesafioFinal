@@ -11,6 +11,8 @@ public final class EnderecoDtoSaida {
     private Integer numero;
     private String complemento;
     private Integer status;
+    private Long codigoBairro;
+    private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoSaida() {}
@@ -21,6 +23,8 @@ public final class EnderecoDtoSaida {
         setNumero(endereco.getNumero());
         setComplemento(endereco.getComplemento());
         setStatus(endereco.getStatus());
+        setCodigoBairro(endereco.getBairro().getCodigoBairro());
+        setCodigoPessoa(endereco.getPessoa().getCodigoPessoa());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -70,5 +74,21 @@ public final class EnderecoDtoSaida {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getCodigoBairro() {
+        return codigoBairro;
+    }
+
+    public void setCodigoBairro(Long codigoBairro) {
+        this.codigoBairro = codigoBairro;
+    }
+
+    public Long getCodigoPessoa() {
+        return codigoPessoa;
+    }
+
+    public void setCodigoPessoa(Long codigoPessoa) {
+        this.codigoPessoa = codigoPessoa;
     }
 }
