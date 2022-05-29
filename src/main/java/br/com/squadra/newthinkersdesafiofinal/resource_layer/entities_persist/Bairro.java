@@ -1,4 +1,4 @@
-package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities;
+package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import javax.persistence.*;
 import java.io.Serializable;

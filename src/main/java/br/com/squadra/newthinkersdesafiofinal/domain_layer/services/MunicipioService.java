@@ -2,7 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Municipio;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public final class MunicipioService {
 
         var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
         if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         municipioSalvo = municipioDoDatabase.get();
 
         converterMunicipioParaMunicipioDtoSaida();
@@ -95,7 +96,7 @@ public final class MunicipioService {
 
         var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
         if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         municipioSalvo = municipioDoDatabase.get();
 
         atualizarMunicipio();
@@ -113,9 +114,9 @@ public final class MunicipioService {
 
         var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
         if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
 
         municipioRepository.deleteById(codigoMunicipio);
-        return ResponseEntity.ok().body("Deletado Município com Chave Identificadora: " + codigoMunicipio + ".");
+        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
     }
 }

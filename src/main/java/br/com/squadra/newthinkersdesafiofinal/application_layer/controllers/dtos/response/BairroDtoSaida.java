@@ -1,6 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response;
 
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Bairro;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 
 public final class BairroDtoSaida {
 

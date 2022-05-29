@@ -2,7 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Uf;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public final class UfService {
 
         var ufDoDatabase = ufRepository.findById(codigoUf);
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         ufSalva = ufDoDatabase.get();
 
         converterUfParaUfDtoSaida();
@@ -95,7 +96,7 @@ public final class UfService {
 
         var ufDoDatabase = ufRepository.findById(codigoUf);
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         ufSalva = ufDoDatabase.get();
 
         atualizarUf();
@@ -114,9 +115,9 @@ public final class UfService {
 
         var ufDoDatabase = ufRepository.findById(codigoUf);
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
 
         ufRepository.deleteById(codigoUf);
-        return ResponseEntity.ok().body("Deletada Uf com Chave Identificadora: " + codigoUf + ".");
+        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
     }
 }

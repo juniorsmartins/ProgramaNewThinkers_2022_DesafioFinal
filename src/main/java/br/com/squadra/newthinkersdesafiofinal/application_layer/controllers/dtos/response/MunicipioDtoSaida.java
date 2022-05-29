@@ -1,6 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response;
 
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Municipio;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 
 public final class MunicipioDtoSaida {
 

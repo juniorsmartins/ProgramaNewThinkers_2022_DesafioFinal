@@ -2,7 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Bairro;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public final class BairroService {
 
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         bairroSalvo = bairroDoDatabase.get();
 
         converterBairroParaBairroDtoSaida();
@@ -96,7 +97,7 @@ public final class BairroService {
 
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         bairroSalvo = bairroDoDatabase.get();
 
         atualizarBairro();
@@ -114,9 +115,9 @@ public final class BairroService {
 
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
 
         bairroRepository.deleteById(codigoBairro);
-        return ResponseEntity.ok().body("Deletado Bairro com Chave Identificadora: " + codigoBairro + ".");
+        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
     }
 }

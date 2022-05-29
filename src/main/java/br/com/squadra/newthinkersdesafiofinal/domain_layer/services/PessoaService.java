@@ -2,7 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Pessoa;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public final class PessoaService {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         pessoaSalva = pessoaDoDatabase.get();
 
         converterPessoaParaPessoaDtoSaida();
@@ -95,7 +96,7 @@ public final class PessoaService {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         pessoaSalva = pessoaDoDatabase.get();
 
         atualizarPessoa();
@@ -117,9 +118,9 @@ public final class PessoaService {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
 
         pessoaRepository.deleteById(codigoPessoa);
-        return ResponseEntity.ok().body("Deletada Pessoa com Chave Identificadora:" + codigoPessoa + ".");
+        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
     }
 }

@@ -1,6 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response;
 
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities.Pessoa;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public final class PessoaDtoSaida {
