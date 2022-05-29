@@ -8,6 +8,7 @@ public final class BairroDtoSaida {
     private Long codigoBairro;
     private String nome;
     private Integer status;
+    private Long codigoMunicipio;
 
     // ---------- CONSTRUTORES ---------- //
     public BairroDtoSaida() {}
@@ -15,6 +16,7 @@ public final class BairroDtoSaida {
         setCodigoBairro(bairro.getCodigoBairro());
         setNome(bairro.getNome());
         setStatus(bairro.getStatus());
+        setCodigoMunicipio(bairro.getMunicipio().getCodigoMunicipio());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -40,5 +42,13 @@ public final class BairroDtoSaida {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getCodigoMunicipio() {
+        return codigoMunicipio;
+    }
+
+    public void setCodigoMunicipio(Long codigoMunicipio) {
+        this.codigoMunicipio = codigoMunicipio;
     }
 }

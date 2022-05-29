@@ -4,7 +4,9 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,14 @@ public final class BairroService {
     @Autowired
     private BairroRepository bairroRepository;
     @Autowired
+    private MunicipioRepository municipioRepository;
+    @Autowired
     private ModelMapper modelMapper;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private BairroDtoEntrada bairroDeEntrada;
     private Bairro bairroSalvo;
     private BairroDtoSaida bairroDeSaida;
+    private Municipio municipioVerificado;
     private List<Bairro> listaDeBairrosSalvos;
     private List<BairroDtoSaida> listaDeBairrosDeSaida;
 
@@ -34,6 +39,11 @@ public final class BairroService {
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         bairroDeEntrada = bairroDtoEntrada;
+
+        var municipioDoDatabase = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio());
+        if(!municipioDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        municipioVerificado = municipioDoDatabase.get();
 
         converterBairroDtoEntradaParaBairro();
         setarStatusAtivado();
@@ -45,7 +55,9 @@ public final class BairroService {
     }
 
         private void converterBairroDtoEntradaParaBairro() {
-            bairroSalvo = modelMapper.map(bairroDeEntrada, Bairro.class);
+            bairroSalvo = new Bairro();
+            bairroSalvo.setNome(bairroDeEntrada.getNome());
+            bairroSalvo.setMunicipio(municipioVerificado);
         }
 
         private void setarStatusAtivado() {
@@ -99,6 +111,11 @@ public final class BairroService {
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         bairroSalvo = bairroDoDatabase.get();
 
+        var municipioDoDatabase = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio());
+        if(!municipioDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        municipioVerificado = municipioDoDatabase.get();
+
         atualizarBairro();
         converterBairroParaBairroDtoSaida();
 
@@ -107,6 +124,7 @@ public final class BairroService {
 
         private void atualizarBairro() {
             bairroSalvo.setNome(bairroDeEntrada.getNome());
+            bairroSalvo.setMunicipio(municipioVerificado);
         }
 
     // ---------- Deletar

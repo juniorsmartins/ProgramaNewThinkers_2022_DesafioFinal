@@ -18,6 +18,10 @@ public final class Bairro implements Serializable {
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
+    // ----- Relacionamento Bidirecional
+    @ManyToOne
+    @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
+    private Municipio municipio;
 
     // ---------- CONSTRUTORES ---------- //
     public Bairro() {}
@@ -45,5 +49,13 @@ public final class Bairro implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Municipio getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(Municipio municipio) {
+        this.municipio = municipio;
     }
 }

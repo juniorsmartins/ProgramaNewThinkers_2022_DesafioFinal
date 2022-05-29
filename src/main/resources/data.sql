@@ -13,10 +13,10 @@ INSERT INTO tb_municipio(nome, status, codigo_uf)
 INSERT INTO tb_municipio(nome, status, codigo_uf)
     VALUES('Porto Alegre', 1, 2);
 
-INSERT INTO tb_bairro(nome, status)
-    VALUES('Centro', 1);
-INSERT INTO tb_bairro(nome, status)
-    VALUES('Primavera', 1);
+INSERT INTO tb_bairro(nome, status, codigo_municipio)
+    VALUES('Centro', 1, 2);
+INSERT INTO tb_bairro(nome, status, codigo_municipio)
+    VALUES('Primavera', 1, 1);
 
 INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, status)
     VALUES('78020-400', 'Rua Comandante Costa', 1550, 'Use interfone', 1);

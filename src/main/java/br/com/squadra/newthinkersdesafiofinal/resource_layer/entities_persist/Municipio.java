@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_municipio")
@@ -22,6 +23,8 @@ public final class Municipio implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_uf", referencedColumnName = "codigo_uf", nullable = false)
     private Uf uf;
+    @OneToMany(mappedBy = "municipio", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Bairro> bairro;
 
     // ---------- CONSTRUTORES ---------- //
     public Municipio() {}

@@ -47,7 +47,6 @@ public final class MunicipioService {
 
         converterMunicipioDtoEntradaParaMunicipio();
         setarStatusAtivado();
-        setarUfVerificada();
         salvarMunicipio();
         converterMunicipioParaMunicipioDtoSaida();
 
@@ -63,10 +62,6 @@ public final class MunicipioService {
 
         private void setarStatusAtivado() {
             municipioSalvo.setStatus(1);
-        }
-
-        private void setarUfVerificada() {
-            municipioSalvo.setUf(ufVerificada);
         }
 
         private void salvarMunicipio() {
