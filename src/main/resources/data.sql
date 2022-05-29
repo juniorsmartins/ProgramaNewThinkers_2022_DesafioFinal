@@ -13,4 +13,7 @@ INSERT INTO tb_municipio(nome, status)
 INSERT INTO tb_municipio(nome, status)
     VALUES('Porto Alegre', 1);
 
-
+INSERT INTO tb_bairro(nome, status)
+    VALUES('Centro', 1);
+INSERT INTO tb_bairro(nome, status)
+    VALUES('Primavera', 1);
