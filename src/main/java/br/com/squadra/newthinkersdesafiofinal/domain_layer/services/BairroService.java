@@ -91,6 +91,23 @@ public final class BairroService {
     }
 
     // ---------- Atualizar
+    public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
+        bairroDtoEntrada = bairroDtoEntrada;
+
+        var bairroDoDatabase = bairroRepository.findById(codigoBairro);
+        if(!bairroDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body("Chave Identificadora não encontrada!");
+        bairroSalvo = bairroDoDatabase.get();
+
+        atualizarBairro();
+        converterBairroParaBairroDtoSaida();
+
+        return ResponseEntity.ok().body(bairroDeSaida);
+    }
+
+        private void atualizarBairro() {
+            bairroSalvo.setNome(bairroDeEntrada.getNome());
+        }
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoBairro) {
