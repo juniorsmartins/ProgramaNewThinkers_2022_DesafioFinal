@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class BairroService {
@@ -31,6 +32,21 @@ public final class BairroService {
     // ---------- Cadastrar
 
     // ---------- Listar
+    public ResponseEntity<?> listar() {
+
+        buscarTodosOsBairrosDoDatabase();
+        converterListaDeBairrosParaListaDeBairrosDeSaida();
+
+        return ResponseEntity.ok().body(listaDeBairrosDeSaida);
+    }
+
+        private void buscarTodosOsBairrosDoDatabase() {
+            listaDeBairrosSalvos = bairroRepository.findAll();
+        }
+
+        private void converterListaDeBairrosParaListaDeBairrosDeSaida() {
+            listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
+        }
 
     // ---------- Consultar
 
