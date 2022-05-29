@@ -92,6 +92,7 @@ public final class EnderecoService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoEndereco, EnderecoDtoEntrada enderecoDtoEntrada) {
+        enderecoDeEntrada = enderecoDtoEntrada;
 
         var enderecoDoDatabase = enderecoRepository.findById(codigoEndereco);
         if(!enderecoDoDatabase.isPresent())
