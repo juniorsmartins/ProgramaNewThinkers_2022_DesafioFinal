@@ -22,6 +22,8 @@ public final class Endereco implements Serializable {
     private Integer numero;
     @Column(name = "complemento", length = 20)
     private String complemento;
+    @Column(name = "status", length = 3, nullable = false)
+    private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
     public Endereco() {}
@@ -65,5 +67,13 @@ public final class Endereco implements Serializable {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

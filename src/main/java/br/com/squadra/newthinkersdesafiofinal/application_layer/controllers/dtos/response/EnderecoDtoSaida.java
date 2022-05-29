@@ -10,6 +10,7 @@ public final class EnderecoDtoSaida {
     private String nomeRua;
     private Integer numero;
     private String complemento;
+    private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoSaida() {}
@@ -19,6 +20,7 @@ public final class EnderecoDtoSaida {
         setNomeRua(endereco.getNomeRua());
         setNumero(endereco.getNumero());
         setComplemento(endereco.getComplemento());
+        setStatus(endereco.getStatus());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -60,5 +62,13 @@ public final class EnderecoDtoSaida {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
