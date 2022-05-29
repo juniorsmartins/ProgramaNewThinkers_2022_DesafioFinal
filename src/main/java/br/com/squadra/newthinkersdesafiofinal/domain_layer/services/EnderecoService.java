@@ -91,6 +91,25 @@ public final class EnderecoService {
     }
 
     // ---------- Atualizar
+    public ResponseEntity<?> atualizar(Long codigoEndereco, EnderecoDtoEntrada enderecoDtoEntrada) {
+
+        var enderecoDoDatabase = enderecoRepository.findById(codigoEndereco);
+        if(!enderecoDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        enderecoSalvo = enderecoDoDatabase.get();
+
+        atualizarEndereco();
+        converterEnderecoParaEnderecoDtoSaida();
+
+        return ResponseEntity.ok().body(enderecoDeSaida);
+    }
+
+        private void atualizarEndereco() {
+            enderecoSalvo.setCep(enderecoDeEntrada.getCep());
+            enderecoSalvo.setNomeRua(enderecoDeEntrada.getNomeRua());
+            enderecoSalvo.setNumero(enderecoDeEntrada.getNumero());
+            enderecoSalvo.setComplemento(enderecoDeEntrada.getComplemento());
+        }
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoEndereco) {
