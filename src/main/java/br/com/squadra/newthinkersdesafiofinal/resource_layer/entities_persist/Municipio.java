@@ -18,6 +18,10 @@ public final class Municipio implements Serializable {
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
+    // ----- Relacionamento Bidirecional
+    @ManyToOne
+    @JoinColumn(name = "codigo_uf", referencedColumnName = "codigo_uf", nullable = false)
+    private Uf uf;
 
     // ---------- CONSTRUTORES ---------- //
     public Municipio() {}
@@ -45,5 +49,13 @@ public final class Municipio implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Uf getUf() {
+        return uf;
+    }
+
+    public void setUf(Uf uf) {
+        this.uf = uf;
     }
 }

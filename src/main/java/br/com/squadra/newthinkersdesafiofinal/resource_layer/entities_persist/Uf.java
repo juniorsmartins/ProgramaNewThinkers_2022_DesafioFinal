@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_uf")
@@ -20,6 +21,9 @@ public final class Uf implements Serializable {
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
+    // ----- Relacionamento Bidirecional
+    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<Municipio> municipio;
 
     // ---------- CONSTRUTORES ---------- //
     public Uf() {}
@@ -55,5 +59,13 @@ public final class Uf implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<Municipio> getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(List<Municipio> municipio) {
+        this.municipio = municipio;
     }
 }
