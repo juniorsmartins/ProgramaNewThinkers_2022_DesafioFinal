@@ -8,7 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,33 @@ public final class BairroService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
+    public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+        bairroDeEntrada = bairroDtoEntrada;
+
+        converterBairroDtoEntradaParaBairro();
+        setarStatusAtivado();
+        salvarBairro();
+        converterBairroParaBairroDtoSaida();
+
+        URI uri = uriComponentsBuilder.path("/bairros/{codigoBairro}").buildAndExpand(bairroDeSaida.getCodigoBairro()).toUri();
+        return ResponseEntity.created(uri).body(bairroDeSaida);
+    }
+
+        private void converterBairroDtoEntradaParaBairro() {
+            bairroSalvo = modelMapper.map(bairroDeEntrada, Bairro.class);
+        }
+
+        private void setarStatusAtivado() {
+            bairroSalvo.setStatus(1);
+        }
+
+        private void salvarBairro() {
+            bairroSalvo = bairroRepository.saveAndFlush(bairroSalvo);
+        }
+
+        private void converterBairroParaBairroDtoSaida() {
+            bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
+        }
 
     // ---------- Listar
     public ResponseEntity<?> listar() {
