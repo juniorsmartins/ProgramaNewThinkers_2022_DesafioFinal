@@ -92,7 +92,7 @@ public final class BairroService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
-        bairroDtoEntrada = bairroDtoEntrada;
+        bairroDeEntrada = bairroDtoEntrada;
 
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
