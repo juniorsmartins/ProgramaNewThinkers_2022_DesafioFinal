@@ -14,19 +14,27 @@ public final class Endereco implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo_endereco", nullable = false)
     private Long codigoEndereco;
+    @Column(name = "cep", length = 10, nullable = false)
+    private String cep;
     @Column(name = "nome_rua", length = 256, nullable = false)
     private String nomeRua;
     @Column(name = "numero", length = 10, nullable = false)
     private Integer numero;
     @Column(name = "complemento", length = 20)
     private String complemento;
-    @Column(name = "cep", length = 10, nullable = false)
-    private String cep;
 
     // ---------- CONSTRUTORES ---------- //
     public Endereco() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
     public Long getCodigoEndereco() {
         return codigoEndereco;
     }
@@ -57,13 +65,5 @@ public final class Endereco implements Serializable {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
     }
 }
