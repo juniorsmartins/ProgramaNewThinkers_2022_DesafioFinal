@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public final class EnderecoService {
@@ -60,6 +61,21 @@ public final class EnderecoService {
         }
 
     // ---------- Listar
+    public ResponseEntity<?> listar() {
+
+        buscarTodosOsEnderecosDoDatabase();
+        converterListaDeEnderecosParaListaDeEnderecosDeSaida();
+
+        return ResponseEntity.ok().body(listaDeEnderecosDeSaida);
+    }
+
+        private void buscarTodosOsEnderecosDoDatabase() {
+            listaDeEnderecosSalvos = enderecoRepository.findAll();
+        }
+
+        private void converterListaDeEnderecosParaListaDeEnderecosDeSaida() {
+            listaDeEnderecosDeSaida = listaDeEnderecosSalvos.stream().map(EnderecoDtoSaida::new).collect(Collectors.toList());
+        }
 
     // ---------- Consultar
 
