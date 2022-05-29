@@ -9,6 +9,8 @@ public final class MunicipioDtoEntrada {
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @NotNull @NotEmpty @Length(max = 256)
     private String nome;
+    @NotNull
+    private Long codigoUf;
 
     // ---------- CONSTRUTORES ---------- //
     public MunicipioDtoEntrada() {}
@@ -20,5 +22,13 @@ public final class MunicipioDtoEntrada {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Long getCodigoUf() {
+        return codigoUf;
+    }
+
+    public void setCodigoUf(Long codigoUf) {
+        this.codigoUf = codigoUf;
     }
 }

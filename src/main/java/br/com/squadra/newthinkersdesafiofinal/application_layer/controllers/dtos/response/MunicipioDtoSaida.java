@@ -8,6 +8,7 @@ public final class MunicipioDtoSaida {
     private Long codigoMunicipio;
     private String nome;
     private Integer status;
+    private Long codigoUf;
 
     // ---------- CONSTRUTORES ---------- //
     public MunicipioDtoSaida() {}
@@ -15,6 +16,7 @@ public final class MunicipioDtoSaida {
         setCodigoMunicipio(municipio.getCodigoMunicipio());
         setNome(municipio.getNome());
         setStatus(municipio.getStatus());
+        setCodigoUf(municipio.getUf().getCodigoUf());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -40,5 +42,13 @@ public final class MunicipioDtoSaida {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getCodigoUf() {
+        return codigoUf;
+    }
+
+    public void setCodigoUf(Long codigoUf) {
+        this.codigoUf = codigoUf;
     }
 }

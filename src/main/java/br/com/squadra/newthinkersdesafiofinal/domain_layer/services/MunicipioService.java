@@ -4,7 +4,9 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,14 @@ public final class MunicipioService {
     @Autowired
     private MunicipioRepository municipioRepository;
     @Autowired
+    private UfRepository ufRepository;
+    @Autowired
     private ModelMapper modelMapper;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private MunicipioDtoEntrada municipioDeEntrada;
     private Municipio municipioSalvo;
     private MunicipioDtoSaida municipioDeSaida;
+    private Uf ufVerificada;
     List<Municipio> listaDeMunicipiosSalvos;
     List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
 
@@ -35,8 +40,14 @@ public final class MunicipioService {
     public ResponseEntity<?> cadastrar(MunicipioDtoEntrada municipioDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         municipioDeEntrada = municipioDtoEntrada;
 
+        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUf());
+        if(!ufDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        ufVerificada = ufDoDatabase.get();
+
         converterMunicipioDtoEntradaParaMunicipio();
         setarStatusAtivado();
+        setarUfVerificada();
         salvarMunicipio();
         converterMunicipioParaMunicipioDtoSaida();
 
@@ -45,11 +56,17 @@ public final class MunicipioService {
     }
 
         private void converterMunicipioDtoEntradaParaMunicipio() {
-            municipioSalvo = modelMapper.map(municipioDeEntrada, Municipio.class);
+            municipioSalvo = new Municipio();
+            municipioSalvo.setNome(municipioDeEntrada.getNome());
+            municipioSalvo.setUf(ufVerificada);
         }
 
         private void setarStatusAtivado() {
             municipioSalvo.setStatus(1);
+        }
+
+        private void setarUfVerificada() {
+            municipioSalvo.setUf(ufVerificada);
         }
 
         private void salvarMunicipio() {
@@ -99,6 +116,11 @@ public final class MunicipioService {
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         municipioSalvo = municipioDoDatabase.get();
 
+        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUf());
+        if(!ufDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        ufVerificada = ufDoDatabase.get();
+
         atualizarMunicipio();
         converterMunicipioParaMunicipioDtoSaida();
 
@@ -107,6 +129,7 @@ public final class MunicipioService {
 
         private void atualizarMunicipio() {
             municipioSalvo.setNome(municipioDeEntrada.getNome());
+            municipioSalvo.setUf(ufVerificada);
         }
 
     // ---------- Deletar
