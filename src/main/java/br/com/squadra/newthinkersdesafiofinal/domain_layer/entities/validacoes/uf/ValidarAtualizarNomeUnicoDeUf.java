@@ -8,15 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ValidarSiglaUnicaCadastrarUf implements ValidacoesCadastrarUf {
+public final class ValidarAtualizarNomeUnicoDeUf implements ValidacoesAtualizarUf {
 
     @Autowired
     private UfRepository ufRepository;
 
     @Override
-    public void validar(UfDtoEntrada ufDtoEntrada) {
-            var ufDoDatabase = ufRepository.findBySigla(ufDtoEntrada.getSigla());
-            if(ufDoDatabase.isPresent())
-                throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);
+    public void validar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
+
+        var ufDoDatabasePorCodigo = ufRepository.findById(codigoUf);
+        if(!ufDoDatabasePorCodigo.isPresent())
+            throw new ValidacaoException("CodigoUf - " + MensagemPadrao.ID_NAO_ENCONTRADO);
+
+        var ufDoDatabasePorNome = ufRepository.findByNome(ufDtoEntrada.getNome());
+        if(ufDoDatabasePorNome.isPresent())
+            throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);
     }
 }

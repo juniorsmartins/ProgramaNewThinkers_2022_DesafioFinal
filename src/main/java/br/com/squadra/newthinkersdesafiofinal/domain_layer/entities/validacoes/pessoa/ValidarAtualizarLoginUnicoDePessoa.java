@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ValidarAtualizarIdExisteAndLoginUnicoDePessoa implements ValidacoesAtualizarPessoa {
+public final class ValidarAtualizarLoginUnicoDePessoa implements ValidacoesAtualizarPessoa {
 
     @Autowired
     private PessoaRepository pessoaRepository;
 
     @Override
-    public void validar(Long codigoId, PessoaDtoEntrada pessoaDtoEntrada) {
+    public void validar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
 
-        var pessoaDoDatabasePorCodigo = pessoaRepository.findById(codigoId);
+        var pessoaDoDatabasePorCodigo = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabasePorCodigo.isPresent())
             throw new ValidacaoException("codigoPessoa - " + MensagemPadrao.ID_NAO_ENCONTRADO);
 
