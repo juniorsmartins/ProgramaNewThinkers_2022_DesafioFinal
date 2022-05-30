@@ -116,10 +116,7 @@ public final class PessoaService {
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
 
-        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
-        if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        pessoaSalva = pessoaDoDatabase.get();
+        pessoaSalva = pessoaRepository.findById(codigoPessoa).get();
 
         atualizarPessoa();
         converterPessoaParaPessoaDtoSaida();
