@@ -4,6 +4,7 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
@@ -27,7 +28,9 @@ public final class UfService {
     private ModelMapper modelMapper;
     // ---------- Padrão de Projeto
     @Autowired
-    private List<ValidacoesCadastrarUf> listaDeValidacoesDeUf;
+    private List<ValidacoesCadastrarUf> listaCadastrarDeValidacoesDeUf;
+    @Autowired
+    private List<ValidacoesAtualizarUf> listaAtualizarDeValidacoesDeUf;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private UfDtoEntrada ufDeEntrada;
     private Uf ufSalva;
@@ -42,7 +45,7 @@ public final class UfService {
 
         // Design Pattern comportamental
         try{
-            listaDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(ufDeEntrada));
+            listaCadastrarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(ufDeEntrada));
         }catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
@@ -106,10 +109,14 @@ public final class UfService {
     public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
         ufDeEntrada = ufDtoEntrada;
 
-        var ufDoDatabase = ufRepository.findById(codigoUf);
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        ufSalva = ufDoDatabase.get();
+        // Design Pattern comportamental
+        try{
+            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUf, ufDeEntrada));
+        }catch(ValidacaoException validacaoException){
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
+
+        ufSalva = ufRepository.findById(codigoUf).get();
 
         atualizarUf();
         converterUfParaUfDtoSaida();

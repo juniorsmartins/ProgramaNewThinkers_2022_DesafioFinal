@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ValidarAtualizarNomeUnicoDeUf implements ValidacoesAtualizarUf {
+public final class ValidarAtualizarSiglaUnicaDeUf implements ValidacoesAtualizarUf {
 
     @Autowired
     private UfRepository ufRepository;
@@ -20,10 +20,10 @@ public final class ValidarAtualizarNomeUnicoDeUf implements ValidacoesAtualizarU
         if(!ufDoDatabasePorCodigo.isPresent())
             throw new ValidacaoException("CodigoUf - " + MensagemPadrao.ID_NAO_ENCONTRADO);
 
-        var ufDoDatabasePorNome = ufRepository.findByNome(ufDtoEntrada.getNome());
-        if(ufDoDatabasePorNome.isPresent()) {
-            if(ufDoDatabasePorCodigo.get().getCodigoUf() != ufDoDatabasePorNome.get().getCodigoUf()) {
-                throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);
+        var ufDoDatabasePorSigla = ufRepository.findBySigla(ufDtoEntrada.getSigla());
+        if(ufDoDatabasePorSigla.isPresent()) {
+            if(ufDoDatabasePorCodigo.get().getCodigoUf() != ufDoDatabasePorSigla.get().getCodigoUf()) {
+                throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);
             }
         }
     }
