@@ -2,7 +2,6 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 
-public interface ValidacoesPessoa {
-
-    void validar(PessoaDtoEntrada pessoaDtoEntrada);
+public interface ValidacoesAtualizarPessoa {
+    void validar(Long codigoId, PessoaDtoEntrada pessoaDtoEntrada);
 }

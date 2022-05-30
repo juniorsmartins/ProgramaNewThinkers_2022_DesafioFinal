@@ -2,7 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 
-public interface ValidacoesUf {
+public interface ValidacoesCadastrarUf {
 
     void validar(UfDtoEntrada ufDtoEntrada);
 }

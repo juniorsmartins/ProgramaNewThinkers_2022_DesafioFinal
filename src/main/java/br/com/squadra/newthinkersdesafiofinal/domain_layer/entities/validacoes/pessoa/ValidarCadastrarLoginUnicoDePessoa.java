@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ValidarLoginUnicoDePessoa implements ValidacoesPessoa {
+public final class ValidarCadastrarLoginUnicoDePessoa implements ValidacoesCadastrarPessoa {
 
     @Autowired
     private PessoaRepository pessoaRepository;

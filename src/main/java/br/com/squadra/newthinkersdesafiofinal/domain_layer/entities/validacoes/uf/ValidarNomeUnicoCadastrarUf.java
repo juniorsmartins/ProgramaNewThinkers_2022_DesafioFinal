@@ -8,15 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ValidarSiglaUnicaUf implements ValidacoesUf {
+public final class ValidarNomeUnicoCadastrarUf implements ValidacoesCadastrarUf {
 
     @Autowired
     private UfRepository ufRepository;
 
     @Override
     public void validar(UfDtoEntrada ufDtoEntrada) {
-            var ufDoDatabase = ufRepository.findBySigla(ufDtoEntrada.getSigla());
+            var ufDoDatabase = ufRepository.findByNome(ufDtoEntrada.getNome());
             if(ufDoDatabase.isPresent())
-                throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);
+                throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);
     }
 }

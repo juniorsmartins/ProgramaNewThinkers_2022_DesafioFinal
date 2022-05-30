@@ -4,7 +4,8 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoExc
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.pessoa.ValidacoesPessoa;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.pessoa.ValidacoesAtualizarPessoa;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.pessoa.ValidacoesCadastrarPessoa;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.modelmapper.ModelMapper;
@@ -27,7 +28,9 @@ public final class PessoaService {
     private ModelMapper modelMapper;
     // ---------- Padrão de Projeto
     @Autowired
-    private List<ValidacoesPessoa> listaDeValidacoesDePessoa;
+    private List<ValidacoesCadastrarPessoa> listaCadastrarDeValidacoesDePessoa;
+    @Autowired
+    private List<ValidacoesAtualizarPessoa> listaAtualizarDeValidacoesDePessoa;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private PessoaDtoEntrada pessoaDeEntrada;
     private Pessoa pessoaSalva;
@@ -42,7 +45,7 @@ public final class PessoaService {
 
         // Design Pattern comportamental
         try{
-            listaDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(pessoaDeEntrada));
+            listaCadastrarDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(pessoaDeEntrada));
         } catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
@@ -105,6 +108,13 @@ public final class PessoaService {
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
         pessoaDeEntrada = pessoaDtoEntrada;
+
+        // Design Pattern comportamental
+        try{
+            listaAtualizarDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoPessoa, pessoaDeEntrada));
+        } catch(ValidacaoException validacaoException){
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())

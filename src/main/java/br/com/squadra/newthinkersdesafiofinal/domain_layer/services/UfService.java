@@ -4,7 +4,7 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesUf;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -27,7 +27,7 @@ public final class UfService {
     private ModelMapper modelMapper;
     // ---------- Padrão de Projeto
     @Autowired
-    private List<ValidacoesUf> listaDeValidacoesDeUf;
+    private List<ValidacoesCadastrarUf> listaDeValidacoesDeUf;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private UfDtoEntrada ufDeEntrada;
     private Uf ufSalva;
