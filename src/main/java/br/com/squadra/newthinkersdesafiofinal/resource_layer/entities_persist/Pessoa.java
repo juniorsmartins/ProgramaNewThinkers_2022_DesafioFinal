@@ -20,7 +20,7 @@ public final class Pessoa implements Serializable {
     private String sobrenome;
     @Column(name = "idade", length = 3, nullable = false)
     private Integer idade;
-    @Column(name = "login", length = 50, nullable = false)
+    @Column(name = "login", length = 50, nullable = false, unique = true)
     private String login;
     @Column(name = "senha", length = 50, nullable = false)
     private String senha;
