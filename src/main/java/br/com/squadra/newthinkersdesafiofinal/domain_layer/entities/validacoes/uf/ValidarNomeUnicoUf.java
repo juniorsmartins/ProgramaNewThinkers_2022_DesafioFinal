@@ -14,7 +14,7 @@ public class ValidarNomeUnicoUf implements ValidacoesUf {
     private UfRepository ufRepository;
 
     @Override
-    public void validar(Long codigoId, UfDtoEntrada ufDtoEntrada) {
+    public void validar(UfDtoEntrada ufDtoEntrada) {
             var ufDoDatabase = ufRepository.findByNome(ufDtoEntrada.getNome());
             if(ufDoDatabase.isPresent())
                 throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);

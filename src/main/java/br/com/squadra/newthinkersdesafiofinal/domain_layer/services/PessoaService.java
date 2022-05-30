@@ -42,7 +42,7 @@ public final class PessoaService {
 
         // Design Pattern comportamental
         try{
-            listaDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(null, pessoaDeEntrada));
+            listaDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(pessoaDeEntrada));
         } catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }

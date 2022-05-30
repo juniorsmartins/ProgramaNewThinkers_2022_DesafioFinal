@@ -14,7 +14,7 @@ public class ValidarSiglaUnicaUf implements ValidacoesUf {
     private UfRepository ufRepository;
 
     @Override
-    public void validar(Long codigoId, UfDtoEntrada ufDtoEntrada) {
+    public void validar(UfDtoEntrada ufDtoEntrada) {
             var ufDoDatabase = ufRepository.findBySigla(ufDtoEntrada.getSigla());
             if(ufDoDatabase.isPresent())
                 throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);

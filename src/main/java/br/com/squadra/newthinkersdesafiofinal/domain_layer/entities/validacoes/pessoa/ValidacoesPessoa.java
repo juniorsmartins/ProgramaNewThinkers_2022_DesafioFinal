@@ -4,5 +4,5 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 
 public interface ValidacoesPessoa {
 
-    void validar(Long codigoId, PessoaDtoEntrada pessoaDtoEntrada);
+    void validar(PessoaDtoEntrada pessoaDtoEntrada);
 }

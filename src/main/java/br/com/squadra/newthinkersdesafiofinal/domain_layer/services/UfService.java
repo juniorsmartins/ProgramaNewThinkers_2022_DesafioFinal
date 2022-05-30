@@ -42,7 +42,7 @@ public final class UfService {
 
         // Design Pattern comportamental
         try{
-            listaDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(null, ufDeEntrada));
+            listaDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(ufDeEntrada));
         }catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }

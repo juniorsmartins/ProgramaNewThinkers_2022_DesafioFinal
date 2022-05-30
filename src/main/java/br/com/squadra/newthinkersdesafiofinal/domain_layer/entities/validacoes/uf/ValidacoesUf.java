@@ -4,5 +4,5 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 
 public interface ValidacoesUf {
 
-    void validar(Long codigoId, UfDtoEntrada ufDtoEntrada);
+    void validar(UfDtoEntrada ufDtoEntrada);
 }

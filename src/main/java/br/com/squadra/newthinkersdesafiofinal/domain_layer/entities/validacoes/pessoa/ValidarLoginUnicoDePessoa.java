@@ -14,7 +14,7 @@ public class ValidarLoginUnicoDePessoa implements ValidacoesPessoa {
     private PessoaRepository pessoaRepository;
 
     @Override
-    public void validar(Long codigoId, PessoaDtoEntrada pessoaDtoEntrada) {
+    public void validar(PessoaDtoEntrada pessoaDtoEntrada) {
             var pessoaDoDatabase = pessoaRepository.findByLogin(pessoaDtoEntrada.getLogin());
             if(pessoaDoDatabase.isPresent())
                 throw new ValidacaoException("Login - " + MensagemPadrao.VALOR_JA_EXISTE);
