@@ -15,9 +15,9 @@ public final class Uf implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo_uf", nullable = false)
     private Long codigoUf;
-    @Column(name = "sigla", length = 3, nullable = false)
+    @Column(name = "sigla", length = 2, nullable = false,unique = true)
     private String sigla;
-    @Column(name = "nome", length = 60, nullable = false)
+    @Column(name = "nome", length = 60, nullable = false, unique = true)
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;

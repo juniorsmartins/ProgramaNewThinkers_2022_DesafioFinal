@@ -3,6 +3,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesUf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -18,11 +20,14 @@ import java.util.stream.Collectors;
 public final class UfService {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    // ---------- Atributos Injetados automaticamente
+    // ---------- Injetados automaticamente
     @Autowired
     private UfRepository ufRepository;
     @Autowired
     private ModelMapper modelMapper;
+    // ---------- Padrão de Projeto
+    @Autowired
+    private List<ValidacoesUf> listaDeValidacoesDeUf;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private UfDtoEntrada ufDeEntrada;
     private Uf ufSalva;
@@ -34,6 +39,13 @@ public final class UfService {
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         ufDeEntrada = ufDtoEntrada;
+
+        // Design Pattern comportamental
+        try{
+            listaDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(null, ufDeEntrada));
+        }catch(ValidacaoException validacaoException){
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
 
         converterUfDtoEntradaParaUf();
         setarStatusAtivado();

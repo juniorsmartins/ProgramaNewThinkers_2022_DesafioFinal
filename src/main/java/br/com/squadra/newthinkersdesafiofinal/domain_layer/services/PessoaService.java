@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public final class PessoaService {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    // ---------- Atributos Injetados automaticamente
+    // ---------- Injetados automaticamente
     @Autowired
     private PessoaRepository pessoaRepository;
     @Autowired
@@ -35,13 +35,12 @@ public final class PessoaService {
     private List<Pessoa> listaDePessoasSalvas;
     private List<PessoaDtoSaida> listaDePessoasDeSaida;
 
-
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         pessoaDeEntrada = pessoaDtoEntrada;
 
-        // Design Pattern comportamental para validações
+        // Design Pattern comportamental
         try{
             listaDeValidacoesDePessoa.forEach(regraDeNegocio -> regraDeNegocio.validar(null, pessoaDeEntrada));
         } catch(ValidacaoException validacaoException){
