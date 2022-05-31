@@ -36,7 +36,7 @@ public class BairroController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "BairroDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
+            @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return bairroService.cadastrar(bairroDtoEntrada, uriComponentsBuilder);
     }
@@ -85,7 +85,7 @@ public class BairroController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoBairro,
-            @Parameter(name = "BairroDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
+            @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
         return bairroService.atualizar(codigoBairro, bairroDtoEntrada);
     }
