@@ -36,13 +36,13 @@ public class BairroController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "BairroDtoEntrada", description = "Objeto de transporte para ficha de cadastro.", required = true)
+            @Parameter(name = "BairroDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return bairroService.cadastrar(bairroDtoEntrada, uriComponentsBuilder);
     }
 
     // ----- Listar Todos
-    @Operation(summary = "Listar", description = "Retornar objetos armazenados no banco de dados.")
+    @Operation(summary = "Listar", description = "Retornar objetos salvos no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
@@ -72,7 +72,7 @@ public class BairroController {
     }
 
     // ----- Atualizar Por Id
-    @Operation(summary = "Atualizar", description = "Atualizar registro no banco de dados.")
+    @Operation(summary = "Atualizar", description = "Alterar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
@@ -85,7 +85,7 @@ public class BairroController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoBairro,
-            @Parameter(name = "BairroDtoEntrada", description = "Objeto de transporte para nova ficha de cadastro de Bairro.", required = true)
+            @Parameter(name = "BairroDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
         return bairroService.atualizar(codigoBairro, bairroDtoEntrada);
     }
