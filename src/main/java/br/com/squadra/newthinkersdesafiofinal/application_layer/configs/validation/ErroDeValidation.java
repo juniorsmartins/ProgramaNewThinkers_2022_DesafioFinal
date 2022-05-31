@@ -1,12 +1,20 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.configs.validation;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ErroDeValidation {
 
+    // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Código Http", type = "String", example = "400 BAD_REQUEST")
     private String status;
+    @Schema(description = "Anotação origem da invalidação", type = "String", example = "NotBlank")
     private String anotacao;
+    @Schema(description = "Campo origem da invalidação", type = "String", example = "NomeRua")
     private String campo;
+    @Schema(description = "Explicação padrão", type = "String", example = "não deve estar em branco")
     private String mensagem;
 
+    // ---------- CONSTRUTORES ---------- //
     public ErroDeValidation(String status, String anotacao, String campo, String mensagem) {
         this.status = status;
         this.anotacao = anotacao;
@@ -14,6 +22,7 @@ public class ErroDeValidation {
         this.mensagem = mensagem;
     }
 
+    // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public String getStatus() {
         return status;
     }
