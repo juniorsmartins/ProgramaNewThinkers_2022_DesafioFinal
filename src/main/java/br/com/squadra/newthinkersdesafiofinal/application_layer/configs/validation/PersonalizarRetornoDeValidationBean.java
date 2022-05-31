@@ -20,14 +20,14 @@ public class PersonalizarRetornoDeValidationBean {
 
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public List<ErroDeValidation> tratarMensagemDeErroDoValidationBean(MethodArgumentNotValidException erroDeValidation) {
-
+    public List<ErroDeValidation> tratarMensagemDeErroBadRequest(MethodArgumentNotValidException erroDeValidation) {
         List<ErroDeValidation> errosDeValidacao = new ArrayList<>();
-
         List<FieldError> fieldErrors = erroDeValidation.getBindingResult().getFieldErrors();
+
         fieldErrors.forEach(erro -> {
             String mensagem = messageInternacionalizada.getMessage(erro, LocaleContextHolder.getLocale());
-            ErroDeValidation erroPersonalizadoParaRetorno = new ErroDeValidation(HttpStatus.BAD_REQUEST.toString(), erro.getCode(), erro.getField(), mensagem);
+            ErroDeValidation erroPersonalizadoParaRetorno = new ErroDeValidation(HttpStatus.BAD_REQUEST.toString(),
+                    erro.getCode(), erro.getField(), mensagem);
             errosDeValidacao.add(erroPersonalizadoParaRetorno);
         });
         return errosDeValidacao;

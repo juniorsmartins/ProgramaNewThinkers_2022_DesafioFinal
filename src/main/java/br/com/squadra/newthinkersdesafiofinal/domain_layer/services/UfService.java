@@ -1,21 +1,21 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
@@ -83,11 +83,13 @@ public final class UfService {
     public ResponseEntity<?> listar(UfDtoEntrada filtro) {
         var ufFiltro = modelMapper.map(filtro, Uf.class);
 
+        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
         ExampleMatcher matcher = ExampleMatcher
                                         .matching()
-                                        .withIgnoreCase()
-                                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+                                        .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
 
+        // Example - pega campos populados para criar filtros
         Example example = Example.of(ufFiltro, matcher);
 
         listaDeUfsSalvas = ufRepository.findAll(example);
@@ -102,16 +104,17 @@ public final class UfService {
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUf) {
-
-        var ufDoDatabase = ufRepository.findById(codigoUf);
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        ufSalva = ufDoDatabase.get();
+        ufSalva = consultarUf(codigoUf);
 
         converterUfParaUfDtoSaida();
 
         return ResponseEntity.ok().body(ufDeSaida);
     }
+        private Uf consultarUf(Long codigoUf) {
+            return ufRepository.findById(codigoUf)
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.NOT_FOUND, "CodigoUf - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
+        }
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
