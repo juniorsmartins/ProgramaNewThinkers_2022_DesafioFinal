@@ -1,11 +1,13 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -107,27 +109,21 @@ public final class UfService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
-        ufDeEntrada = ufDtoEntrada;
 
-        // Design Pattern comportamental
         try{
-            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUf, ufDeEntrada));
+            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUf, ufDtoEntrada));
         }catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
 
-        ufSalva = ufRepository.findById(codigoUf).get();
-
-        atualizarUf();
-        converterUfParaUfDtoSaida();
-
-        return ResponseEntity.ok().body(ufDeSaida);
+        return ufRepository.findById(codigoUf)
+                .map( ufDoDatabase -> {
+                    ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
+                    ufDoDatabase.setNome(ufDtoEntrada.getNome());
+                    ufDeSaida = modelMapper.map(ufDoDatabase, UfDtoSaida.class);
+                    return ResponseEntity.ok().body(ufDeSaida);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-        private void atualizarUf() {
-            ufSalva.setNome(ufDeEntrada.getNome());
-            ufSalva.setSigla(ufDeEntrada.getSigla());
-        }
 
     // ---------- Deletar
     public ResponseEntity<?> deletar(Long codigoUf) {
