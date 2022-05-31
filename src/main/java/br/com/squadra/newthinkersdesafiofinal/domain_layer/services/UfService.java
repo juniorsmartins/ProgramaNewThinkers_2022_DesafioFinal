@@ -12,6 +12,8 @@ import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -78,17 +80,21 @@ public final class UfService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<?> listar(UfDtoEntrada filtro) {
+        var ufFiltro = modelMapper.map(filtro, Uf.class);
 
-        buscarTodasAsUfsDoDatabase();
+        ExampleMatcher matcher = ExampleMatcher
+                                        .matching()
+                                        .withIgnoreCase()
+                                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example example = Example.of(ufFiltro, matcher);
+
+        listaDeUfsSalvas = ufRepository.findAll(example);
         converterListaDeUfsParaListaDeUfsDeSaida();
 
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
-
-        private void buscarTodasAsUfsDoDatabase() {
-            listaDeUfsSalvas = ufRepository.findAll();
-        }
 
         private void converterListaDeUfsParaListaDeUfsDeSaida() {
             listaDeUfsDeSaida = listaDeUfsSalvas.stream().map(UfDtoSaida::new).collect(Collectors.toList());
