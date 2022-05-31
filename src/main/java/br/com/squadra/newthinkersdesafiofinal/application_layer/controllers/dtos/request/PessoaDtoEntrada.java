@@ -1,19 +1,26 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.*;
 
+@Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class PessoaDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Denominação pessoal", type = "String", example = "Andrew", required = true)
     @NotBlank @Length(max = 256)
     private String nome;
+    @Schema(description = "Denominação familiar", type = "String", example = "Hunt", required = true)
     @NotBlank @Length(max = 256)
     private String sobrenome;
+    @Schema(description = "Anos", type = "Integer", example = "32", required = true)
     @NotNull @Max(150)
     private Integer idade;
+    @Schema(description = "Identificação", type = "String", example = "huntandrew", required = true)
     @NotBlank @Length(max = 50)
     private String login;
+    @Schema(description = "Código secreto", type = "String", example = "hunt123456", required = true)
     @NotBlank @Length(max = 50)
     private String senha;
 

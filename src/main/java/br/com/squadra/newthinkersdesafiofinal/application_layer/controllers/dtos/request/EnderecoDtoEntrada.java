@@ -1,24 +1,32 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class EnderecoDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
     @NotNull @NotEmpty @Length(max = 10)
     private String cep;
+    @Schema(description = "Denominação", type = "String", example = "Rua Eliza Michelete Vicente", required = true)
     @NotBlank @Length(max = 256)
     private String nomeRua;
+    @Schema(description = "Número", type = "Integer", example = "2158", required = true)
     @NotNull @Max(99999)
     private Integer numero;
+    @Schema(description = "Informações adicionais", type = "String", example = "Entrada pela lateral")
     @Length(max = 20)
     private String complemento;
+    @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
     @NotNull
     private Long codigoBairro;
+    @Schema(description = "Chave Identificadora", type = "Long", example = "17")
     private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //

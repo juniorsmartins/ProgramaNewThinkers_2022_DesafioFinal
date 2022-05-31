@@ -36,7 +36,7 @@ public class EnderecoController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "EnderecoDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
+            @Parameter(name = "EnderecoDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid EnderecoDtoEntrada enderecoDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return enderecoService.cadastrar(enderecoDtoEntrada, uriComponentsBuilder);
     }
@@ -85,7 +85,7 @@ public class EnderecoController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoEndereco", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoEndereco,
-            @Parameter(name = "enderecoDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
+            @Parameter(name = "enderecoDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid EnderecoDtoEntrada enderecoDtoEntrada) {
         return enderecoService.atualizar(codigoEndereco, enderecoDtoEntrada);
     }

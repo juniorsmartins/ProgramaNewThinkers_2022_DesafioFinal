@@ -36,7 +36,7 @@ public class UfController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
+            @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return ufService.cadastrar(ufDtoEntrada, uriComponentsBuilder);
     }
@@ -85,7 +85,7 @@ public class UfController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoUf,
-            @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
+            @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntrada ufDtoEntrada) {
         return ufService.atualizar(codigoUf, ufDtoEntrada);
     }

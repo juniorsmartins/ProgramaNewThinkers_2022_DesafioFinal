@@ -36,7 +36,7 @@ public class MunicipioController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
+            @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return municipioService.cadastrar(municipioDtoEntrada, uriComponentsBuilder);
     }
@@ -85,7 +85,7 @@ public class MunicipioController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoMunicipio", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoMunicipio,
-            @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
+            @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada) {
         return municipioService.atualizar(codigoMunicipio, municipioDtoEntrada);
     }

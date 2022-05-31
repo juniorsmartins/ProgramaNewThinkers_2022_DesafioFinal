@@ -36,7 +36,7 @@ public class PessoaController {
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
-            @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de ficha de cadastro.", required = true)
+            @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
         return pessoaService.cadastrar(pessoaDtoEntrada, uriComponentsBuilder);
     }
@@ -85,7 +85,7 @@ public class PessoaController {
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoPessoa", description = "Chave Identificadora", example = "8", required = true)
             @PathVariable(name = "id") Long codigoPessoa,
-            @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados para alterar cadastro.", required = true)
+            @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
         return pessoaService.atualizar(codigoPessoa, pessoaDtoEntrada);
     }
