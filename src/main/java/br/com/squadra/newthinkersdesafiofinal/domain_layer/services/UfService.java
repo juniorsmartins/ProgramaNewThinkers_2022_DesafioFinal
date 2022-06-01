@@ -16,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,10 +76,6 @@ public final class UfService {
             listaDeUfsDeSaida = listaDeUfsSalvas.stream().map(UfDtoSaida::new).collect(Collectors.toList());
         }
 
-        private void converterUfParaUfDtoSaida() {
-            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
-        }
-
     // ---------- Listar
     public ResponseEntity<?> listar(UfDtoEntrada filtros) {
         var ufFiltro = modelMapper.map(filtros, Uf.class);
@@ -114,6 +108,10 @@ public final class UfService {
 
         return ResponseEntity.ok().body(ufDeSaida);
     }
+
+        private void converterUfParaUfDtoSaida() {
+            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
+        }
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {

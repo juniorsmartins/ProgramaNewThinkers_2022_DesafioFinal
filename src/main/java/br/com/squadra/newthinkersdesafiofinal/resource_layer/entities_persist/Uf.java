@@ -19,7 +19,7 @@ public final class Uf implements Serializable {
     private String sigla;
     @Column(name = "nome", length = 60, nullable = false, unique = true)
     private String nome;
-    @Column(name = "status", length = 3, nullable = false)
+    @Column(name = "status", length = 1, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
     @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true)

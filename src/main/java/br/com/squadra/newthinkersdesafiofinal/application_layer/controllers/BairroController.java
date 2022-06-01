@@ -37,8 +37,8 @@ public class BairroController {
     @PostMapping
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return bairroService.cadastrar(bairroDtoEntrada, uriComponentsBuilder);
+            @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
+        return bairroService.cadastrar(bairroDtoEntrada);
     }
 
     // ----- Listar Todos

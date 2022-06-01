@@ -39,7 +39,7 @@ public final class BairroService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada) {
         bairroDeEntrada = bairroDtoEntrada;
 
         var municipioDoDatabase = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio());
@@ -48,30 +48,30 @@ public final class BairroService {
         municipioVerificado = municipioDoDatabase.get();
 
         converterBairroDtoEntradaParaBairro();
-        setarStatusAtivado();
         salvarBairro();
-        converterBairroParaBairroDtoSaida();
+        buscarTodosBairrosParaRetornar();
+        converterListaDeBairrosParaListaDeBairrosDeSaida();
 
-        URI uri = uriComponentsBuilder.path("/bairros/{codigoBairro}").buildAndExpand(bairroDeSaida.getCodigoBairro()).toUri();
-        return ResponseEntity.created(uri).body(bairroDeSaida);
+        return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
 
         private void converterBairroDtoEntradaParaBairro() {
             bairroSalvo = new Bairro();
             bairroSalvo.setNome(bairroDeEntrada.getNome());
+            bairroSalvo.setStatus(bairroDeEntrada.getStatus());
             bairroSalvo.setMunicipio(municipioVerificado);
-        }
-
-        private void setarStatusAtivado() {
-            bairroSalvo.setStatus(1);
         }
 
         private void salvarBairro() {
             bairroSalvo = bairroRepository.saveAndFlush(bairroSalvo);
         }
 
-        private void converterBairroParaBairroDtoSaida() {
-            bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
+        private void buscarTodosBairrosParaRetornar() {
+            listaDeBairrosSalvos = bairroRepository.findAll();
+        }
+
+        private void converterListaDeBairrosParaListaDeBairrosDeSaida() {
+            listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
         }
 
     // ---------- Listar
@@ -94,10 +94,6 @@ public final class BairroService {
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
 
-        private void converterListaDeBairrosParaListaDeBairrosDeSaida() {
-            listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
-        }
-
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoBairro) {
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
@@ -109,6 +105,10 @@ public final class BairroService {
 
         return ResponseEntity.ok().body(bairroDeSaida);
     }
+
+        private void converterBairroParaBairroDtoSaida() {
+            bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
+        }
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
