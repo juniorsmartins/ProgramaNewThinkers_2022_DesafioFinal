@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
-public class PersonalizarRetornoDeValidationBean {
+public class PersonalizarRetornoDeMensagemDeErro {
 
     @Autowired
     private MessageSource messageInternacionalizada;

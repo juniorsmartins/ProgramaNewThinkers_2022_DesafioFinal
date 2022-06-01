@@ -104,17 +104,16 @@ public final class UfService {
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUf) {
-        ufSalva = consultarUf(codigoUf);
+
+        var ufDoDatabase = ufRepository.findById(codigoUf);
+        if(!ufDoDatabase.isPresent())
+            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+        ufSalva = ufDoDatabase.get();
 
         converterUfParaUfDtoSaida();
 
         return ResponseEntity.ok().body(ufDeSaida);
     }
-        private Uf consultarUf(Long codigoUf) {
-            return ufRepository.findById(codigoUf)
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.NOT_FOUND, "CodigoUf - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
-        }
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
