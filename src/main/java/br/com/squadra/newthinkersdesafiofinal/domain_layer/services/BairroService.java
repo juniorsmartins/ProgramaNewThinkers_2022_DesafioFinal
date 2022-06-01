@@ -3,6 +3,9 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.bairro.ValidacoesAtualizarBairro;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.bairro.ValidacoesCadastrarBairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
@@ -13,8 +16,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,11 @@ public final class BairroService {
     private MunicipioRepository municipioRepository;
     @Autowired
     private ModelMapper modelMapper;
+    // ---------- Padrão de Projeto
+    @Autowired
+    private List<ValidacoesCadastrarBairro> listaCadastrarDeValidacoesDeBairro;
+    @Autowired
+    private List<ValidacoesAtualizarBairro> listaAtualizarDeValidacoesDeBairro;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private BairroDtoEntrada bairroDeEntrada;
     private Bairro bairroSalvo;
@@ -42,10 +48,14 @@ public final class BairroService {
     public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada) {
         bairroDeEntrada = bairroDtoEntrada;
 
-        var municipioDoDatabase = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio());
-        if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        municipioVerificado = municipioDoDatabase.get();
+        // Design Pattern comportamental
+        try{
+            listaCadastrarDeValidacoesDeBairro.forEach(regraDeNegocio -> regraDeNegocio.validar(bairroDeEntrada));
+        }catch(ValidacaoException validacaoException){
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
+
+        municipioVerificado = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio()).get();
 
         converterBairroDtoEntradaParaBairro();
         salvarBairro();
@@ -112,27 +122,31 @@ public final class BairroService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
-        bairroDeEntrada = bairroDtoEntrada;
 
-        var bairroDoDatabase = bairroRepository.findById(codigoBairro);
-        if(!bairroDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        bairroSalvo = bairroDoDatabase.get();
+        // Design Pattern comportamental
+        try{
+            listaAtualizarDeValidacoesDeBairro.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoBairro, bairroDtoEntrada));
+        }catch(ValidacaoException validacaoException){
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
 
-        var municipioDoDatabase = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio());
-        if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        municipioVerificado = municipioDoDatabase.get();
+        municipioVerificado = municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).get();
 
-        atualizarBairro();
-        converterBairroParaBairroDtoSaida();
-
-        return ResponseEntity.ok().body(bairroDeSaida);
+        return bairroRepository.findById(codigoBairro)
+                .map(bairroDoDatabase -> {
+                    bairroDoDatabase.setNome(bairroDtoEntrada.getNome());
+                    bairroDoDatabase.setMunicipio(municipioVerificado);
+                    bairroDoDatabase.setStatus(bairroDtoEntrada.getStatus());
+                    listaDeBairrosSalvos = bairroRepository.findAll();
+                    listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
+                    return ResponseEntity.ok().body(listaDeBairrosDeSaida);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
         private void atualizarBairro() {
             bairroSalvo.setNome(bairroDeEntrada.getNome());
             bairroSalvo.setMunicipio(municipioVerificado);
+            bairroSalvo.setStatus(bairroDeEntrada.getStatus());
         }
 
     // ---------- Deletar

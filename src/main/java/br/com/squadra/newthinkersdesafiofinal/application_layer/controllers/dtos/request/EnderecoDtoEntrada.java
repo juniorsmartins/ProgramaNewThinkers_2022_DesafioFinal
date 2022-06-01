@@ -26,11 +26,13 @@ public final class EnderecoDtoEntrada {
     @Length(max = 20)
     private String complemento;
     @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    @NotNull @Max(1)
     private Integer status;
     @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
     @NotNull
     private Long codigoBairro;
     @Schema(description = "Chave Identificadora", type = "Long", example = "17")
+    @NotNull
     private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //

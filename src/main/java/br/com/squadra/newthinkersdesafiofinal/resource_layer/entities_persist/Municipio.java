@@ -23,7 +23,7 @@ public final class Municipio implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_uf", referencedColumnName = "codigo_uf", nullable = false)
     private Uf uf;
-    @OneToMany(mappedBy = "municipio", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "municipio", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Bairro> bairro;
 
     // ---------- CONSTRUTORES ---------- //

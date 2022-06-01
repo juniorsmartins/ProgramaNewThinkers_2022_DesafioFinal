@@ -28,7 +28,7 @@ public final class Endereco implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_bairro", referencedColumnName = "codigo_bairro", nullable = false)
     private Bairro bairro;
-    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "codigo_pessoa", referencedColumnName = "codigo_pessoa", nullable = false)
     private Pessoa pessoa;
 

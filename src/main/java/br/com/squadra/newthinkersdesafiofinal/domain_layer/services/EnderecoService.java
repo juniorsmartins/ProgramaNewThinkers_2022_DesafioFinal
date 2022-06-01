@@ -15,8 +15,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +42,7 @@ public final class EnderecoService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(EnderecoDtoEntrada enderecoDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> cadastrar(EnderecoDtoEntrada enderecoDtoEntrada) {
         enderecoDeEntrada = enderecoDtoEntrada;
 
         var pessoaDoDatabase = pessoaRepository.findById(enderecoDeEntrada.getCodigoPessoa());
@@ -58,12 +56,11 @@ public final class EnderecoService {
         bairroVerificado = bairroDoDatabase.get();
 
         converterEnderecoDtoEntradaParaEndereco();
-        setarStatusAtivado();
         salvarEndereco();
-        converterEnderecoParaEnderecoDtoSaida();
+        buscarTodosEnderecosParaRetornar();
+        converterListaDeEnderecosParaListaDeEnderecosDeSaida();
 
-        URI uri = uriComponentsBuilder.path("/enderecos/{codigoEndereco}").buildAndExpand(enderecoDeSaida.getCodigoEndereco()).toUri();
-        return ResponseEntity.created(uri).body(enderecoDeSaida);
+        return ResponseEntity.ok().body(listaDeEnderecosDeSaida);
     }
 
         private void converterEnderecoDtoEntradaParaEndereco() {
@@ -74,18 +71,19 @@ public final class EnderecoService {
             enderecoSalvo.setComplemento(enderecoDeEntrada.getComplemento());
             enderecoSalvo.setBairro(bairroVerificado);
             enderecoSalvo.setPessoa(pessoaVerificada);
-        }
-
-        private void setarStatusAtivado() {
-            enderecoSalvo.setStatus(1);
+            enderecoSalvo.setStatus(enderecoDeEntrada.getStatus());
         }
 
         private void salvarEndereco() {
-         enderecoSalvo = enderecoRepository.saveAndFlush(enderecoSalvo);
+            enderecoSalvo = enderecoRepository.saveAndFlush(enderecoSalvo);
         }
 
-        private void converterEnderecoParaEnderecoDtoSaida() {
-            enderecoDeSaida = modelMapper.map(enderecoSalvo, EnderecoDtoSaida.class);
+        private void buscarTodosEnderecosParaRetornar() {
+            listaDeEnderecosSalvos = enderecoRepository.findAll();
+        }
+
+        private void converterListaDeEnderecosParaListaDeEnderecosDeSaida() {
+            listaDeEnderecosDeSaida = listaDeEnderecosSalvos.stream().map(EnderecoDtoSaida::new).collect(Collectors.toList());
         }
 
     // ---------- Listar
@@ -108,10 +106,6 @@ public final class EnderecoService {
         return ResponseEntity.ok().body(listaDeEnderecosDeSaida);
     }
 
-        private void converterListaDeEnderecosParaListaDeEnderecosDeSaida() {
-            listaDeEnderecosDeSaida = listaDeEnderecosSalvos.stream().map(EnderecoDtoSaida::new).collect(Collectors.toList());
-        }
-
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoEndereco) {
 
@@ -124,6 +118,10 @@ public final class EnderecoService {
 
         return ResponseEntity.ok().body(enderecoDeSaida);
     }
+
+        private void converterEnderecoParaEnderecoDtoSaida() {
+            enderecoDeSaida = modelMapper.map(enderecoSalvo, EnderecoDtoSaida.class);
+        }
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoEndereco, EnderecoDtoEntrada enderecoDtoEntrada) {

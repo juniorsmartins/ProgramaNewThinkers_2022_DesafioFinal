@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -29,10 +28,7 @@ public class BairroController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!")
     })
     @PostMapping
     public ResponseEntity<?> cadastrar(
@@ -46,9 +42,7 @@ public class BairroController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
     public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
@@ -60,9 +54,7 @@ public class BairroController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> consultar(
@@ -75,10 +67,9 @@ public class BairroController {
     @Operation(summary = "Atualizar", description = "Alterar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
+            @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @PutMapping("/{id}")
     @Transactional
@@ -95,9 +86,7 @@ public class BairroController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletar(

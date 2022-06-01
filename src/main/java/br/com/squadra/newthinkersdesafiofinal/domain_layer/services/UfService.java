@@ -116,6 +116,7 @@ public final class UfService {
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
 
+        // Design Pattern comportamental
         try{
             listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUF, ufDtoEntrada));
         }catch(ValidacaoException validacaoException){

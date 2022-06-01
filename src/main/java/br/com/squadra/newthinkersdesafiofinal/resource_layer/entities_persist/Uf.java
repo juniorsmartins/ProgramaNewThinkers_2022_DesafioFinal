@@ -22,7 +22,7 @@ public final class Uf implements Serializable {
     @Column(name = "status", length = 1, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Municipio> municipio;
 
     // ---------- CONSTRUTORES ---------- //

@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_pessoa")
@@ -27,8 +28,8 @@ public final class Pessoa implements Serializable {
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToOne(mappedBy = "pessoa")
-    private Endereco endereco;
+    @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Endereco> listaDeEnderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public Pessoa() {}
@@ -90,11 +91,11 @@ public final class Pessoa implements Serializable {
         this.status = status;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public List<Endereco> getListaDeEnderecos() {
+        return listaDeEnderecos;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setListaDeEnderecos(List<Endereco> listaDeEnderecos) {
+        this.listaDeEnderecos = listaDeEnderecos;
     }
 }

@@ -37,8 +37,8 @@ public class EnderecoController {
     @PostMapping
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "EnderecoDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid EnderecoDtoEntrada enderecoDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return enderecoService.cadastrar(enderecoDtoEntrada, uriComponentsBuilder);
+            @RequestBody @Valid EnderecoDtoEntrada enderecoDtoEntrada) {
+        return enderecoService.cadastrar(enderecoDtoEntrada);
     }
 
     // ----- Listar Todos

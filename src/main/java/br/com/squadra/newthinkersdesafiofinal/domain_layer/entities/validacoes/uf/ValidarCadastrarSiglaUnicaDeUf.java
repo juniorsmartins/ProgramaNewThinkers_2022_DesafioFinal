@@ -15,8 +15,7 @@ public final class ValidarCadastrarSiglaUnicaDeUf implements ValidacoesCadastrar
 
     @Override
     public void validar(UfDtoEntrada ufDtoEntrada) {
-            var ufDoDatabase = ufRepository.findBySigla(ufDtoEntrada.getSigla());
-            if(ufDoDatabase.isPresent())
-                throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);
+            if(ufRepository.findBySigla(ufDtoEntrada.getSigla()).isPresent())
+                throw new ValidacaoException("Sigla - ".concat(MensagemPadrao.VALOR_JA_EXISTE));
     }
 }

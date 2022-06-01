@@ -15,8 +15,7 @@ public final class ValidarCadastrarNomeUnicoDeUf implements ValidacoesCadastrarU
 
     @Override
     public void validar(UfDtoEntrada ufDtoEntrada) {
-            var ufDoDatabase = ufRepository.findByNome(ufDtoEntrada.getNome());
-            if(ufDoDatabase.isPresent())
-                throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);
+            if(ufRepository.findByNome(ufDtoEntrada.getNome()).isPresent())
+                throw new ValidacaoException("Nome - ".concat(MensagemPadrao.VALOR_JA_EXISTE));
     }
 }
