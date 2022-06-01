@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 public final class PessoaDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private Long codigoPessoa;
     @Schema(description = "Denominação pessoal", type = "String", example = "Andrew", required = true)
     @NotBlank @Length(max = 256)
     private String nome;
@@ -23,11 +25,21 @@ public final class PessoaDtoEntrada {
     @Schema(description = "Código secreto", type = "String", example = "hunt123456", required = true)
     @NotBlank @Length(max = 50)
     private String senha;
+    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public Long getCodigoPessoa() {
+        return codigoPessoa;
+    }
+
+    public void setCodigoPessoa(Long codigoPessoa) {
+        this.codigoPessoa = codigoPessoa;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -66,5 +78,13 @@ public final class PessoaDtoEntrada {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

@@ -51,8 +51,8 @@ public class PessoaController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return pessoaService.listar();
+    public ResponseEntity<?> listar(PessoaDtoEntrada filtros) {
+        return pessoaService.listar(filtros);
     }
 
     // ----- Consultar Por Id
