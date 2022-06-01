@@ -5,7 +5,7 @@ import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf
 public final class UfDtoSaida {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    private Long codigoUf;
+    private Long codigoUF;
     private String sigla;
     private String nome;
     private Integer status;
@@ -13,19 +13,19 @@ public final class UfDtoSaida {
     // ---------- CONSTRUTORES ---------- //
     public UfDtoSaida() {}
     public UfDtoSaida(Uf uf) {
-        setCodigoUf(uf.getCodigoUf());
+        setCodigoUF(uf.getCodigoUF());
         setNome(uf.getNome());
         setSigla(uf.getSigla());
         setStatus(uf.getStatus());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
-    public Long getCodigoUf() {
-        return codigoUf;
+    public Long getCodigoUF() {
+        return codigoUF;
     }
 
-    public void setCodigoUf(Long codigoUf) {
-        this.codigoUf = codigoUf;
+    public void setCodigoUF(Long codigoUF) {
+        this.codigoUF = codigoUF;
     }
 
     public String getSigla() {

@@ -59,7 +59,7 @@ public final class UfService {
         salvarUf();
         converterUfParaUfDtoSaida();
 
-        URI uri = uriComponentsBuilder.path("/ufs/{codigoPessoa}").buildAndExpand(ufDeSaida.getCodigoUf()).toUri();
+        URI uri = uriComponentsBuilder.path("/ufs/{codigoPessoa}").buildAndExpand(ufDeSaida.getCodigoUF()).toUri();
         return ResponseEntity.created(uri).body(ufDeSaida);
     }
 
@@ -103,9 +103,9 @@ public final class UfService {
         }
 
     // ---------- Consultar
-    public ResponseEntity<?> consultar(Long codigoUf) {
+    public ResponseEntity<?> consultar(Long codigoUF) {
 
-        var ufDoDatabase = ufRepository.findById(codigoUf);
+        var ufDoDatabase = ufRepository.findById(codigoUF);
         if(!ufDoDatabase.isPresent())
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         ufSalva = ufDoDatabase.get();
@@ -116,15 +116,15 @@ public final class UfService {
     }
 
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
+    public ResponseEntity<?> atualizar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
 
         try{
-            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUf, ufDtoEntrada));
+            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUF, ufDtoEntrada));
         }catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
 
-        return ufRepository.findById(codigoUf)
+        return ufRepository.findById(codigoUF)
                 .map( ufDoDatabase -> {
                     ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
                     ufDoDatabase.setNome(ufDtoEntrada.getNome());
@@ -134,13 +134,27 @@ public final class UfService {
     }
 
     // ---------- Deletar
-    public ResponseEntity<?> deletar(Long codigoUf) {
+    public ResponseEntity<?> deletar(Long codigoUF) {
 
-        var ufDoDatabase = ufRepository.findById(codigoUf);
+        try{
+            if(!ufRepository.findById(codigoUF).isPresent())
+                throw new ValidacaoException("CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO));
+        }catch(ValidacaoException validacaoException) {
+            return ResponseEntity.badRequest().body(validacaoException.getMessage());
+        }
+
+        return ufRepository.findById(codigoUF)
+                                .map(uf -> {
+                                    ufRepository.delete(uf);
+                                    return ResponseEntity.noContent().build();
+                                }).orElseThrow(() -> new ResponseStatusException(
+                                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
+
+/*        var ufDoDatabase = ufRepository.findById(codigoUf);
         if(!ufDoDatabase.isPresent())
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
 
         ufRepository.deleteById(codigoUf);
-        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
+        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);*/
     }
 }

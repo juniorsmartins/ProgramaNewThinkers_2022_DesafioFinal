@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,14 +28,12 @@ public class UfController {
     // ----- Cadastrar
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
@@ -46,8 +45,6 @@ public class UfController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
@@ -60,27 +57,25 @@ public class UfController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> consultar(
-            @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "10", required = true)
-            @PathVariable(name = "id") Long codigoUf) {
-        return ufService.consultar(codigoUf);
+            @Parameter(name = "codigoUF", description = "Chave Identificadora", example = "10", required = true)
+            @PathVariable(name = "id") Long codigoUF) {
+        return ufService.consultar(codigoUF);
     }
 
     // ----- Atualizar Por Id
     @Operation(summary = "Atualizar", description = "Alterar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
+            @ApiResponse(responseCode = "204", description = "Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public ResponseEntity<?> atualizar(
             @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "8", required = true)
@@ -94,12 +89,12 @@ public class UfController {
     @Operation(summary = "Deletar", description = "Deletar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
+            @ApiResponse(responseCode = "204", description = "Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> deletar(
             @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "7", required = true)
             @PathVariable(name = "id") Long codigoUf) {

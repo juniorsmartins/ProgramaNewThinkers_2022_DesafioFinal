@@ -13,8 +13,8 @@ public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo_uf", nullable = false)
-    private Long codigoUf;
+    @Column(name = "Codigo_UF", nullable = false)
+    private Long codigoUF;
     @Column(name = "sigla", length = 2, nullable = false, unique = true)
     private String sigla;
     @Column(name = "nome", length = 60, nullable = false, unique = true)
@@ -29,12 +29,12 @@ public final class Uf implements Serializable {
     public Uf() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
-    public Long getCodigoUf() {
-        return codigoUf;
+    public Long getCodigoUF() {
+        return codigoUF;
     }
 
-    public void setCodigoUf(Long codigoUf) {
-        this.codigoUf = codigoUf;
+    public void setCodigoUF(Long codigoUF) {
+        this.codigoUF = codigoUF;
     }
 
     public String getSigla() {

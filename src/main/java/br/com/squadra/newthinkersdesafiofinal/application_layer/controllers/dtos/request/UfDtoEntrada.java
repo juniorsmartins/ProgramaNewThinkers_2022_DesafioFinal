@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 public final class UfDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private String codigoUF;
     @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
     @NotNull @NotEmpty @Length(max = 2)
     private String sigla;
@@ -20,6 +22,14 @@ public final class UfDtoEntrada {
     public UfDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public String getCodigoUF() {
+        return codigoUF;
+    }
+
+    public void setCodigoUF(String codigoUF) {
+        this.codigoUF = codigoUF;
+    }
+
     public String getSigla() {
         return sigla;
     }

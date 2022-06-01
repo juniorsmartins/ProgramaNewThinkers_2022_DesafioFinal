@@ -16,7 +16,7 @@ public final class MunicipioDtoSaida {
         setCodigoMunicipio(municipio.getCodigoMunicipio());
         setNome(municipio.getNome());
         setStatus(municipio.getStatus());
-        setCodigoUf(municipio.getUf().getCodigoUf());
+        setCodigoUf(municipio.getUf().getCodigoUF());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //

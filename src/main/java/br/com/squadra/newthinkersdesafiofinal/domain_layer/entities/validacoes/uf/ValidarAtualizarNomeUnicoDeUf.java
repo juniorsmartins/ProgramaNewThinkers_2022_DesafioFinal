@@ -14,15 +14,15 @@ public final class ValidarAtualizarNomeUnicoDeUf implements ValidacoesAtualizarU
     private UfRepository ufRepository;
 
     @Override
-    public void validar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
+    public void validar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
 
-        var ufDoDatabasePorCodigo = ufRepository.findById(codigoUf);
+        var ufDoDatabasePorCodigo = ufRepository.findById(codigoUF);
         if(!ufDoDatabasePorCodigo.isPresent())
             throw new ValidacaoException("CodigoUf - " + MensagemPadrao.ID_NAO_ENCONTRADO);
 
         var ufDoDatabasePorNome = ufRepository.findByNome(ufDtoEntrada.getNome());
         if(ufDoDatabasePorNome.isPresent()) {
-            if(ufDoDatabasePorCodigo.get().getCodigoUf() != ufDoDatabasePorNome.get().getCodigoUf()) {
+            if(ufDoDatabasePorCodigo.get().getCodigoUF() != ufDoDatabasePorNome.get().getCodigoUF()) {
                 throw new ValidacaoException("Nome - " + MensagemPadrao.VALOR_JA_EXISTE);
             }
         }

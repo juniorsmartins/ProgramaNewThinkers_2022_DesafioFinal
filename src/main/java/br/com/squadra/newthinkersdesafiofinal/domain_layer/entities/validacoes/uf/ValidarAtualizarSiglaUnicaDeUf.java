@@ -14,15 +14,15 @@ public final class ValidarAtualizarSiglaUnicaDeUf implements ValidacoesAtualizar
     private UfRepository ufRepository;
 
     @Override
-    public void validar(Long codigoUf, UfDtoEntrada ufDtoEntrada) {
+    public void validar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
 
-        var ufDoDatabasePorCodigo = ufRepository.findById(codigoUf);
+        var ufDoDatabasePorCodigo = ufRepository.findById(codigoUF);
         if(!ufDoDatabasePorCodigo.isPresent())
             throw new ValidacaoException("CodigoUf - " + MensagemPadrao.ID_NAO_ENCONTRADO);
 
         var ufDoDatabasePorSigla = ufRepository.findBySigla(ufDtoEntrada.getSigla());
         if(ufDoDatabasePorSigla.isPresent()) {
-            if(ufDoDatabasePorCodigo.get().getCodigoUf() != ufDoDatabasePorSigla.get().getCodigoUf()) {
+            if(ufDoDatabasePorCodigo.get().getCodigoUF() != ufDoDatabasePorSigla.get().getCodigoUF()) {
                 throw new ValidacaoException("Sigla - " + MensagemPadrao.VALOR_JA_EXISTE);
             }
         }

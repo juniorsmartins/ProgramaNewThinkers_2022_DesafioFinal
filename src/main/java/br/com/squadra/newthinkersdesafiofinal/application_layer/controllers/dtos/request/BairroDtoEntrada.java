@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 public final class BairroDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private Long codigoBairro;
     @Schema(description = "Denominação", type = "String", example = "Centro Sul", required = true)
     @NotBlank @Length(max = 256)
     private String nome;
@@ -20,6 +22,14 @@ public final class BairroDtoEntrada {
     public BairroDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public Long getCodigoBairro() {
+        return codigoBairro;
+    }
+
+    public void setCodigoBairro(Long codigoBairro) {
+        this.codigoBairro = codigoBairro;
+    }
+
     public String getNome() {
         return nome;
     }
