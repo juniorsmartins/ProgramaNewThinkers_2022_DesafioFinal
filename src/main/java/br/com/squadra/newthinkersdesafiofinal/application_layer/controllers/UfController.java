@@ -28,16 +28,16 @@ public class UfController {
     // ----- Cadastrar
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return ufService.cadastrar(ufDtoEntrada, uriComponentsBuilder);
+            @RequestBody @Valid UfDtoEntrada ufDtoEntrada) {
+        return ufService.cadastrar(ufDtoEntrada);
     }
 
     // ----- Listar Todos

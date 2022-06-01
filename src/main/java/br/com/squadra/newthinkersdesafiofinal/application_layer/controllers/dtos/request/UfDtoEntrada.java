@@ -2,6 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +20,7 @@ public final class UfDtoEntrada {
     @NotNull @NotEmpty @Length(max = 60)
     private String nome;
     @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    @NotNull @Max(1)
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //

@@ -44,7 +44,7 @@ public final class UfService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada) {
         ufDeEntrada = ufDtoEntrada;
 
         // Design Pattern comportamental
@@ -55,24 +55,27 @@ public final class UfService {
         }
 
         converterUfDtoEntradaParaUf();
-        setarStatusAtivado();
         salvarUf();
-        converterUfParaUfDtoSaida();
+        buscarTodasUfsParaRetornar();
+        converterListaDeUfsParaListaDeUfsDeSaida();
 
-        URI uri = uriComponentsBuilder.path("/ufs/{codigoPessoa}").buildAndExpand(ufDeSaida.getCodigoUF()).toUri();
-        return ResponseEntity.created(uri).body(ufDeSaida);
+        return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
 
         private void converterUfDtoEntradaParaUf() {
             ufSalva = modelMapper.map(ufDeEntrada, Uf.class);
         }
 
-        private void setarStatusAtivado() {
-            ufSalva.setStatus(1);
-        }
-
         private void salvarUf() {
             ufSalva = ufRepository.saveAndFlush(ufSalva);
+        }
+
+        private void buscarTodasUfsParaRetornar() {
+            listaDeUfsSalvas = ufRepository.findAll();
+        }
+
+        private void converterListaDeUfsParaListaDeUfsDeSaida() {
+            listaDeUfsDeSaida = listaDeUfsSalvas.stream().map(UfDtoSaida::new).collect(Collectors.toList());
         }
 
         private void converterUfParaUfDtoSaida() {
@@ -98,10 +101,6 @@ public final class UfService {
 
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
-
-        private void converterListaDeUfsParaListaDeUfsDeSaida() {
-            listaDeUfsDeSaida = listaDeUfsSalvas.stream().map(UfDtoSaida::new).collect(Collectors.toList());
-        }
 
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUF) {
