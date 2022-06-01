@@ -94,10 +94,6 @@ public final class BairroService {
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
 
-        private void buscarTodosOsBairrosDoDatabase() {
-            listaDeBairrosSalvos = bairroRepository.findAll();
-        }
-
         private void converterListaDeBairrosParaListaDeBairrosDeSaida() {
             listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
         }

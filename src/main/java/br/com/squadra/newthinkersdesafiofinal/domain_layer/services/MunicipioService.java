@@ -9,6 +9,8 @@ import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.Munici
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -73,16 +75,23 @@ public final class MunicipioService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
+        var municipioFiltro = modelMapper.map(filtros, Municipio.class);
 
-        buscarTodosOsMunicipiosDoDatabase();
+        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                .withStringMatcher(ExampleMatcher
+                        .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+
+        // Example - pega campos populados para criar filtros
+        Example example = Example.of(municipioFiltro, matcher);
+
+        listaDeMunicipiosSalvos = municipioRepository.findAll(example);
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
 
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
-    }
-
-    private void buscarTodosOsMunicipiosDoDatabase() {
-        listaDeMunicipiosSalvos = municipioRepository.findAll();
     }
 
     private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {

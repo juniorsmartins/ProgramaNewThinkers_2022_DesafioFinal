@@ -9,9 +9,13 @@ import javax.validation.constraints.NotNull;
 public final class MunicipioDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private Long codigoMunicipio;
     @Schema(description = "Denominação", type = "String", example = "Londrina", required = true)
     @NotNull @NotEmpty @Length(max = 256)
     private String nome;
+    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    private Integer status;
     @Schema(description = "Chave Identificadora", type = "Long", example = "18", required = true)
     @NotNull
     private Long codigoUf;
@@ -20,12 +24,28 @@ public final class MunicipioDtoEntrada {
     public MunicipioDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public Long getCodigoMunicipio() {
+        return codigoMunicipio;
+    }
+
+    public void setCodigoMunicipio(Long codigoMunicipio) {
+        this.codigoMunicipio = codigoMunicipio;
+    }
+
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getCodigoUf() {

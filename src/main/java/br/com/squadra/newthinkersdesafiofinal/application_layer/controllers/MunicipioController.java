@@ -51,8 +51,8 @@ public class MunicipioController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return municipioService.listar();
+    public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
+        return municipioService.listar(filtros);
     }
 
     // ----- Consultar Por Id

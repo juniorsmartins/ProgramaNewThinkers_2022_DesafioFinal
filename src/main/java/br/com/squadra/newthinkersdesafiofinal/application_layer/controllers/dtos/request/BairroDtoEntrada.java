@@ -14,6 +14,8 @@ public final class BairroDtoEntrada {
     @Schema(description = "Denominação", type = "String", example = "Centro Sul", required = true)
     @NotBlank @Length(max = 256)
     private String nome;
+    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    private Integer status;
     @Schema(description = "Chave Identificadora", type = "Long", example = "10", required = true)
     @NotNull
     private Long codigoMunicipio;
@@ -36,6 +38,14 @@ public final class BairroDtoEntrada {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getCodigoMunicipio() {
