@@ -11,6 +11,8 @@ import javax.validation.constraints.NotNull;
 public final class EnderecoDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private Long codigoEndereco;
     @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
     @NotNull @NotEmpty @Length(max = 10)
     private String cep;
@@ -23,6 +25,8 @@ public final class EnderecoDtoEntrada {
     @Schema(description = "Informações adicionais", type = "String", example = "Entrada pela lateral")
     @Length(max = 20)
     private String complemento;
+    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    private Integer status;
     @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
     @NotNull
     private Long codigoBairro;
@@ -33,6 +37,14 @@ public final class EnderecoDtoEntrada {
     public EnderecoDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
+    public Long getCodigoEndereco() {
+        return codigoEndereco;
+    }
+
+    public void setCodigoEndereco(Long codigoEndereco) {
+        this.codigoEndereco = codigoEndereco;
+    }
+
     public String getCep() {
         return cep;
     }
@@ -63,6 +75,14 @@ public final class EnderecoDtoEntrada {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getCodigoBairro() {

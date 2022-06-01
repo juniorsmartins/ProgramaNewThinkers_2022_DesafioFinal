@@ -11,6 +11,8 @@ import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.Endere
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -87,17 +89,24 @@ public final class EnderecoService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<?> listar(EnderecoDtoEntrada filtros) {
+        var enderecoFiltro = modelMapper.map(filtros, Endereco.class);
 
-        buscarTodosOsEnderecosDoDatabase();
+        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                .withStringMatcher(ExampleMatcher
+                        .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+
+        // Example - pega campos populados para criar filtros
+        Example example = Example.of(enderecoFiltro, matcher);
+
+        listaDeEnderecosSalvos = enderecoRepository.findAll(example);
         converterListaDeEnderecosParaListaDeEnderecosDeSaida();
 
         return ResponseEntity.ok().body(listaDeEnderecosDeSaida);
     }
-
-        private void buscarTodosOsEnderecosDoDatabase() {
-            listaDeEnderecosSalvos = enderecoRepository.findAll();
-        }
 
         private void converterListaDeEnderecosParaListaDeEnderecosDeSaida() {
             listaDeEnderecosDeSaida = listaDeEnderecosSalvos.stream().map(EnderecoDtoSaida::new).collect(Collectors.toList());

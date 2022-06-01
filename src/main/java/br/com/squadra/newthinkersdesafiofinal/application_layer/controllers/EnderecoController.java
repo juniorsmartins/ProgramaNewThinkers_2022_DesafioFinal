@@ -51,8 +51,8 @@ public class EnderecoController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return enderecoService.listar();
+    public ResponseEntity<?> listar(EnderecoDtoEntrada filtros) {
+        return enderecoService.listar(filtros);
     }
 
     // ----- Consultar Por Id

@@ -21,5 +21,5 @@ INSERT INTO tb_bairro(nome, status, codigo_municipio)
 INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, status, codigo_bairro, codigo_pessoa)
     VALUES('78020-400', 'Rua Comandante Costa', 1550, 'Use interfone', 1, 2, 1);
 INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, status, codigo_bairro, codigo_pessoa)
-    VALUES('78020-400', 'Rua Outono Cinza', 2684, 'Entrada lateral', 1, 2, 2);
+    VALUES('72551-110', 'Rua Outono Cinza', 2684, 'Entrada lateral', 2, 1, 2);
 
