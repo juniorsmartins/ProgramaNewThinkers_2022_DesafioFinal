@@ -80,14 +80,15 @@ public final class UfService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar(UfDtoEntrada filtro) {
-        var ufFiltro = modelMapper.map(filtro, Uf.class);
+    public ResponseEntity<?> listar(UfDtoEntrada filtros) {
+        var ufFiltro = modelMapper.map(filtros, Uf.class);
 
         // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
         ExampleMatcher matcher = ExampleMatcher
                                         .matching()
                                         .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+                                        .withStringMatcher(ExampleMatcher
+                                                .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
 
         // Example - pega campos populados para criar filtros
         Example example = Example.of(ufFiltro, matcher);

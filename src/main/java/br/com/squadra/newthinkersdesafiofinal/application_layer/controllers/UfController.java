@@ -48,8 +48,8 @@ public class UfController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
-    public ResponseEntity<?> listar(UfDtoEntrada filtro) {
-        return ufService.listar(filtro);
+    public ResponseEntity<?> listar(UfDtoEntrada filtros) {
+        return ufService.listar(filtros);
     }
 
     // ----- Consultar Por Id

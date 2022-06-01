@@ -9,6 +9,8 @@ import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.Bairro
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -73,9 +75,20 @@ public final class BairroService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar() {
+    public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
+        var bairroFiltro = modelMapper.map(filtros, Bairro.class);
 
-        buscarTodosOsBairrosDoDatabase();
+        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                        .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                                .withStringMatcher(ExampleMatcher
+                                        .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+
+        // Example - pega campos populados para criar filtros
+        Example example = Example.of(bairroFiltro, matcher);
+
+        listaDeBairrosSalvos = bairroRepository.findAll(example);
         converterListaDeBairrosParaListaDeBairrosDeSaida();
 
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);

@@ -51,8 +51,8 @@ public class BairroController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return bairroService.listar();
+    public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
+        return bairroService.listar(filtros);
     }
 
     // ----- Consultar Por Id
