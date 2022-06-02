@@ -4,8 +4,10 @@ import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.modelos_pesquisa.UfModelPesquisa;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -78,19 +80,31 @@ public final class UfService {
 
     // ---------- Listar
     public ResponseEntity<?> listar(UfDtoEntrada filtros) {
-        var ufFiltro = modelMapper.map(filtros, Uf.class);
 
-        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-        ExampleMatcher matcher = ExampleMatcher
-                                        .matching()
-                                        .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                                        .withStringMatcher(ExampleMatcher
-                                                .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        if(filtros.getCodigoUF() != null || filtros.getNome() != null || filtros.getSigla() != null) {
+            var ufFiltro = modelMapper.map(filtros, Uf.class);
 
-        // Example - pega campos populados para criar filtros
-        Example example = Example.of(ufFiltro, matcher);
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher matcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher
+                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
 
-        listaDeUfsSalvas = ufRepository.findAll(example);
+            // Example - pega campos populados para criar filtros
+            Example example = Example.of(ufFiltro, matcher);
+
+            var ufDoDatabase = ufRepository.findOne(example);
+            if(!ufDoDatabase.isPresent())
+                return ResponseEntity.notFound().build();
+            ufSalva = (Uf) ufDoDatabase.get();
+
+            converterUfParaUfDtoSaida();
+            return ResponseEntity.ok().body(ufDeSaida);
+        }
+
+        buscarTodasUfsParaRetornar();
         converterListaDeUfsParaListaDeUfsDeSaida();
 
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
