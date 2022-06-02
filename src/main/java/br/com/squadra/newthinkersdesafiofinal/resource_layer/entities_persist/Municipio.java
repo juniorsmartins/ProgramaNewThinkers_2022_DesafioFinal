@@ -1,11 +1,14 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
+import org.hibernate.annotations.SQLDelete;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_municipio")
+@SQLDelete(sql = "UPDATE tb_municipio SET status = 2 WHERE codigo_municipio = ?;")
 public final class Municipio implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //

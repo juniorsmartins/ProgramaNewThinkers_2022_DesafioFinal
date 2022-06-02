@@ -34,7 +34,7 @@ public final class UfService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada) {
+    public List<UfDtoSaida> cadastrar(UfDtoEntrada ufDtoEntrada) {
         ufDeEntrada = ufDtoEntrada;
 
         converterUfDtoEntradaParaUf();
@@ -42,7 +42,7 @@ public final class UfService {
         buscarTodasUfsParaRetornar();
         converterListaDeUfsParaListaDeUfsDeSaida();
 
-        return ResponseEntity.ok().body(listaDeUfsDeSaida);
+        return listaDeUfsDeSaida;
     }
 
         private void converterUfDtoEntradaParaUf() {
@@ -94,45 +94,48 @@ public final class UfService {
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
 
+        private void converterUfParaUfDtoSaida() {
+        ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
+    }
+
     // ---------- Consultar
-    public ResponseEntity<?> consultar(Long codigoUF) {
+    public UfDtoSaida consultar(Long codigoUF) {
 
         return ufRepository.findById(codigoUF)
                 .map( ufDoDatabase -> {
                     ufSalva = modelMapper.map(ufDoDatabase, Uf.class);
                     converterUfParaUfDtoSaida();
-                    return ResponseEntity.ok().body(ufDeSaida);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
+                    return ufDeSaida;
+                }).orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
     }
 
-        private void converterUfParaUfDtoSaida() {
-            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
-        }
-
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(UfDtoEntrada ufDtoEntrada) {
+    public List<UfDtoSaida> atualizar(UfDtoEntrada ufDtoEntrada) {
 
         return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map( ufDoDatabase -> {
                     ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
                     ufDoDatabase.setNome(ufDtoEntrada.getNome());
                     ufDoDatabase.setStatus(ufDtoEntrada.getStatus());
-                    ufSalva = ufRepository.saveAndFlush(ufDoDatabase);
+                    ufRepository.saveAndFlush(ufDoDatabase);
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
-                    return ResponseEntity.ok().body(listaDeUfsDeSaida);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
+                    return listaDeUfsDeSaida;
+                }).orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
     }
 
     // ---------- Deletar
-    public ResponseEntity<List<UfDtoSaida>> deletar(Long codigoUF) {
+    public List<UfDtoSaida> deletar(Long codigoUF) {
 
         return ufRepository.findById(codigoUF)
                 .map(uf -> {
                     ufRepository.delete(uf);
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
-                    return ResponseEntity.ok().body(listaDeUfsDeSaida);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
+                    return listaDeUfsDeSaida;
+                }).orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
     }
 }
