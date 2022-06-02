@@ -13,6 +13,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
@@ -39,63 +40,82 @@ public final class MunicipioService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(MunicipioDtoEntrada municipioDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<?> cadastrar(MunicipioDtoEntrada municipioDtoEntrada) {
         municipioDeEntrada = municipioDtoEntrada;
 
-        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUf());
+        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUF());
         if(!ufDoDatabase.isPresent())
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         ufVerificada = ufDoDatabase.get();
 
         converterMunicipioDtoEntradaParaMunicipio();
-        setarStatusAtivado();
         salvarMunicipio();
+        buscarTodosMunicipiosParaRetornar();
         converterMunicipioParaMunicipioDtoSaida();
 
-        URI uri = uriComponentsBuilder.path("/municipios/{codigoMunicipio}").buildAndExpand(municipioDeSaida.getCodigoMunicipio()).toUri();
-        return ResponseEntity.created(uri).body(municipioDeSaida);
+        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
         private void converterMunicipioDtoEntradaParaMunicipio() {
             municipioSalvo = new Municipio();
             municipioSalvo.setNome(municipioDeEntrada.getNome());
             municipioSalvo.setUf(ufVerificada);
-        }
-
-        private void setarStatusAtivado() {
-            municipioSalvo.setStatus(1);
+            municipioSalvo.setStatus(municipioDeEntrada.getStatus());
         }
 
         private void salvarMunicipio() {
             municipioSalvo = municipioRepository.saveAndFlush(municipioSalvo);
         }
 
-        private void converterMunicipioParaMunicipioDtoSaida() {
-            municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);
+        private void buscarTodosMunicipiosParaRetornar() {
+            listaDeMunicipiosSalvos = municipioRepository.findAll();
+        }
+
+        private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
+            listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos.stream()
+                    .map(MunicipioDtoSaida::new).collect(Collectors.toList());
         }
 
     // ---------- Listar
     public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
-        var municipioFiltro = modelMapper.map(filtros, Municipio.class);
 
-        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-        ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                .withStringMatcher(ExampleMatcher
-                        .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        if(filtros.getCodigoUF() != null || filtros.getNome() != null) {
+            var municipioFiltro = modelMapper.map(filtros, Municipio.class);
 
-        // Example - pega campos populados para criar filtros
-        Example example = Example.of(municipioFiltro, matcher);
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher matcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher
+                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
 
-        listaDeMunicipiosSalvos = municipioRepository.findAll(example);
+            // Example - pega campos populados para criar filtros
+            Example example = Example.of(municipioFiltro, matcher);
+
+            listaDeMunicipiosSalvos = municipioRepository.findAll(example);
+            if(listaDeMunicipiosSalvos.isEmpty())
+                return ResponseEntity.notFound().build();
+            
+            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+
+            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
+        }
+
+        if(filtros.getCodigoMunicipio() != null ) {
+            var municipioDoDatabase = municipioRepository.findById(filtros.getCodigoMunicipio());
+            if(!municipioDoDatabase.isPresent())
+                return ResponseEntity.notFound().build();
+            municipioSalvo = municipioDoDatabase.get();
+            converterMunicipioParaMunicipioDtoSaida();
+
+            return ResponseEntity.ok().body(municipioDeSaida);
+        }
+
+        buscarTodosMunicipiosParaRetornar();
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
 
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
-    }
-
-    private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
-        listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos.stream().map(MunicipioDtoSaida::new).collect(Collectors.toList());
     }
 
     // ---------- Consultar
@@ -111,6 +131,10 @@ public final class MunicipioService {
         return ResponseEntity.ok().body(municipioDeSaida);
     }
 
+        private void converterMunicipioParaMunicipioDtoSaida() {
+            municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);
+        }
+
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoMunicipio, MunicipioDtoEntrada municipioDtoEntrada) {
         municipioDeEntrada = municipioDtoEntrada;
@@ -120,7 +144,7 @@ public final class MunicipioService {
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         municipioSalvo = municipioDoDatabase.get();
 
-        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUf());
+        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUF());
         if(!ufDoDatabase.isPresent())
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
         ufVerificada = ufDoDatabase.get();

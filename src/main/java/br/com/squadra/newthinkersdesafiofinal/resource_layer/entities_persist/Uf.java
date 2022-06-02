@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_uf")
-@SQLDelete(sql = "UPDATE tb_uf SET status = 0 WHERE codigo_UF = ?;")
+@SQLDelete(sql = "UPDATE tb_uf SET status = 2 WHERE codigo_UF = ?;")
 public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //

@@ -18,7 +18,7 @@ public final class UfDtoEntrada {
     @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
     @NotNull @NotEmpty @Length(min = 2, max = 2)
     private String sigla;
-    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
     @NotNull @Max(1)
     private Integer status;
 

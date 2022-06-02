@@ -37,8 +37,8 @@ public class MunicipioController {
     @PostMapping
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return municipioService.cadastrar(municipioDtoEntrada, uriComponentsBuilder);
+            @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada) {
+        return municipioService.cadastrar(municipioDtoEntrada);
     }
 
     // ----- Listar Todos
