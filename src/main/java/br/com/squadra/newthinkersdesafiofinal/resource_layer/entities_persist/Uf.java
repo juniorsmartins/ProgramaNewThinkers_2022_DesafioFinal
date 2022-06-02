@@ -1,11 +1,13 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
+import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_uf")
+@SQLDelete(sql = "UPDATE tb_uf SET status = 0 WHERE codigo_UF = ?;")
 public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
@@ -15,10 +17,10 @@ public final class Uf implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Codigo_UF", nullable = false)
     private Long codigoUF;
-    @Column(name = "sigla", length = 2, nullable = false, unique = true)
-    private String sigla;
     @Column(name = "nome", length = 60, nullable = false, unique = true)
     private String nome;
+    @Column(name = "sigla", length = 2, nullable = false, unique = true)
+    private String sigla;
     @Column(name = "status", length = 1, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
@@ -37,20 +39,20 @@ public final class Uf implements Serializable {
         this.codigoUF = codigoUF;
     }
 
-    public String getSigla() {
-        return sigla;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
     public Integer getStatus() {

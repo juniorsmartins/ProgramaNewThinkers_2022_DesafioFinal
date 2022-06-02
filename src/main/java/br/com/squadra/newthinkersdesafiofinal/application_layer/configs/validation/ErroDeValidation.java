@@ -2,7 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.configs.validat
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Classe para personalizar retorno de exceções.")
+@Schema(description = "Classe para personalizar retorno de exceções de validação.")
 public class ErroDeValidation {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //

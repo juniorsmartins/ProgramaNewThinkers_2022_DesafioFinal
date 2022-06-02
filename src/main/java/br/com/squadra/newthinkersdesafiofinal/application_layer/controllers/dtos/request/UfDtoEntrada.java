@@ -12,12 +12,12 @@ public final class UfDtoEntrada {
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private String codigoUF;
-    @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
-    @NotNull @NotEmpty @Length(max = 2)
-    private String sigla;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
     @NotNull @NotEmpty @Length(max = 60)
     private String nome;
+    @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
+    @NotNull @NotEmpty @Length(min = 2, max = 2)
+    private String sigla;
     @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
     @NotNull @Max(1)
     private Integer status;
@@ -34,20 +34,20 @@ public final class UfDtoEntrada {
         this.codigoUF = codigoUF;
     }
 
-    public String getSigla() {
-        return sigla;
-    }
-
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getSigla() {
+        return sigla;
+    }
+
+    public void setSigla(String sigla) {
+        this.sigla = sigla;
     }
 
     public Integer getStatus() {

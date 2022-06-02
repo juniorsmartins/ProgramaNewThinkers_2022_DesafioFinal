@@ -1,6 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

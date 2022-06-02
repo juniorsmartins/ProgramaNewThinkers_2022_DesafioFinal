@@ -2,12 +2,11 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ErroPadronizado;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.modelos_pesquisa.UfModelPesquisa;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -18,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +115,7 @@ public final class UfService {
 
         var ufDoDatabase = ufRepository.findById(codigoUF);
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+            return ResponseEntity.badRequest().body("CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO));
         ufSalva = ufDoDatabase.get();
 
         converterUfParaUfDtoSaida();
@@ -147,27 +147,16 @@ public final class UfService {
     }
 
     // ---------- Deletar
-    public ResponseEntity<?> deletar(Long codigoUF) {
-
-        try{
-            if(!ufRepository.findById(codigoUF).isPresent())
-                throw new ValidacaoException("CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO));
-        }catch(ValidacaoException validacaoException) {
-            return ResponseEntity.badRequest().body(validacaoException.getMessage());
-        }
+    public ResponseEntity<List<UfDtoSaida>> deletar(Long codigoUF) {
 
         return ufRepository.findById(codigoUF)
-                                .map(uf -> {
-                                    ufRepository.delete(uf);
-                                    return ResponseEntity.noContent().build();
-                                }).orElseThrow(() -> new ResponseStatusException(
-                                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
-
-/*        var ufDoDatabase = ufRepository.findById(codigoUf);
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-
-        ufRepository.deleteById(codigoUf);
-        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);*/
+                .map(uf -> {
+                    ufRepository.delete(uf);
+                    buscarTodasUfsParaRetornar();
+                    converterListaDeUfsParaListaDeUfsDeSaida();
+                    return ResponseEntity.ok().body(listaDeUfsDeSaida);
+                }).orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
     }
 }
