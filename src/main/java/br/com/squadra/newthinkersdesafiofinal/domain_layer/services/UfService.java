@@ -114,7 +114,7 @@ public final class UfService {
 
         var ufDoDatabase = ufRepository.findById(codigoUF);
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body("CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO));
+            return ResponseEntity.notFound().build();
         ufSalva = ufDoDatabase.get();
 
         converterUfParaUfDtoSaida();
@@ -128,20 +128,24 @@ public final class UfService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
+        ufDeEntrada = ufDtoEntrada;
 
         // Design Pattern comportamental
         try{
-            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUF, ufDtoEntrada));
+            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUF, ufDeEntrada));
         }catch(ValidacaoException validacaoException){
             return ResponseEntity.badRequest().body(validacaoException.getMessage());
         }
 
         return ufRepository.findById(codigoUF)
                 .map( ufDoDatabase -> {
-                    ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
-                    ufDoDatabase.setNome(ufDtoEntrada.getNome());
-                    ufDeSaida = modelMapper.map(ufDoDatabase, UfDtoSaida.class);
-                    return ResponseEntity.ok().body(ufDeSaida);
+                    ufDoDatabase.setSigla(ufDeEntrada.getSigla());
+                    ufDoDatabase.setNome(ufDeEntrada.getNome());
+                    ufDoDatabase.setStatus(ufDeEntrada.getStatus());
+                    ufSalva = ufRepository.saveAndFlush(ufDoDatabase);
+                    buscarTodasUfsParaRetornar();
+                    converterListaDeUfsParaListaDeUfsDeSaida();
+                    return ResponseEntity.ok().body(listaDeUfsDeSaida);
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
