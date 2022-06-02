@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class UfController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do Servidor!")
     })
     @PostMapping
+    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public List<UfDtoSaida> cadastrar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
@@ -76,6 +78,7 @@ public class UfController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @PutMapping
+    @Transactional
     /*@ResponseStatus(HttpStatus.NO_CONTENT)*/
     public List<UfDtoSaida> atualizar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
@@ -92,6 +95,7 @@ public class UfController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @DeleteMapping("/{id}")
+    @Transactional
     /*@ResponseStatus(HttpStatus.NO_CONTENT)*/
     public List<UfDtoSaida> deletar(
             @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "7", required = true)

@@ -1,4 +1,4 @@
-package br.com.squadra.newthinkersdesafiofinal.application_layer.configs.modelmapper;
+package br.com.squadra.newthinkersdesafiofinal.application_layer.configs;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
