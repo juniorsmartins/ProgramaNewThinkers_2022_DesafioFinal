@@ -3,9 +3,6 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.bairro.ValidacoesAtualizarBairro;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.bairro.ValidacoesCadastrarBairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
@@ -30,11 +27,6 @@ public final class BairroService {
     private MunicipioRepository municipioRepository;
     @Autowired
     private ModelMapper modelMapper;
-    // ---------- Padrão de Projeto
-    @Autowired
-    private List<ValidacoesCadastrarBairro> listaCadastrarDeValidacoesDeBairro;
-    @Autowired
-    private List<ValidacoesAtualizarBairro> listaAtualizarDeValidacoesDeBairro;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private BairroDtoEntrada bairroDeEntrada;
     private Bairro bairroSalvo;
@@ -47,13 +39,6 @@ public final class BairroService {
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada) {
         bairroDeEntrada = bairroDtoEntrada;
-
-        // Design Pattern comportamental
-        try{
-            listaCadastrarDeValidacoesDeBairro.forEach(regraDeNegocio -> regraDeNegocio.validar(bairroDeEntrada));
-        }catch(ValidacaoException validacaoException){
-            return ResponseEntity.badRequest().body(validacaoException.getMessage());
-        }
 
         municipioVerificado = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio()).get();
 
@@ -122,13 +107,6 @@ public final class BairroService {
 
     // ---------- Atualizar
     public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
-
-        // Design Pattern comportamental
-        try{
-            listaAtualizarDeValidacoesDeBairro.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoBairro, bairroDtoEntrada));
-        }catch(ValidacaoException validacaoException){
-            return ResponseEntity.badRequest().body(validacaoException.getMessage());
-        }
 
         municipioVerificado = municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).get();
 

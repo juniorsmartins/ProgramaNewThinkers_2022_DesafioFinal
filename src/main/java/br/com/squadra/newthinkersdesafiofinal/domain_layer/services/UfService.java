@@ -3,9 +3,6 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesAtualizarUf;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.validacoes.uf.ValidacoesCadastrarUf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -28,11 +25,6 @@ public final class UfService {
     private UfRepository ufRepository;
     @Autowired
     private ModelMapper modelMapper;
-    // ---------- Padrão de Projeto
-    @Autowired
-    private List<ValidacoesCadastrarUf> listaCadastrarDeValidacoesDeUf;
-    @Autowired
-    private List<ValidacoesAtualizarUf> listaAtualizarDeValidacoesDeUf;
     // ---------- Atributos p/estilo pessoal de Clean Code
     private UfDtoEntrada ufDeEntrada;
     private Uf ufSalva;
@@ -44,13 +36,6 @@ public final class UfService {
     // ---------- Cadastrar
     public ResponseEntity<?> cadastrar(UfDtoEntrada ufDtoEntrada) {
         ufDeEntrada = ufDtoEntrada;
-
-        // Design Pattern comportamental
-        try{
-            listaCadastrarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(ufDeEntrada));
-        }catch(ValidacaoException validacaoException){
-            return ResponseEntity.badRequest().body(validacaoException.getMessage());
-        }
 
         converterUfDtoEntradaParaUf();
         salvarUf();
@@ -112,14 +97,12 @@ public final class UfService {
     // ---------- Consultar
     public ResponseEntity<?> consultar(Long codigoUF) {
 
-        var ufDoDatabase = ufRepository.findById(codigoUF);
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.notFound().build();
-        ufSalva = ufDoDatabase.get();
-
-        converterUfParaUfDtoSaida();
-
-        return ResponseEntity.ok().body(ufDeSaida);
+        return ufRepository.findById(codigoUF)
+                .map( ufDoDatabase -> {
+                    ufSalva = modelMapper.map(ufDoDatabase, Uf.class);
+                    converterUfParaUfDtoSaida();
+                    return ResponseEntity.ok().body(ufDeSaida);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
         private void converterUfParaUfDtoSaida() {
@@ -127,21 +110,13 @@ public final class UfService {
         }
 
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(Long codigoUF, UfDtoEntrada ufDtoEntrada) {
-        ufDeEntrada = ufDtoEntrada;
+    public ResponseEntity<?> atualizar(UfDtoEntrada ufDtoEntrada) {
 
-        // Design Pattern comportamental
-        try{
-            listaAtualizarDeValidacoesDeUf.forEach(regraDeNegocio -> regraDeNegocio.validar(codigoUF, ufDeEntrada));
-        }catch(ValidacaoException validacaoException){
-            return ResponseEntity.badRequest().body(validacaoException.getMessage());
-        }
-
-        return ufRepository.findById(codigoUF)
+        return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map( ufDoDatabase -> {
-                    ufDoDatabase.setSigla(ufDeEntrada.getSigla());
-                    ufDoDatabase.setNome(ufDeEntrada.getNome());
-                    ufDoDatabase.setStatus(ufDeEntrada.getStatus());
+                    ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
+                    ufDoDatabase.setNome(ufDtoEntrada.getNome());
+                    ufDoDatabase.setStatus(ufDtoEntrada.getStatus());
                     ufSalva = ufRepository.saveAndFlush(ufDoDatabase);
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
@@ -158,8 +133,6 @@ public final class UfService {
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
                     return ResponseEntity.ok().body(listaDeUfsDeSaida);
-                }).orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

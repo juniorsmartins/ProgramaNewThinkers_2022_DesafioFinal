@@ -11,7 +11,7 @@ public final class UfDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
-    private String codigoUF;
+    private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
     @NotNull @NotEmpty @Length(max = 60)
     private String nome;
@@ -26,11 +26,11 @@ public final class UfDtoEntrada {
     public UfDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
-    public String getCodigoUF() {
+    public Long getCodigoUF() {
         return codigoUF;
     }
 
-    public void setCodigoUF(String codigoUF) {
+    public void setCodigoUF(Long codigoUF) {
         this.codigoUF = codigoUF;
     }
 

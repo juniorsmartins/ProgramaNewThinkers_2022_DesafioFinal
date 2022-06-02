@@ -1,7 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.ValidacaoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -72,14 +71,12 @@ public class UfController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
-    @PutMapping("/{id}")
+    @PutMapping
     @Transactional
     public ResponseEntity<?> atualizar(
-            @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "8", required = true)
-            @PathVariable(name = "id") Long codigoUf,
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntrada ufDtoEntrada) {
-        return ufService.atualizar(codigoUf, ufDtoEntrada);
+        return ufService.atualizar(ufDtoEntrada);
     }
 
     // ----- Deletar Por Id
