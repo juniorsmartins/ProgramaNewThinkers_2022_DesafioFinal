@@ -3,7 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services.impl;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.RegraDeNegocioException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
@@ -110,7 +110,7 @@ public final class UfServiceImpl implements UfService {
                     ufSalva = modelMapper.map(ufDoDatabase, Uf.class);
                     converterUfParaUfDtoSaida();
                     return ufDeSaida;
-                }).orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
     }
 
     // ---------- Atualizar
@@ -126,7 +126,7 @@ public final class UfServiceImpl implements UfService {
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
                     return listaDeUfsDeSaida;
-                }).orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
 
         /*return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map( ufDoDatabase -> {
@@ -151,6 +151,6 @@ public final class UfServiceImpl implements UfService {
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaida();
                     return listaDeUfsDeSaida;
-                }).orElseThrow(() -> new RegraDeNegocioException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
     }
 }
