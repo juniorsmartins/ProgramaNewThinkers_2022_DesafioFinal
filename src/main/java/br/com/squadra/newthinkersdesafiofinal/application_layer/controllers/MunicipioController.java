@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -35,6 +34,7 @@ public class MunicipioController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
     })
     @PostMapping
+    @Transactional
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada) {

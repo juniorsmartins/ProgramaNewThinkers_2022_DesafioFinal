@@ -13,9 +13,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.util.UriComponentsBuilder;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +32,8 @@ public final class MunicipioService {
     private Municipio municipioSalvo;
     private MunicipioDtoSaida municipioDeSaida;
     private Uf ufVerificada;
-    List<Municipio> listaDeMunicipiosSalvos;
-    List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
+    private List<Municipio> listaDeMunicipiosSalvos;
+    private List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
@@ -45,7 +42,7 @@ public final class MunicipioService {
 
         var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUF());
         if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
+            return ResponseEntity.notFound().build();
         ufVerificada = ufDoDatabase.get();
 
         converterMunicipioDtoEntradaParaMunicipio();
@@ -96,7 +93,7 @@ public final class MunicipioService {
             listaDeMunicipiosSalvos = municipioRepository.findAll(example);
             if(listaDeMunicipiosSalvos.isEmpty())
                 return ResponseEntity.notFound().build();
-            
+
             converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
 
             return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
