@@ -65,7 +65,10 @@ public final class UfServiceImpl implements UfService {
         }
 
         private void buscarTodasUfsParaRetornar() {
-            listaDeUfsSalvas = ufRepository.findAll();
+            listaDeUfsSalvas = ufRepository.findAll()
+                    .stream()
+                    .sorted((uf1, uf2) -> uf2.getCodigoUF().compareTo(uf1.getCodigoUF()))
+                    .toList();
         }
 
         private void converterListaDeUfsParaListaDeUfsDeSaida() {
@@ -98,6 +101,12 @@ public final class UfServiceImpl implements UfService {
 
             converterUfParaUfDtoSaida();
             return ResponseEntity.ok().body(ufDeSaida);
+        }
+
+        if(filtros.getStatus() != null) {
+            listaDeUfsSalvas = ufRepository.findByStatus(filtros.getStatus());
+            converterListaDeUfsParaListaDeUfsDeSaida();
+            return ResponseEntity.ok().body(listaDeUfsDeSaida);
         }
 
         buscarTodasUfsParaRetornar();
