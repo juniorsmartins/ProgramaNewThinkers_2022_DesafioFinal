@@ -3,7 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.UfService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

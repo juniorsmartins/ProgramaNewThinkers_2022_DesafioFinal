@@ -1,4 +1,4 @@
-package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
+package br.com.squadra.newthinkersdesafiofinal.domain_layer.portas;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
