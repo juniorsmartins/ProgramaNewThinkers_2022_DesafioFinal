@@ -88,13 +88,11 @@ public final class MunicipioServiceImpl implements MunicipioService {
     @Override
     public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
 
+        criarExampleMatcherParaConfigurarFiltros();
+        // Example - pega campos populados para criar filtros
+        Example example = Example.of(modelMapper.map(filtros, Municipio.class), matcher);
+
         if(filtros.getCodigoMunicipio() != null || filtros.getNome() != null) {
-            var municipioFiltro = modelMapper.map(filtros, Municipio.class);
-
-            criarExampleMatcherParaConfigurarFiltros();
-            // Example - pega campos populados para criar filtros
-            Example example = Example.of(municipioFiltro, matcher);
-
             var municipioDoDatabase = municipioRepository.findOne(example);
             if(!municipioDoDatabase.isPresent())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
@@ -104,50 +102,17 @@ public final class MunicipioServiceImpl implements MunicipioService {
             return ResponseEntity.ok().body(municipioDeSaida);
         }
 
-
-        return null;
-        /*if(filtros.getCodigoMunicipio() != null)
-            return municipioRepository.findById(filtros.getCodigoMunicipio())
-                    .map(municipio -> {
-                        municipioSalvo = municipio;
-                        converterMunicipioParaMunicipioDtoSaida();
-                        return ResponseEntity.ok().body(municipioDeSaida);
-                    }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
-
-        if(filtros.getNome() != null)
-            return municipioRepository.findByNomeLike("%" + filtros.getNome() + "%")
-                    .map(municipio -> {
-                        municipioSalvo = municipio;
-                        converterMunicipioParaMunicipioDtoSaida();
-                        return ResponseEntity.ok().body(municipioDeSaida);
-                    }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO));
-
-        if(filtros.getCodigoUF() != null) {
-            var ufFiltro = modelMapper.map(filtros, Municipio.class);
-
-            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-            ExampleMatcher matcher = ExampleMatcher
-                    .matching()
-                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                    .withIgnoreNullValues()
-                    .withStringMatcher(ExampleMatcher
-                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
-
-            // Example - pega campos populados para criar filtros
-            Example example = Example.of(ufFiltro, matcher);
-
-            var listaDeMunicipioDoDatabase = municipioRepository.findAll(example);
-            if(listaDeMunicipioDoDatabase.isEmpty())
+        if(filtros.getCodigoUF() != null || filtros.getStatus() != null) {
+            listaDeMunicipiosSalvos = municipioRepository.findAll(example);
+            if(listaDeMunicipiosSalvos.isEmpty())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
-            listaDeMunicipiosSalvos = listaDeMunicipioDoDatabase;
-
-            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+            converterMunicipioParaMunicipioDtoSaida();
             return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
         }
 
         buscarTodosMunicipiosParaRetornar();
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);*/
+        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
         private void criarExampleMatcherParaConfigurarFiltros() {

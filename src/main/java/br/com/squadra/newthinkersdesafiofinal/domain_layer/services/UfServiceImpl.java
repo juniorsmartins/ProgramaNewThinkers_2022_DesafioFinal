@@ -105,6 +105,8 @@ public final class UfServiceImpl implements UfService {
 
         if(filtros.getStatus() != null) {
             listaDeUfsSalvas = ufRepository.findByStatus(filtros.getStatus());
+            if(listaDeUfsSalvas.isEmpty())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
             converterListaDeUfsParaListaDeUfsDeSaida();
             return ResponseEntity.ok().body(listaDeUfsDeSaida);
         }
