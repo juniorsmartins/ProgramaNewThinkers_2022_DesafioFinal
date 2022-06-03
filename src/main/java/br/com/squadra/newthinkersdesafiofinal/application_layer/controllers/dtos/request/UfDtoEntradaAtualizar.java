@@ -11,18 +11,18 @@ public final class UfDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
-    @NotNull(message = "CodigoUF - Preenchimento obrigatório! Não pode ser nulo.")
+    @NotNull(message = "{campo.codigouf.naonulo}")
     private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
-    @NotBlank(message = "Nome - Preenchimento obrigatório! Não pode ser nulo ou vazio.")
-    @Length(max = 60, message = "Nome - Preenchimento máximo de 60 dígitos.")
+    @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
+    @Length(max = 60, message = "{campo.nome.tamanho}")
     private String nome;
     @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
-    @NotBlank(message = "Sigla - Preenchimento obrigatório! Não pode ser nulo ou vazio.")
-    @Length(min = 2, max = 2, message = "Sigla - Preenchimento obrigatório de mínimo e de máximo dois dígitos.")
+    @NotBlank(message = "{campo.sigla.naonuloandnaovazio}")
+    @Length(min = 2, max = 2, message = "{campo.sigla.tamanho}")
     private String sigla;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
-    @NotNull(message = "Status - Preenchimento obrigatório!") @Max(1)
+    @NotNull(message = "{campo.status.obrigatorio}") @Max(value = 1, message = "{campo.status.tamanho}")
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
