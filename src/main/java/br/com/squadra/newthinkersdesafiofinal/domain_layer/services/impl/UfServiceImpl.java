@@ -84,7 +84,7 @@ public final class UfServiceImpl implements UfService {
 
             var ufDoDatabase = ufRepository.findOne(example);
             if(!ufDoDatabase.isPresent())
-                return ResponseEntity.notFound().build();
+                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO);
             ufSalva = (Uf) ufDoDatabase.get();
 
             converterUfParaUfDtoSaida();

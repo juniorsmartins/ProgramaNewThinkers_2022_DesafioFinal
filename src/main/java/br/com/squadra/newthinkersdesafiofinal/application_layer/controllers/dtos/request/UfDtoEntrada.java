@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -13,13 +14,13 @@ public final class UfDtoEntrada {
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
-    @NotNull @NotEmpty @Length(max = 60)
+    @NotBlank(message = "Nome - Preenchimento obrigatório! Não pode ser nulo ou vazio.") @Length(max = 60)
     private String nome;
     @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
-    @NotNull @NotEmpty @Length(min = 2, max = 2)
+    @NotBlank(message = "Sigla - Preenchimento obrigatório! Não pode ser nulo ou vazio.") @Length(min = 2, max = 2)
     private String sigla;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
-    @NotNull @Max(1)
+    @NotNull(message = "Status - Preenchimento obrigatório!") @Max(1)
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
