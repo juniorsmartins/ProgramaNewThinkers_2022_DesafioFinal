@@ -3,6 +3,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasUfAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasUfCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.UfService;
@@ -32,12 +34,20 @@ public final class UfServiceImpl implements UfService {
     private UfDtoSaida ufDeSaida;
     private List<Uf> listaDeUfsSalvas;
     private List<UfDtoSaida> listaDeUfsDeSaida;
+    // ---------- Regras de Negócio
+    @Autowired
+    private List<IRegrasUfCadastrar> listaDeRegrasDeCadastro;
+    @Autowired
+    private List<IRegrasUfAtualizar> listaDeRegrasDeAtualização;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
     @Override
     public List<UfDtoSaida> cadastrar(UfDtoEntrada ufDtoEntrada) {
         ufDeEntrada = ufDtoEntrada;
+
+        // Tratamento de regras de negócio
+        listaDeRegrasDeCadastro.forEach(regra -> regra.validar(ufDeEntrada));
 
         converterUfDtoEntradaParaUf();
         salvarUf();
@@ -116,6 +126,9 @@ public final class UfServiceImpl implements UfService {
     // ---------- Atualizar
     @Override
     public List<UfDtoSaida> atualizar(UfDtoEntradaAtualizar ufDtoEntrada) {
+
+        // Tratamento de regras de negócio
+        listaDeRegrasDeAtualização.forEach(regra -> regra.validar(ufDtoEntrada));
 
         return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map( ufDoDatabase -> {

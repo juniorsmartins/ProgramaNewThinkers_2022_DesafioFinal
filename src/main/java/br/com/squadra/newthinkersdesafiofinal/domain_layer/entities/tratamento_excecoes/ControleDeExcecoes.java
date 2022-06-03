@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,12 @@ public class ControleDeExcecoes {
         return new ApiErrors(HttpStatus.NOT_FOUND.toString(), recursoNaoEncontradoException.getMessage());
     }
 
+    @ExceptionHandler(RegrasDeNegocioVioladasException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiErrors handlerRegrasDeNegocioVioladasException(RegrasDeNegocioVioladasException regrasDeNegocioVioladasException) {
+        return new ApiErrors(HttpStatus.CONFLICT.toString(), regrasDeNegocioVioladasException.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handlerMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
@@ -38,7 +47,7 @@ public class ControleDeExcecoes {
                     HttpStatus.BAD_REQUEST.toString(), mensagem);
             errosDeValidacao.add(erroPersonalizadoParaRetorno);
         });
-        return ResponseEntity.badRequest().body(errosDeValidacao);
+        return ResponseEntity.badRequest().body(errosDeValidacao.get(0));
     }
 
     /*@ExceptionHandler(MethodArgumentNotValidException.class)

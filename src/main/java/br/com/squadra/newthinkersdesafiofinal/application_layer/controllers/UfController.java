@@ -30,10 +30,9 @@ public class UfController {
     // ----- Cadastrar
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do Servidor!")
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PostMapping
     @Transactional
@@ -76,11 +75,11 @@ public class UfController {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!"),
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PutMapping
     @Transactional
-    /*@ResponseStatus(HttpStatus.NO_CONTENT)*/
     public List<UfDtoSaida> atualizar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntradaAtualizar ufDtoEntradaAtualizar) {
@@ -97,7 +96,6 @@ public class UfController {
     })
     @DeleteMapping("/{id}")
     @Transactional
-    /*@ResponseStatus(HttpStatus.NO_CONTENT)*/
     public List<UfDtoSaida> deletar(
             @Parameter(name = "codigoUf", description = "Chave Identificadora", example = "7", required = true)
             @PathVariable(name = "id") Long codigoUf) {

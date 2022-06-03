@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface UfRepository extends JpaRepository<Uf, Long> {
 
-    Optional<Uf> findBySigla(String sigla);
     Optional<Uf> findByNome(String nome);
+    Optional<Uf> findBySigla(String sigla);
 }
