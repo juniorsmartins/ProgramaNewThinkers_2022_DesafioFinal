@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeUnicoAtualizar implements IRegrasUfAtualizar {
+public class RegraSiglaUnicaAtualizar implements IRegrasUfAtualizar {
 
     @Autowired
     private UfRepository ufRepository;
@@ -21,9 +21,9 @@ public class RegraNomeUnicoAtualizar implements IRegrasUfAtualizar {
         if(!ufPorCodigo.isPresent())
             throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO);
 
-        var ufPorNome = ufRepository.findByNome(ufDtoEntradaAtualizar.getNome());
-        if(ufPorNome.isPresent())
-            if(ufPorNome.get().getCodigoUF() != ufPorCodigo.get().getCodigoUF())
-                throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO);
+        var ufPorSigla = ufRepository.findBySigla(ufDtoEntradaAtualizar.getSigla());
+        if(ufPorSigla.isPresent())
+            if(ufPorSigla.get().getCodigoUF() != ufPorCodigo.get().getCodigoUF())
+                throw new RegrasDeNegocioVioladasException(MensagemPadrao.SIGLA_NAO_UNICA);
     }
 }
