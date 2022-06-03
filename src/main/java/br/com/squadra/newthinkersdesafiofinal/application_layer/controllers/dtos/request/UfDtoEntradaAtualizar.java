@@ -7,10 +7,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
-public final class UfDtoEntrada {
+public final class UfDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    @NotNull(message = "CodigoUF - Preenchimento obrigatório! Não pode ser nulo.")
     private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
     @NotBlank(message = "Nome - Preenchimento obrigatório! Não pode ser nulo ou vazio.")
@@ -25,7 +26,7 @@ public final class UfDtoEntrada {
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
-    public UfDtoEntrada() {}
+    public UfDtoEntradaAtualizar() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public Long getCodigoUF() {

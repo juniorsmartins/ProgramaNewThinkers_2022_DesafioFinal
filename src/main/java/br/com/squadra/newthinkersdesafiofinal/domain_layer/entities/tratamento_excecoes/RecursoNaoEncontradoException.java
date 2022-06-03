@@ -1,4 +1,4 @@
-package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities;
+package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
 

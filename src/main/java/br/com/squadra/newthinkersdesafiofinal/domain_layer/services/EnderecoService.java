@@ -2,7 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.EnderecoDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.EnderecoDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Endereco;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;

@@ -1,9 +1,10 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services.impl;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.MensagemPadrao;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.RecursoNaoEncontradoException;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +115,7 @@ public final class UfServiceImpl implements UfService {
 
     // ---------- Atualizar
     @Override
-    public List<UfDtoSaida> atualizar(UfDtoEntrada ufDtoEntrada) {
+    public List<UfDtoSaida> atualizar(UfDtoEntradaAtualizar ufDtoEntrada) {
 
         return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map( ufDoDatabase -> {

@@ -1,4 +1,4 @@
-package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities;
+package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

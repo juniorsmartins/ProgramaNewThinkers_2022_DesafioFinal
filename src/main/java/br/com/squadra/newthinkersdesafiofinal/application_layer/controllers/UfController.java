@@ -1,6 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.UfService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,8 +83,8 @@ public class UfController {
     /*@ResponseStatus(HttpStatus.NO_CONTENT)*/
     public List<UfDtoSaida> atualizar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid UfDtoEntrada ufDtoEntrada) {
-        return ufService.atualizar(ufDtoEntrada);
+            @RequestBody @Valid UfDtoEntradaAtualizar ufDtoEntradaAtualizar) {
+        return ufService.atualizar(ufDtoEntradaAtualizar);
     }
 
     // ----- Deletar Por Id
