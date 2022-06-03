@@ -39,6 +39,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
     private Uf ufVerificada;
     private List<Municipio> listaDeMunicipiosSalvos;
     private List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
+    private ExampleMatcher matcher;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastro;
@@ -55,7 +56,6 @@ public final class MunicipioServiceImpl implements MunicipioService {
         listaDeRegrasDeCadastro.forEach(regra -> regra.validar(municipioDeEntrada));
 
         ufVerificada = ufRepository.findById(municipioDeEntrada.getCodigoUF()).get();
-
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
@@ -64,18 +64,19 @@ public final class MunicipioServiceImpl implements MunicipioService {
     }
 
         private void converterMunicipioDtoEntradaParaMunicipio() {
-            municipioSalvo = new Municipio();
-            municipioSalvo.setUf(ufVerificada);
-            municipioSalvo.setNome(municipioDeEntrada.getNome());
-            municipioSalvo.setStatus(municipioDeEntrada.getStatus());
+            municipioSalvo = modelMapper.map(municipioDeEntrada, Municipio.class);
         }
 
         private void salvarMunicipio() {
-            municipioSalvo = municipioRepository.saveAndFlush(municipioSalvo);
+            municipioRepository.saveAndFlush(municipioSalvo);
         }
 
         private void buscarTodosMunicipiosParaRetornar() {
-            listaDeMunicipiosSalvos = municipioRepository.findAll();
+            listaDeMunicipiosSalvos = municipioRepository.findAll()
+                    .stream()
+                    .sorted((municipio1, municipio2) -> municipio2.getCodigoMunicipio()
+                            .compareTo(municipio1.getCodigoMunicipio()))
+                    .toList();
         }
 
         private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
@@ -87,7 +88,25 @@ public final class MunicipioServiceImpl implements MunicipioService {
     @Override
     public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
 
-        if(filtros.getCodigoMunicipio() != null)
+        if(filtros.getCodigoMunicipio() != null || filtros.getNome() != null) {
+            var municipioFiltro = modelMapper.map(filtros, Municipio.class);
+
+            criarExampleMatcherParaConfigurarFiltros();
+            // Example - pega campos populados para criar filtros
+            Example example = Example.of(municipioFiltro, matcher);
+
+            var municipioDoDatabase = municipioRepository.findOne(example);
+            if(!municipioDoDatabase.isPresent())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+            municipioSalvo = (Municipio) municipioDoDatabase.get();
+
+            converterMunicipioParaMunicipioDtoSaida();
+            return ResponseEntity.ok().body(municipioDeSaida);
+        }
+
+
+        return null;
+        /*if(filtros.getCodigoMunicipio() != null)
             return municipioRepository.findById(filtros.getCodigoMunicipio())
                     .map(municipio -> {
                         municipioSalvo = municipio;
@@ -128,8 +147,18 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
         buscarTodosMunicipiosParaRetornar();
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
+        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);*/
     }
+
+        private void criarExampleMatcherParaConfigurarFiltros() {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            matcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher
+                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        }
 
         private void converterMunicipioParaMunicipioDtoSaida() {
             municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);

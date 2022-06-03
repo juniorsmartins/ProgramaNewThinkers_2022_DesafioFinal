@@ -61,7 +61,7 @@ public final class UfServiceImpl implements UfService {
         }
 
         private void salvarUf() {
-            ufSalva = ufRepository.saveAndFlush(ufSalva);
+            ufRepository.saveAndFlush(ufSalva);
         }
 
         private void buscarTodasUfsParaRetornar() {
