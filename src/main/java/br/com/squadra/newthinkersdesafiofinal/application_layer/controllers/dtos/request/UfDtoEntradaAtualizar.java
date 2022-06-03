@@ -11,7 +11,7 @@ public final class UfDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
-    @NotNull(message = "{campo.codigouf.naonulo}")
+    @NotNull(message = "{campo.codigo-uf.naonulo}")
     private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
