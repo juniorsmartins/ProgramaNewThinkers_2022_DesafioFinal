@@ -2,7 +2,9 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.MunicipioService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public final class MunicipioService {
+public final class MunicipioServiceImpl implements MunicipioService {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     // ---------- Atributos Injetados automaticamente
@@ -34,29 +36,32 @@ public final class MunicipioService {
     private Uf ufVerificada;
     private List<Municipio> listaDeMunicipiosSalvos;
     private List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
+    // ---------- Regras de Negócio
+    @Autowired
+    private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastro;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(MunicipioDtoEntrada municipioDtoEntrada) {
+    public List<MunicipioDtoSaida> cadastrar(MunicipioDtoEntrada municipioDtoEntrada) {
         municipioDeEntrada = municipioDtoEntrada;
 
-        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUF());
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.notFound().build();
-        ufVerificada = ufDoDatabase.get();
+        // Tratamento de regras de negócio
+        listaDeRegrasDeCadastro.forEach(regra -> regra.validar(municipioDeEntrada));
+
+        ufVerificada = ufRepository.findById(municipioDtoEntrada.getCodigoUF()).get();
 
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
         converterMunicipioParaMunicipioDtoSaida();
 
-        return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
+        return listaDeMunicipiosDeSaida;
     }
 
         private void converterMunicipioDtoEntradaParaMunicipio() {
             municipioSalvo = new Municipio();
-            municipioSalvo.setNome(municipioDeEntrada.getNome());
             municipioSalvo.setUf(ufVerificada);
+            municipioSalvo.setNome(municipioDeEntrada.getNome());
             municipioSalvo.setStatus(municipioDeEntrada.getStatus());
         }
 

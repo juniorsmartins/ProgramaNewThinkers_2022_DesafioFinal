@@ -1,7 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.MunicipioService;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.MunicipioServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +21,7 @@ public class MunicipioController {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Autowired
-    private MunicipioService municipioService;
+    private MunicipioServiceImpl municipioService;
 
     // ---------- MÉTODOS DE CONTROLE ---------- //
     // ----- Cadastrar
