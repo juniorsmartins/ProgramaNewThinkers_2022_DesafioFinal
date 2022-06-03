@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
@@ -26,15 +27,13 @@ public class MunicipioController {
     // ----- Cadastrar
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PostMapping
     @Transactional
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "municipioDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid MunicipioDtoEntrada municipioDtoEntrada) {
