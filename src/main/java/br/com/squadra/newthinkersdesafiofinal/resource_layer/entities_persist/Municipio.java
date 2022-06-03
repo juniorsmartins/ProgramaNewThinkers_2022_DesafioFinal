@@ -18,7 +18,7 @@ public final class Municipio implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo_municipio", nullable = false)
     private Long codigoMunicipio;
-    @Column(name = "nome", length = 256, nullable = false)
+    @Column(name = "nome", length = 256, nullable = false, unique = true)
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;

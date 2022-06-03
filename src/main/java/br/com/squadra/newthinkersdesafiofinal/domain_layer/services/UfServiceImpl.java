@@ -103,7 +103,6 @@ public final class UfServiceImpl implements UfService {
 
         buscarTodasUfsParaRetornar();
         converterListaDeUfsParaListaDeUfsDeSaida();
-
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
 

@@ -42,6 +42,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
+    @Override
     public List<MunicipioDtoSaida> cadastrar(MunicipioDtoEntrada municipioDtoEntrada) {
         municipioDeEntrada = municipioDtoEntrada;
 
@@ -79,9 +80,10 @@ public final class MunicipioServiceImpl implements MunicipioService {
         }
 
     // ---------- Listar
+    @Override
     public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
 
-        if(filtros.getCodigoUF() != null || filtros.getNome() != null) {
+        if(filtros.getCodigoMunicipio() != null || filtros.getNome() != null) {
             var municipioFiltro = modelMapper.map(filtros, Municipio.class);
 
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
@@ -95,28 +97,27 @@ public final class MunicipioServiceImpl implements MunicipioService {
             // Example - pega campos populados para criar filtros
             Example example = Example.of(municipioFiltro, matcher);
 
-            listaDeMunicipiosSalvos = municipioRepository.findAll(example);
-            if(listaDeMunicipiosSalvos.isEmpty())
+            var municipioFiltrado = municipioRepository.findOne(example);
+            if(!municipioFiltrado.isPresent())
                 return ResponseEntity.notFound().build();
+            municipioSalvo = (Municipio) municipioFiltrado.get();
 
-            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-
-            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
+            converterMunicipioParaMunicipioDtoSaida();
+            return ResponseEntity.ok().body(municipioSalvo);
         }
 
-        if(filtros.getCodigoMunicipio() != null ) {
-            var municipioDoDatabase = municipioRepository.findById(filtros.getCodigoMunicipio());
-            if(!municipioDoDatabase.isPresent())
+        if(filtros.getCodigoUF() != null) {
+            var listaDeMunicipiosPorCodigoUF = municipioRepository.findByCodigoUF(filtros.getCodigoUF());
+            if(listaDeMunicipiosPorCodigoUF.isEmpty())
                 return ResponseEntity.notFound().build();
-            municipioSalvo = municipioDoDatabase.get();
-            converterMunicipioParaMunicipioDtoSaida();
+            listaDeMunicipiosSalvos = listaDeMunicipiosPorCodigoUF;
 
-            return ResponseEntity.ok().body(municipioDeSaida);
+            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
         }
 
         buscarTodosMunicipiosParaRetornar();
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
