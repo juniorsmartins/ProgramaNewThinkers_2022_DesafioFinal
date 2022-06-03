@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ufs")
+@RequestMapping("/uf")
 @Tag(name = "UfController")
 public class UfController {
 
@@ -30,13 +30,12 @@ public class UfController {
     // ----- Cadastrar
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
+            @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
             @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PostMapping
     @Transactional
-    @ResponseStatus(HttpStatus.CREATED)
     public List<UfDtoSaida> cadastrar(
             @Parameter(name = "ufDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid UfDtoEntrada ufDtoEntrada) {
@@ -73,7 +72,6 @@ public class UfController {
     @Operation(summary = "Atualizar", description = "Alterar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
-            @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!"),
             @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")

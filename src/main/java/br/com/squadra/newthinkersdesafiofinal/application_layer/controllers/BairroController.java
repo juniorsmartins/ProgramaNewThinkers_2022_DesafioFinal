@@ -31,6 +31,7 @@ public class BairroController {
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!")
     })
     @PostMapping
+    @Transactional
     public ResponseEntity<?> cadastrar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
@@ -89,6 +90,7 @@ public class BairroController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> deletar(
             @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "7", required = true)
             @PathVariable(name = "id") Long codigoBairro) {

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeUnico implements IRegrasUfCadastrar {
+public class RegraNomeUnicoCadastrar implements IRegrasUfCadastrar {
 
     @Autowired
     private UfRepository ufRepository;

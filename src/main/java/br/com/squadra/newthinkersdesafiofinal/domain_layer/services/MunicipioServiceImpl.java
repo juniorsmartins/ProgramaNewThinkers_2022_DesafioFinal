@@ -1,9 +1,12 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.MunicipioService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
@@ -39,6 +42,8 @@ public final class MunicipioServiceImpl implements MunicipioService {
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastro;
+    @Autowired
+    private List<IRegrasMunicipioAtualizar> listaDeRegrasDeAtualizar;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
@@ -49,13 +54,12 @@ public final class MunicipioServiceImpl implements MunicipioService {
         // Tratamento de regras de negócio
         listaDeRegrasDeCadastro.forEach(regra -> regra.validar(municipioDeEntrada));
 
-        ufVerificada = ufRepository.findById(municipioDtoEntrada.getCodigoUF()).get();
+        ufVerificada = ufRepository.findById(municipioDeEntrada.getCodigoUF()).get();
 
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
         converterMunicipioParaMunicipioDtoSaida();
-
         return listaDeMunicipiosDeSaida;
     }
 
@@ -83,8 +87,24 @@ public final class MunicipioServiceImpl implements MunicipioService {
     @Override
     public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
 
-        if(filtros.getCodigoMunicipio() != null || filtros.getNome() != null) {
-            var municipioFiltro = modelMapper.map(filtros, Municipio.class);
+        if(filtros.getCodigoMunicipio() != null)
+            return municipioRepository.findById(filtros.getCodigoMunicipio())
+                    .map(municipio -> {
+                        municipioSalvo = municipio;
+                        converterMunicipioParaMunicipioDtoSaida();
+                        return ResponseEntity.ok().body(municipioDeSaida);
+                    }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
+
+        if(filtros.getNome() != null)
+            return municipioRepository.findByNomeLike("%" + filtros.getNome() + "%")
+                    .map(municipio -> {
+                        municipioSalvo = municipio;
+                        converterMunicipioParaMunicipioDtoSaida();
+                        return ResponseEntity.ok().body(municipioDeSaida);
+                    }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO));
+
+        if(filtros.getCodigoUF() != null) {
+            var ufFiltro = modelMapper.map(filtros, Municipio.class);
 
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
             ExampleMatcher matcher = ExampleMatcher
@@ -95,22 +115,12 @@ public final class MunicipioServiceImpl implements MunicipioService {
                             .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
 
             // Example - pega campos populados para criar filtros
-            Example example = Example.of(municipioFiltro, matcher);
+            Example example = Example.of(ufFiltro, matcher);
 
-            var municipioFiltrado = municipioRepository.findOne(example);
-            if(!municipioFiltrado.isPresent())
-                return ResponseEntity.notFound().build();
-            municipioSalvo = (Municipio) municipioFiltrado.get();
-
-            converterMunicipioParaMunicipioDtoSaida();
-            return ResponseEntity.ok().body(municipioSalvo);
-        }
-
-        if(filtros.getCodigoUF() != null) {
-            var listaDeMunicipiosPorCodigoUF = municipioRepository.findByCodigoUF(filtros.getCodigoUF());
-            if(listaDeMunicipiosPorCodigoUF.isEmpty())
-                return ResponseEntity.notFound().build();
-            listaDeMunicipiosSalvos = listaDeMunicipiosPorCodigoUF;
+            var listaDeMunicipioDoDatabase = municipioRepository.findAll(example);
+            if(listaDeMunicipioDoDatabase.isEmpty())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+            listaDeMunicipiosSalvos = listaDeMunicipioDoDatabase;
 
             converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
             return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
@@ -121,41 +131,40 @@ public final class MunicipioServiceImpl implements MunicipioService {
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
-    // ---------- Consultar
-    public ResponseEntity<?> consultar(Long codigoMunicipio) {
-
-        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
-        if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        municipioSalvo = municipioDoDatabase.get();
-
-        converterMunicipioParaMunicipioDtoSaida();
-
-        return ResponseEntity.ok().body(municipioDeSaida);
-    }
-
         private void converterMunicipioParaMunicipioDtoSaida() {
             municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);
         }
 
+    // ---------- Consultar
+    @Override
+    public MunicipioDtoSaida consultar(Long codigoMunicipio) {
+
+        return municipioRepository.findById(codigoMunicipio)
+                .map(municipioDoDatabase -> {
+                    municipioSalvo = municipioDoDatabase;
+                    converterMunicipioParaMunicipioDtoSaida();
+                    return municipioDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
+    }
+
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(Long codigoMunicipio, MunicipioDtoEntrada municipioDtoEntrada) {
-        municipioDeEntrada = municipioDtoEntrada;
+    @Override
+    public List<MunicipioDtoSaida> atualizar(MunicipioDtoEntradaAtualizar municipioDtoEntrada) {
 
-        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
-        if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        municipioSalvo = municipioDoDatabase.get();
+        // Tratamento de regras de negócio
+        listaDeRegrasDeAtualizar.forEach(regra -> regra.validar(municipioDtoEntrada));
 
-        var ufDoDatabase = ufRepository.findById(municipioDeEntrada.getCodigoUF());
-        if(!ufDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        ufVerificada = ufDoDatabase.get();
-
-        atualizarMunicipio();
-        converterMunicipioParaMunicipioDtoSaida();
-
-        return ResponseEntity.ok().body(municipioDeSaida);
+        return municipioRepository.findById(municipioDtoEntrada.getCodigoMunicipio())
+                .map(municipio -> {
+                    ufVerificada = ufRepository.findById(municipioDtoEntrada.getCodigoUF()).get();
+                    municipio.setUf(ufVerificada);
+                    municipio.setNome(municipioDtoEntrada.getNome());
+                    municipio.setStatus(municipioDtoEntrada.getStatus());
+                    municipioRepository.saveAndFlush(municipio);
+                    buscarTodosMunicipiosParaRetornar();
+                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+                    return listaDeMunicipiosDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }
 
         private void atualizarMunicipio() {
@@ -164,13 +173,15 @@ public final class MunicipioServiceImpl implements MunicipioService {
         }
 
     // ---------- Deletar
-    public ResponseEntity<?> deletar(Long codigoMunicipio) {
+    @Override
+    public List<MunicipioDtoSaida> deletar(Long codigoMunicipio) {
 
-        var municipioDoDatabase = municipioRepository.findById(codigoMunicipio);
-        if(!municipioDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-
-        municipioRepository.deleteById(codigoMunicipio);
-        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
+        return municipioRepository.findById(codigoMunicipio)
+                .map(municipio -> {
+                    municipioRepository.delete(municipio);
+                    buscarTodosMunicipiosParaRetornar();
+                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+                    return listaDeMunicipiosDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }
 }

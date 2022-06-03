@@ -28,20 +28,20 @@ public final class MunicipioDtoEntrada {
     public MunicipioDtoEntrada() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
-    public Long getCodigoMunicipio() {
-        return codigoMunicipio;
-    }
-
-    public void setCodigoMunicipio(Long codigoMunicipio) {
-        this.codigoMunicipio = codigoMunicipio;
-    }
-
     public Long getCodigoUF() {
         return codigoUF;
     }
 
     public void setCodigoUF(Long codigoUF) {
         this.codigoUF = codigoUF;
+    }
+
+    public Long getCodigoMunicipio() {
+        return codigoMunicipio;
+    }
+
+    public void setCodigoMunicipio(Long codigoMunicipio) {
+        this.codigoMunicipio = codigoMunicipio;
     }
 
     public String getNome() {

@@ -53,7 +53,6 @@ public final class UfServiceImpl implements UfService {
         salvarUf();
         buscarTodasUfsParaRetornar();
         converterListaDeUfsParaListaDeUfsDeSaida();
-
         return listaDeUfsDeSaida;
     }
 
@@ -107,15 +106,15 @@ public final class UfServiceImpl implements UfService {
     }
 
         private void converterUfParaUfDtoSaida() {
-        ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
-    }
+            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
+        }
 
     // ---------- Consultar
     @Override
     public UfDtoSaida consultar(Long codigoUF) {
 
         return ufRepository.findById(codigoUF)
-                .map( ufDoDatabase -> {
+                .map(ufDoDatabase -> {
                     ufSalva = modelMapper.map(ufDoDatabase, Uf.class);
                     converterUfParaUfDtoSaida();
                     return ufDeSaida;
@@ -130,7 +129,7 @@ public final class UfServiceImpl implements UfService {
         listaDeRegrasDeAtualização.forEach(regra -> regra.validar(ufDtoEntrada));
 
         return ufRepository.findById(ufDtoEntrada.getCodigoUF())
-                .map( ufDoDatabase -> {
+                .map(ufDoDatabase -> {
                     ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
                     ufDoDatabase.setNome(ufDtoEntrada.getNome());
                     ufDoDatabase.setStatus(ufDtoEntrada.getStatus());
@@ -139,18 +138,6 @@ public final class UfServiceImpl implements UfService {
                     converterListaDeUfsParaListaDeUfsDeSaida();
                     return listaDeUfsDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
-
-        /*return ufRepository.findById(ufDtoEntrada.getCodigoUF())
-                .map( ufDoDatabase -> {
-                    ufDoDatabase.setSigla(ufDtoEntrada.getSigla());
-                    ufDoDatabase.setNome(ufDtoEntrada.getNome());
-                    ufDoDatabase.setStatus(ufDtoEntrada.getStatus());
-                    ufRepository.saveAndFlush(ufDoDatabase);
-                    buscarTodasUfsParaRetornar();
-                    converterListaDeUfsParaListaDeUfsDeSaida();
-                    return listaDeUfsDeSaida;
-                }).orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "CodigoUF - ".concat(MensagemPadrao.ID_NAO_ENCONTRADO)));*/
     }
 
     // ---------- Deletar

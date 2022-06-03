@@ -26,8 +26,8 @@ public final class Municipio implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_uf", referencedColumnName = "codigo_uf", nullable = false)
     private Uf uf;
-    @OneToMany(mappedBy = "municipio", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Bairro> bairro;
+    @OneToMany(mappedBy = "municipio", cascade = {CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Bairro> listaDeBairros;
 
     // ---------- CONSTRUTORES ---------- //
     public Municipio() {}
@@ -63,5 +63,13 @@ public final class Municipio implements Serializable {
 
     public void setUf(Uf uf) {
         this.uf = uf;
+    }
+
+    public List<Bairro> getListaDeBairros() {
+        return listaDeBairros;
+    }
+
+    public void setListaDeBairros(List<Bairro> listaDeBairros) {
+        this.listaDeBairros = listaDeBairros;
     }
 }

@@ -24,7 +24,7 @@ public final class Uf implements Serializable {
     @Column(name = "status", length = 1, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Municipio> municipio;
 
     // ---------- CONSTRUTORES ---------- //
