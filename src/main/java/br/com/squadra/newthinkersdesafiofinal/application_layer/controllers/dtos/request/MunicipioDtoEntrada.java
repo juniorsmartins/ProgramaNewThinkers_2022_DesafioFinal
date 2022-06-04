@@ -18,7 +18,7 @@ public final class MunicipioDtoEntrada {
     private Long codigoMunicipio;
     @Schema(description = "Denominação", type = "String", example = "Londrina", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
-    @Length(max = 256, message = "{campo.nome.nome-municipio-tamanho}")
+    @Length(max = 256, message = "{campo.nome.tamanhoMaximo256}")
     private String nome;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
     @NotNull(message = "{campo.status.obrigatorio}")

@@ -2,13 +2,18 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.*;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
-public final class PessoaDtoEntrada {
+public final class PessoaDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    @NotNull(message = "{campo.codigo-pessoa.naonulo}")
     private Long codigoPessoa;
     @Schema(description = "Denominação pessoal", type = "String", example = "Andrew", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
@@ -37,7 +42,7 @@ public final class PessoaDtoEntrada {
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
-    public PessoaDtoEntrada() {}
+    public PessoaDtoEntradaAtualizar() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public Long getCodigoPessoa() {

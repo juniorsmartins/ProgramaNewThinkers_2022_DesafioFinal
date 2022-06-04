@@ -1,6 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,8 +79,8 @@ public class PessoaController {
     @Transactional
     public List<PessoaDtoSaida> atualizar(
             @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
-        return pessoaService.atualizar(pessoaDtoEntrada);
+            @RequestBody @Valid PessoaDtoEntradaAtualizar pessoaDtoEntradaAtualizar) {
+        return pessoaService.atualizar(pessoaDtoEntradaAtualizar);
     }
 
     // ----- Deletar Por Id
