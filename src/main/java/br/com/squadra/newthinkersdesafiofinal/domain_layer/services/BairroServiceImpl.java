@@ -150,6 +150,7 @@ public final class BairroServiceImpl implements BairroService {
 
         return bairroRepository.findById(bairroDtoEntrada.getCodigoBairro())
                 .map(bairro -> {
+                    bairroSalvo = bairro;
                     disponibilizarMunicipioVerificado();
                     atualizarBairro();
                     buscarTodosBairrosParaRetornar();

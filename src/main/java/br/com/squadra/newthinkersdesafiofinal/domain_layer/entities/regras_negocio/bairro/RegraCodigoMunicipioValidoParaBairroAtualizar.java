@@ -2,6 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_nego
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ public class RegraCodigoMunicipioValidoParaBairroAtualizar implements IRegrasBai
 
     @Override
     public void validar(BairroDtoEntradaAtualizar bairroDtoEntrada) {
-/*        if(!municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).isPresent());
-        throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO);*/
+        if(!municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).isPresent())
+            throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO);
     }
 }

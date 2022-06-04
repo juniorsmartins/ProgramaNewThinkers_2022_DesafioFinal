@@ -150,6 +150,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
         return municipioRepository.findById(municipioDtoEntrada.getCodigoMunicipio())
                 .map(municipio -> {
+                    municipioSalvo = municipio;
                     disponibilizarUfVerificada();
                     atualizarMunicipio();
                     buscarTodosMunicipiosParaRetornar();

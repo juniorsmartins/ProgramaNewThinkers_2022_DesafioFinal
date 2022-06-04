@@ -1,7 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.bairro;
 
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroCadastrar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RegrasDeNegocioVioladasException;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasBairroCadastrar {
+public class RegraNomeDeBairroUnicoNoMesmoMunicipioAtualizar implements IRegrasBairroAtualizar {
 
     @Autowired
     private MunicipioRepository municipioRepository;
@@ -21,7 +21,7 @@ public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasB
     private BairroRepository bairroRepository;
 
     @Override
-    public void validar(BairroDtoEntrada bairroDtoEntrada) {
+    public void validar(BairroDtoEntradaAtualizar bairroDtoEntrada) {
 
         // busca município por códigoID
         var municipioPorCodigo = municipioRepository
@@ -35,10 +35,12 @@ public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasB
         var listaDeBairrosPorMunicipio = bairroRepository
                 .findByMunicipio_codigoMunicipio(municipioPorCodigo.get().getCodigoMunicipio());
 
-        // checagem sobre o nome, lança exceção se já houver nome de bairro no database no mesmo município
+        // checagem sobre o nome, lança exceção se já houver nome de bairro igual no mesmo município
         for(Bairro bairro : listaDeBairrosPorMunicipio) {
-            if(bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome()))
-                throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
+            if (bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome())) {
+                if(bairro.getCodigoBairro() != bairroDtoEntrada.getCodigoBairro())
+                    throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
+            }
         }
     }
 }

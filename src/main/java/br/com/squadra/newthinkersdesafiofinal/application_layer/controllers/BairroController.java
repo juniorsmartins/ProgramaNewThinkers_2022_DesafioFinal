@@ -75,7 +75,7 @@ public class BairroController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!"),
             @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
-    @PutMapping("/{id}")
+    @PutMapping
     @Transactional
     public List<BairroDtoSaida> atualizar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
