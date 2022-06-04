@@ -6,7 +6,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
-
-    Optional<Pessoa> findByLogin(String login);
-    List<Pessoa> findAllBySobrenomeLike(String sobrenome);
 }

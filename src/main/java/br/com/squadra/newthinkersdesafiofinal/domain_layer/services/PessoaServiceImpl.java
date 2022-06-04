@@ -11,13 +11,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
-import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public final class PessoaService {
+public final class PessoaServiceImpl {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     // ---------- Injetados automaticamente
@@ -34,7 +31,7 @@ public final class PessoaService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
+    public List<PessoaDtoSaida> cadastrar(PessoaDtoEntrada pessoaDtoEntrada) {
         pessoaDeEntrada = pessoaDtoEntrada;
 
         converterPessoaDtoEntradaParaPessoa();
@@ -42,7 +39,6 @@ public final class PessoaService {
         salvarPessoa();
         converterPessoaParaPessoaDtoSaida();
 
-        URI uri = uriComponentsBuilder.path("/pessoas/{codigoPessoa}").buildAndExpand(pessoaDeSaida.getCodigoPessoa()).toUri();
         return ResponseEntity.created(uri).body(pessoaDeSaida);
     }
 
@@ -83,11 +79,14 @@ public final class PessoaService {
     }
 
         private void converterListaDePessoasParaListaDePessoasDeSaida() {
-            listaDePessoasDeSaida = listaDePessoasSalvas.stream().map(PessoaDtoSaida::new).collect(Collectors.toList());
+            listaDePessoasDeSaida = listaDePessoasSalvas
+                    .stream()
+                    .map(PessoaDtoSaida::new)
+                    .toList();
         }
 
     // ---------- Consultar
-    public ResponseEntity<?> consultar(Long codigoPessoa) {
+    public PessoaDtoSaida consultar(Long codigoPessoa) {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())
@@ -100,7 +99,7 @@ public final class PessoaService {
     }
 
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(Long codigoPessoa, PessoaDtoEntrada pessoaDtoEntrada) {
+    public List<PessoaDtoSaida> atualizar(PessoaDtoEntrada pessoaDtoEntrada) {
         pessoaDeEntrada = pessoaDtoEntrada;
 
         pessoaSalva = pessoaRepository.findById(codigoPessoa).get();
@@ -120,7 +119,7 @@ public final class PessoaService {
         }
 
     // ---------- Deletar
-    public ResponseEntity<?> deletar(Long codigoPessoa) {
+    public List<PessoaDtoSaida> deletar(Long codigoPessoa) {
 
         var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
         if(!pessoaDoDatabase.isPresent())

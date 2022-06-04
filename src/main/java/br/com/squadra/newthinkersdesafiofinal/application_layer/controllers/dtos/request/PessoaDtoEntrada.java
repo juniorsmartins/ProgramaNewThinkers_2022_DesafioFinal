@@ -11,10 +11,12 @@ public final class PessoaDtoEntrada {
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoPessoa;
     @Schema(description = "Denominação pessoal", type = "String", example = "Andrew", required = true)
-    @NotBlank @Length(max = 256)
+    @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
+    @Length(max = 256, message = "{campo.nome.nome-municipio-tamanho}")
     private String nome;
     @Schema(description = "Denominação familiar", type = "String", example = "Hunt", required = true)
-    @NotBlank @Length(max = 256)
+    @NotBlank
+    @Length(max = 256)
     private String sobrenome;
     @Schema(description = "Anos", type = "Integer", example = "32", required = true)
     @NotNull @Max(150)
@@ -25,7 +27,10 @@ public final class PessoaDtoEntrada {
     @Schema(description = "Código secreto", type = "String", example = "hunt123456", required = true)
     @NotBlank @Length(max = 50)
     private String senha;
-    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
+    @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
+    @NotNull(message = "{campo.status.obrigatorio}")
+    @Max(value = 2, message = "{campo.status.tamanho}")
+    @Min(value = 1, message = "{campo.status.tamanho}")
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //

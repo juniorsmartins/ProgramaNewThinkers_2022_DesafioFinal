@@ -1,7 +1,8 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.PessoaService;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,12 +11,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/pessoas")
+@RequestMapping("/pessoa")
 @Tag(name = "PessoaController")
 public class PessoaController {
 
@@ -28,17 +29,15 @@ public class PessoaController {
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
-            @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PostMapping
-    public ResponseEntity<?> cadastrar(
+    @Transactional
+    public List<PessoaDtoSaida> cadastrar(
             @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada, UriComponentsBuilder uriComponentsBuilder) {
-        return pessoaService.cadastrar(pessoaDtoEntrada, uriComponentsBuilder);
+            @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
+        return pessoaService.cadastrar(pessoaDtoEntrada);
     }
 
     // ----- Listar Todos
@@ -46,9 +45,7 @@ public class PessoaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
     public ResponseEntity<?> listar(PessoaDtoEntrada filtros) {
@@ -60,12 +57,10 @@ public class PessoaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<?> consultar(
+    public PessoaDtoSaida consultar(
             @Parameter(name = "codigoPessoa", description = "Chave Identificadora", example = "10", required = true)
             @PathVariable(name = "id") Long codigoPessoa) {
         return pessoaService.consultar(codigoPessoa);
@@ -76,31 +71,28 @@ public class PessoaController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!"),
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
-    @PutMapping("/{id}")
+    @PutMapping
     @Transactional
-    public ResponseEntity<?> atualizar(
-            @Parameter(name = "codigoPessoa", description = "Chave Identificadora", example = "8", required = true)
-            @PathVariable(name = "id") Long codigoPessoa,
+    public List<PessoaDtoSaida> atualizar(
             @Parameter(name = "pessoaDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid PessoaDtoEntrada pessoaDtoEntrada) {
-        return pessoaService.atualizar(codigoPessoa, pessoaDtoEntrada);
+        return pessoaService.atualizar(pessoaDtoEntrada);
     }
 
     // ----- Deletar Por Id
     @Operation(summary = "Deletar", description = "Deletar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
+            @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized - Usuário não autorizado!"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Usuário não autenticado!"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error - Erro interno do servidor!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(
+    @Transactional
+    public List<PessoaDtoSaida> deletar(
             @Parameter(name = "codigoPessoa", description = "Chave Identificadora", example = "7", required = true)
             @PathVariable(name = "id") Long codigoPessoa) {
         return pessoaService.deletar(codigoPessoa);
