@@ -101,7 +101,7 @@ public final class BairroServiceImpl implements BairroService {
             return ResponseEntity.ok().body(bairroDeSaida);
         }
 
-        if(filtros.getCodigoMunicipio() != null || filtros.getStatus() != null) {
+        if(filtros.getCodigoMunicipio() != null || filtros.getStatus() != null || filtros.getNome() != null) {
             listaDeBairrosSalvos = bairroRepository.findAll(example);
             if(listaDeBairrosSalvos.isEmpty())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
