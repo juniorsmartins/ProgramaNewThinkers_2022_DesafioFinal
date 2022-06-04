@@ -34,6 +34,7 @@ public final class UfServiceImpl implements UfService {
     private UfDtoSaida ufDeSaida;
     private List<Uf> listaDeUfsSalvas;
     private List<UfDtoSaida> listaDeUfsDeSaida;
+    private ExampleMatcher matcher;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasUfCadastrar> listaDeRegrasDeCadastro;
@@ -72,8 +73,10 @@ public final class UfServiceImpl implements UfService {
         }
 
         private void converterListaDeUfsParaListaDeUfsDeSaida() {
-            listaDeUfsDeSaida = listaDeUfsSalvas.stream()
-                    .map(UfDtoSaida::new).collect(Collectors.toList());
+            listaDeUfsDeSaida = listaDeUfsSalvas
+                    .stream()
+                    .map(UfDtoSaida::new)
+                    .toList();
         }
 
     // ---------- Listar

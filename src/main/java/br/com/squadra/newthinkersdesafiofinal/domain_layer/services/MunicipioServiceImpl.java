@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
@@ -18,8 +19,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public final class MunicipioServiceImpl implements MunicipioService {
@@ -59,7 +60,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
-        converterMunicipioParaMunicipioDtoSaida();
+        converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
         return listaDeMunicipiosDeSaida;
     }
 
@@ -74,14 +75,15 @@ public final class MunicipioServiceImpl implements MunicipioService {
         private void buscarTodosMunicipiosParaRetornar() {
             listaDeMunicipiosSalvos = municipioRepository.findAll()
                     .stream()
-                    .sorted((municipio1, municipio2) -> municipio2.getCodigoMunicipio()
-                            .compareTo(municipio1.getCodigoMunicipio()))
+                    .sorted((m1, m2) -> m2.getCodigoMunicipio().compareTo(m1.getCodigoMunicipio()))
                     .toList();
         }
 
         private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
-            listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos.stream()
-                    .map(MunicipioDtoSaida::new).collect(Collectors.toList());
+            listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos
+                    .stream()
+                    .map(MunicipioDtoSaida::new)
+                    .toList();
         }
 
     // ---------- Listar

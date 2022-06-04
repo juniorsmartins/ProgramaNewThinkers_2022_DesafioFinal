@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -22,7 +23,9 @@ public final class UfDtoEntradaAtualizar {
     @Length(min = 2, max = 2, message = "{campo.sigla.tamanho}")
     private String sigla;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
-    @NotNull(message = "{campo.status.obrigatorio}") @Max(value = 1, message = "{campo.status.tamanho}")
+    @NotNull(message = "{campo.status.obrigatorio}")
+    @Max(value = 2, message = "{campo.status.tamanho}")
+    @Min(value = 1, message = "{campo.status.tamanho}")
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
