@@ -101,7 +101,15 @@ public final class BairroServiceImpl implements BairroService {
             return ResponseEntity.ok().body(bairroDeSaida);
         }
 
-        listaDeBairrosSalvos = bairroRepository.findAll(example);
+        if(filtros.getCodigoMunicipio() != null || filtros.getStatus() != null) {
+            listaDeBairrosSalvos = bairroRepository.findAll(example);
+            if(listaDeBairrosSalvos.isEmpty())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+            converterListaDeBairrosParaListaDeBairrosDeSaida();
+            return ResponseEntity.ok().body(listaDeBairrosDeSaida);
+        }
+
+        buscarTodosBairrosParaRetornar();
         converterListaDeBairrosParaListaDeBairrosDeSaida();
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }

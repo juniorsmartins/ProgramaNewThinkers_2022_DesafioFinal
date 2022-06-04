@@ -23,21 +23,23 @@ public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasB
     @Override
     public void validar(BairroDtoEntrada bairroDtoEntrada) {
 
+        // busca município por códigoID
         var municipioPorCodigo = municipioRepository
                 .findById(bairroDtoEntrada.getCodigoMunicipio());
+
+        // verifica se trouxe município
         if(!municipioPorCodigo.isPresent())
             throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO);
-
         System.out.println(municipioPorCodigo.get().getNome());
 
+        // busca os bairros por município
         var listaDeBairrosPorMunicipio = bairroRepository
-                .findByMunicipio(municipioPorCodigo.get());
+                .findByMunicipio_codigoMunicipio(municipioPorCodigo.get().getCodigoMunicipio());
 
-        var a = listaDeBairrosPorMunicipio
-                .stream()
-                .filter(bairro -> bairroDtoEntrada.getNome().equalsIgnoreCase(bairro.getNome()))
-                .distinct();
-        if(a != null)
-            throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
+        // checagem sobre o nome, lança exceção se já houver nome de bairro no database no mesmo município
+        for(Bairro bairro : listaDeBairrosPorMunicipio) {
+            if(bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome()))
+                throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
+        }
     }
 }

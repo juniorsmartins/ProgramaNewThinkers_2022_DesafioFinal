@@ -16,7 +16,7 @@ public class RegraCodigoMunicipioValidoParaBairroCadastrar implements IRegrasBai
 
     @Override
     public void validar(BairroDtoEntrada bairroDtoEntrada) {
-/*        if(!municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).isPresent());
-            throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO);*/
+        if(!municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).isPresent())
+            throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO);
     }
 }
