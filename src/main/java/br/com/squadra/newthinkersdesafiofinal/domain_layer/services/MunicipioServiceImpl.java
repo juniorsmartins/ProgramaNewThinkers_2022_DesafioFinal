@@ -108,7 +108,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
             listaDeMunicipiosSalvos = municipioRepository.findAll(example);
             if(listaDeMunicipiosSalvos.isEmpty())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
-            converterMunicipioParaMunicipioDtoSaida();
+            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
             return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
         }
 
