@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @Service
@@ -85,9 +88,26 @@ public final class PessoaServiceImpl implements PessoaService {
         // Example - pega campos populados para criar filtros
         Example example = Example.of(modelMapper.map(filtros, Pessoa.class), matcher);
 
-        listaDePessoasSalvas = pessoaRepository.findAll(example);
-        converterListaDePessoasParaListaDePessoasDeSaida();
+        if(filtros.getCodigoPessoa() != null) {
+            var pessoaDoDatabase = pessoaRepository.findOne(example);
+            if(!pessoaDoDatabase.isPresent())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOPESSOA_NAO_ENCONTRADO);
+            pessoaSalva = (Pessoa) pessoaDoDatabase.get();
 
+            converterPessoaParaPessoaDtoSaida();
+            return ResponseEntity.ok().body(pessoaDeSaida);
+        }
+
+        if(filtros.getNome() != null || filtros.getSobrenome() != null || filtros.getStatus() != null) {
+            listaDePessoasSalvas = pessoaRepository.findAll(example);
+            if(listaDePessoasSalvas.isEmpty())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+            converterListaDePessoasParaListaDePessoasDeSaida();
+            return ResponseEntity.ok().body(listaDePessoasDeSaida);
+        }
+
+        buscarTodasPessoasParaRetornar();
+        converterListaDePessoasParaListaDePessoasDeSaida();
         return ResponseEntity.ok().body(listaDePessoasDeSaida);
     }
 
@@ -99,6 +119,10 @@ public final class PessoaServiceImpl implements PessoaService {
                     .withIgnoreNullValues()
                     .withStringMatcher(ExampleMatcher
                             .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        }
+
+        private void converterPessoaParaPessoaDtoSaida() {
+            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
         }
 
     // ---------- Consultar
@@ -113,10 +137,6 @@ public final class PessoaServiceImpl implements PessoaService {
 
         return ResponseEntity.ok().body(pessoaDeSaida);
     }
-
-        private void converterPessoaParaPessoaDtoSaida() {
-            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
-        }
 
     // ---------- Atualizar
     public List<PessoaDtoSaida> atualizar(PessoaDtoEntrada pessoaDtoEntrada) {
