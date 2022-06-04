@@ -8,16 +8,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
-public final class MunicipioDtoEntradaAtualizar {
+public final class BairroDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    @Schema(description = "Chave Identificadora", type = "Long", example = "18", required = true)
-    @NotNull(message = "{campo.codigo-uf.naonulo}")
-    private Long codigoUF;
-    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    @Schema(description = "Chave Identificadora", type = "Long", example = "10", required = true)
     @NotNull(message = "{campo.codigo-municipio.naonulo}")
     private Long codigoMunicipio;
-    @Schema(description = "Denominação", type = "String", example = "Londrina", required = true)
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    @NotNull(message = "{campo.codigo-bairro.naonulo}")
+    private Long codigoBairro;
+    @Schema(description = "Denominação", type = "String", example = "Centro Sul", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
     @Length(max = 256, message = "{campo.nome.nome-municipio-tamanho}")
     private String nome;
@@ -28,23 +28,23 @@ public final class MunicipioDtoEntradaAtualizar {
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //
-    public MunicipioDtoEntradaAtualizar() {}
+    public BairroDtoEntradaAtualizar() {}
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
-    public Long getCodigoUF() {
-        return codigoUF;
-    }
-
-    public void setCodigoUF(Long codigoUF) {
-        this.codigoUF = codigoUF;
-    }
-
     public Long getCodigoMunicipio() {
         return codigoMunicipio;
     }
 
     public void setCodigoMunicipio(Long codigoMunicipio) {
         this.codigoMunicipio = codigoMunicipio;
+    }
+
+    public Long getCodigoBairro() {
+        return codigoBairro;
+    }
+
+    public void setCodigoBairro(Long codigoBairro) {
+        this.codigoBairro = codigoBairro;
     }
 
     public String getNome() {

@@ -1,7 +1,10 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
-import br.com.squadra.newthinkersdesafiofinal.domain_layer.services.BairroService;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.BairroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,9 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/bairros")
+@RequestMapping("/bairro")
 @Tag(name = "BairroController")
 public class BairroController {
 
@@ -27,12 +31,12 @@ public class BairroController {
     @Operation(summary = "Cadastrar", description = "Criar novo registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
-            @ApiResponse(responseCode = "201", description = "Created - Recurso criado com sucesso!"),
-            @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!")
+            @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PostMapping
     @Transactional
-    public ResponseEntity<?> cadastrar(
+    public List<MunicipioDtoSaida> cadastrar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
         return bairroService.cadastrar(bairroDtoEntrada);
@@ -58,7 +62,7 @@ public class BairroController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<?> consultar(
+    public BairroDtoSaida consultar(
             @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "10", required = true)
             @PathVariable(name = "id") Long codigoBairro) {
         return bairroService.consultar(codigoBairro);
@@ -68,30 +72,29 @@ public class BairroController {
     @Operation(summary = "Atualizar", description = "Alterar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
-            @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
-            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
+            @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!"),
+            @ApiResponse(responseCode = "409", description = "Conflict - Informação em conflito no servidor.")
     })
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> atualizar(
-            @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "8", required = true)
-            @PathVariable(name = "id") Long codigoBairro,
+    public List<BairroDtoSaida> atualizar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
-            @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
-        return bairroService.atualizar(codigoBairro, bairroDtoEntrada);
+            @RequestBody @Valid BairroDtoEntradaAtualizar bairroDtoEntrada) {
+        return bairroService.atualizar(bairroDtoEntrada);
     }
 
     // ----- Deletar Por Id
     @Operation(summary = "Deletar", description = "Deletar registro no banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK - Tudo certo!"),
+            @ApiResponse(responseCode = "204", description = "No Content - Tudo certo! Sem retorno."),
             @ApiResponse(responseCode = "400", description = "Bad Request - Requisição mal-feita!"),
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> deletar(
+    public List<BairroDtoSaida> deletar(
             @Parameter(name = "codigoBairro", description = "Chave Identificadora", example = "7", required = true)
             @PathVariable(name = "id") Long codigoBairro) {
         return bairroService.deletar(codigoBairro);

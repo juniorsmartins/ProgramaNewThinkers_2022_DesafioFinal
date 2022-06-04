@@ -1,8 +1,11 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.BairroService;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Bairro;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public final class BairroService {
+public final class BairroServiceImpl implements BairroService {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     // ---------- Atributos Injetados automaticamente
@@ -37,7 +40,7 @@ public final class BairroService {
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
-    public ResponseEntity<?> cadastrar(BairroDtoEntrada bairroDtoEntrada) {
+    public List<MunicipioDtoSaida> cadastrar(BairroDtoEntrada bairroDtoEntrada) {
         bairroDeEntrada = bairroDtoEntrada;
 
         municipioVerificado = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio()).get();
@@ -90,7 +93,7 @@ public final class BairroService {
     }
 
     // ---------- Consultar
-    public ResponseEntity<?> consultar(Long codigoBairro) {
+    public BairroDtoSaida consultar(Long codigoBairro) {
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
             return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
@@ -106,7 +109,7 @@ public final class BairroService {
         }
 
     // ---------- Atualizar
-    public ResponseEntity<?> atualizar(Long codigoBairro, BairroDtoEntrada bairroDtoEntrada) {
+    public List<BairroDtoSaida> atualizar(BairroDtoEntradaAtualizar bairroDtoEntrada) {
 
         municipioVerificado = municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).get();
 
@@ -128,7 +131,7 @@ public final class BairroService {
         }
 
     // ---------- Deletar
-    public ResponseEntity<?> deletar(Long codigoBairro) {
+    public List<BairroDtoSaida> deletar(Long codigoBairro) {
 
         var bairroDoDatabase = bairroRepository.findById(codigoBairro);
         if(!bairroDoDatabase.isPresent())
