@@ -37,9 +37,9 @@ public final class UfServiceImpl implements UfService {
     private ExampleMatcher matcher;
     // ---------- Regras de Negócio
     @Autowired
-    private List<IRegrasUfCadastrar> listaDeRegrasDeCadastro;
+    private List<IRegrasUfCadastrar> listaDeRegrasDeCadastrar;
     @Autowired
-    private List<IRegrasUfAtualizar> listaDeRegrasDeAtualização;
+    private List<IRegrasUfAtualizar> listaDeRegrasDeAtualizar;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
@@ -48,7 +48,7 @@ public final class UfServiceImpl implements UfService {
         ufDeEntrada = ufDtoEntrada;
 
         // Tratamento de regras de negócio
-        listaDeRegrasDeCadastro.forEach(regra -> regra.validar(ufDeEntrada));
+        listaDeRegrasDeCadastrar.forEach(regra -> regra.validar(ufDeEntrada));
 
         converterUfDtoEntradaParaUf();
         salvarUf();
@@ -140,7 +140,7 @@ public final class UfServiceImpl implements UfService {
     public List<UfDtoSaida> atualizar(UfDtoEntradaAtualizar ufDtoEntrada) {
 
         // Tratamento de regras de negócio
-        listaDeRegrasDeAtualização.forEach(regra -> regra.validar(ufDtoEntrada));
+        listaDeRegrasDeAtualizar.forEach(regra -> regra.validar(ufDtoEntrada));
 
         return ufRepository.findById(ufDtoEntrada.getCodigoUF())
                 .map(ufDoDatabase -> {

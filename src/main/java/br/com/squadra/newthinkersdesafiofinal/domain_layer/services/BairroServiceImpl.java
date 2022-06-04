@@ -3,7 +3,8 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.BairroService;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public final class BairroServiceImpl implements BairroService {
@@ -41,9 +41,9 @@ public final class BairroServiceImpl implements BairroService {
     private ExampleMatcher matcher;
     // ---------- Regras de Negócio
     @Autowired
-    private List<IRegrasBairroCadastrar> listaDeRegrasDeCadastro;
+    private List<IRegrasBairroCadastrar> listaDeRegrasDeCadastrar;
     @Autowired
-    private List<IRegrasBairroAtualizar> listaDeRegrasDeCadastro;
+    private List<IRegrasBairroAtualizar> listaDeRegrasDeAtualizar;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
@@ -52,9 +52,8 @@ public final class BairroServiceImpl implements BairroService {
         bairroDeEntrada = bairroDtoEntrada;
 
         // Tratamento de regras de negócio
-        // ?? incluir padrão de tratamento de exceção
+        listaDeRegrasDeCadastrar.forEach(regra -> regra.validar(bairroDeEntrada));
 
-        municipioVerificado = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio()).get();
         converterBairroDtoEntradaParaBairro();
         salvarBairro();
         buscarTodosBairrosParaRetornar();
@@ -63,7 +62,7 @@ public final class BairroServiceImpl implements BairroService {
     }
 
         private void converterBairroDtoEntradaParaBairro() {
-            bairroSalvo = modelMapper.map(bairroSalvo, Bairro.class);
+            bairroSalvo = modelMapper.map(bairroDeEntrada, Bairro.class);
         }
 
         private void salvarBairro() {
@@ -87,23 +86,35 @@ public final class BairroServiceImpl implements BairroService {
     // ---------- Listar
     @Override
     public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
-        var bairroFiltro = modelMapper.map(filtros, Bairro.class);
 
-        // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-        ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                        .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                                .withStringMatcher(ExampleMatcher
-                                        .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
-
+        criarExampleMatcherParaConfigurarFiltros();
         // Example - pega campos populados para criar filtros
-        Example example = Example.of(bairroFiltro, matcher);
+        Example example = Example.of(modelMapper.map(filtros, Bairro.class), matcher);
+
+        if(filtros.getCodigoBairro() != null) {
+            var bairroDoDatabase = bairroRepository.findOne(example);
+            if(!bairroDoDatabase.isPresent())
+                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO);
+            bairroSalvo = (Bairro) bairroDoDatabase.get();
+
+            converterBairroParaBairroDtoSaida();
+            return ResponseEntity.ok().body(bairroDeSaida);
+        }
 
         listaDeBairrosSalvos = bairroRepository.findAll(example);
         converterListaDeBairrosParaListaDeBairrosDeSaida();
-
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
+
+        private void criarExampleMatcherParaConfigurarFiltros() {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            matcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher
+                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        }
 
         private void converterBairroParaBairroDtoSaida() {
             bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
@@ -122,35 +133,42 @@ public final class BairroServiceImpl implements BairroService {
     }
 
     // ---------- Atualizar
+    @Override
     public List<BairroDtoSaida> atualizar(BairroDtoEntradaAtualizar bairroDtoEntrada) {
+        bairroDeEntrada = modelMapper.map(bairroDtoEntrada, BairroDtoEntrada.class);
 
-        municipioVerificado = municipioRepository.findById(bairroDtoEntrada.getCodigoMunicipio()).get();
+        // Tratamento de regras de negócio
+        listaDeRegrasDeAtualizar.forEach(regra -> regra.validar(bairroDtoEntrada));
 
-        return bairroRepository.findById(codigoBairro)
-                .map(bairroDoDatabase -> {
-                    bairroDoDatabase.setNome(bairroDtoEntrada.getNome());
-                    bairroDoDatabase.setMunicipio(municipioVerificado);
-                    bairroDoDatabase.setStatus(bairroDtoEntrada.getStatus());
-                    listaDeBairrosSalvos = bairroRepository.findAll();
-                    listaDeBairrosDeSaida = listaDeBairrosSalvos.stream().map(BairroDtoSaida::new).collect(Collectors.toList());
-                    return ResponseEntity.ok().body(listaDeBairrosDeSaida);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        return bairroRepository.findById(bairroDtoEntrada.getCodigoBairro())
+                .map(bairro -> {
+                    disponibilizarMunicipioVerificado();
+                    atualizarBairro();
+                    buscarTodosBairrosParaRetornar();
+                    converterListaDeBairrosParaListaDeBairrosDeSaida();
+                    return listaDeBairrosDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO));
     }
 
+        private void disponibilizarMunicipioVerificado() {
+            municipioVerificado = municipioRepository.findById(bairroDeEntrada.getCodigoMunicipio()).get();
+        }
+
         private void atualizarBairro() {
-            bairroSalvo.setNome(bairroDeEntrada.getNome());
             bairroSalvo.setMunicipio(municipioVerificado);
+            bairroSalvo.setNome(bairroDeEntrada.getNome());
             bairroSalvo.setStatus(bairroDeEntrada.getStatus());
         }
 
     // ---------- Deletar
     public List<BairroDtoSaida> deletar(Long codigoBairro) {
 
-        var bairroDoDatabase = bairroRepository.findById(codigoBairro);
-        if(!bairroDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-
-        bairroRepository.deleteById(codigoBairro);
-        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
+        return bairroRepository.findById(codigoBairro)
+                .map(bairro -> {
+                    bairroRepository.delete(bairro);
+                    buscarTodosBairrosParaRetornar();
+                    converterListaDeBairrosParaListaDeBairrosDeSaida();
+                    return listaDeBairrosDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO));
     }
 }

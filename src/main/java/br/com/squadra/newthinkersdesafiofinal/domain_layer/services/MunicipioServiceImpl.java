@@ -41,7 +41,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
     private ExampleMatcher matcher;
     // ---------- Regras de Negócio
     @Autowired
-    private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastro;
+    private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastrar;
     @Autowired
     private List<IRegrasMunicipioAtualizar> listaDeRegrasDeAtualizar;
 
@@ -52,9 +52,8 @@ public final class MunicipioServiceImpl implements MunicipioService {
         municipioDeEntrada = municipioDtoEntrada;
 
         // Tratamento de regras de negócio
-        listaDeRegrasDeCadastro.forEach(regra -> regra.validar(municipioDeEntrada));
+        listaDeRegrasDeCadastrar.forEach(regra -> regra.validar(municipioDeEntrada));
 
-        ufVerificada = ufRepository.findById(municipioDeEntrada.getCodigoUF()).get();
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
@@ -144,26 +143,29 @@ public final class MunicipioServiceImpl implements MunicipioService {
     // ---------- Atualizar
     @Override
     public List<MunicipioDtoSaida> atualizar(MunicipioDtoEntradaAtualizar municipioDtoEntrada) {
+        municipioDeEntrada = modelMapper.map(municipioDtoEntrada, MunicipioDtoEntrada.class);
 
         // Tratamento de regras de negócio
         listaDeRegrasDeAtualizar.forEach(regra -> regra.validar(municipioDtoEntrada));
 
         return municipioRepository.findById(municipioDtoEntrada.getCodigoMunicipio())
                 .map(municipio -> {
-                    ufVerificada = ufRepository.findById(municipioDtoEntrada.getCodigoUF()).get();
-                    municipio.setUf(ufVerificada);
-                    municipio.setNome(municipioDtoEntrada.getNome());
-                    municipio.setStatus(municipioDtoEntrada.getStatus());
-                    municipioRepository.saveAndFlush(municipio);
+                    disponibilizarUfVerificada();
+                    atualizarMunicipio();
                     buscarTodosMunicipiosParaRetornar();
                     converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
                     return listaDeMunicipiosDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }
 
+        private void disponibilizarUfVerificada() {
+            ufVerificada = ufRepository.findById(municipioDeEntrada.getCodigoUF()).get();
+        }
+
         private void atualizarMunicipio() {
-            municipioSalvo.setNome(municipioDeEntrada.getNome());
             municipioSalvo.setUf(ufVerificada);
+            municipioSalvo.setNome(municipioDeEntrada.getNome());
+            municipioSalvo.setStatus(municipioDeEntrada.getStatus());
         }
 
     // ---------- Deletar

@@ -3,7 +3,6 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.BairroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +35,7 @@ public class BairroController {
     })
     @PostMapping
     @Transactional
-    public List<MunicipioDtoSaida> cadastrar(
+    public List<BairroDtoSaida> cadastrar(
             @Parameter(name = "bairroDtoEntrada", description = "Classe de transporte de dados de entrada.", required = true)
             @RequestBody @Valid BairroDtoEntrada bairroDtoEntrada) {
         return bairroService.cadastrar(bairroDtoEntrada);

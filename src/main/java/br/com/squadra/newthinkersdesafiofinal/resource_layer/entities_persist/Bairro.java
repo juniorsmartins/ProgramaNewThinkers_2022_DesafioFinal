@@ -1,7 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import org.hibernate.annotations.SQLDelete;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -27,7 +26,7 @@ public final class Bairro implements Serializable {
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
     private Municipio municipio;
     @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Endereco> endereco;
+    private List<Endereco> listaDeEnderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public Bairro() {}
@@ -65,11 +64,11 @@ public final class Bairro implements Serializable {
         this.municipio = municipio;
     }
 
-    public List<Endereco> getEndereco() {
-        return endereco;
+    public List<Endereco> getListaDeEnderecos() {
+        return listaDeEnderecos;
     }
 
-    public void setEndereco(List<Endereco> endereco) {
-        this.endereco = endereco;
+    public void setListaDeEnderecos(List<Endereco> listaDeEnderecos) {
+        this.listaDeEnderecos = listaDeEnderecos;
     }
 }
