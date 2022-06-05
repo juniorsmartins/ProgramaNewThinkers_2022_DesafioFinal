@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado.PessoaDtoSaidaDetalhado;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -61,7 +62,7 @@ public class PessoaController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping("/{id}")
-    public PessoaDtoSaida consultar(
+    public PessoaDtoSaidaDetalhado consultar(
             @Parameter(name = "codigoPessoa", description = "Chave Identificadora", example = "10", required = true)
             @PathVariable(name = "id") Long codigoPessoa) {
         return pessoaService.consultar(codigoPessoa);

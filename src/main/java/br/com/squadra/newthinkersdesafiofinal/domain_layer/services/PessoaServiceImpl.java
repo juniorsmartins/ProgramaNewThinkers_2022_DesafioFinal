@@ -142,13 +142,13 @@ public final class PessoaServiceImpl implements PessoaService {
 
     // ---------- Consultar
     @Override
-    public PessoaDtoSaida consultar(Long codigoPessoa) {
+    public PessoaDtoSaidaDetalhado consultar(Long codigoPessoa) {
 
         return pessoaRepository.findById(codigoPessoa)
                 .map(pessoa -> {
                     pessoaSalva = pessoa;
-                    converterPessoaParaPessoaDtoSaida();
-                    return pessoaDeSaida;
+                    converterPessoaParaPessoaDtoSaidaDetalhada();
+                    return pessoaDeSaidaDetalhado;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
     }
