@@ -15,7 +15,6 @@ public final class EnderecoDtoEntrada {
     private Long codigoEndereco;
     @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
     @NotBlank(message = "{campo.cep.naonuloandnaovazio}")
-    @CPF(message = "{campo.cep.formato}")
     private String cep;
     @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
     @NotNull(message = "{campo.codigo-bairro.naonulo}")

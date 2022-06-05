@@ -75,7 +75,8 @@ public final class PessoaServiceImpl implements PessoaService {
         }
 
         private void incluirCodigoPessoaEmEnderecos() {
-            pessoaSalva.getEnderecos().forEach(endereco -> endereco.setPessoa(pessoaSalva));
+            if(pessoaSalva.getEnderecos() != null)
+                pessoaSalva.getEnderecos().forEach(endereco -> endereco.setPessoa(pessoaSalva));
         }
 
         private void buscarTodasPessoasParaRetornar() {
