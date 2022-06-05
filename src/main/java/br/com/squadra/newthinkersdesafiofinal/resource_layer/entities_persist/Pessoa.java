@@ -32,7 +32,7 @@ public final class Pessoa implements Serializable {
     private Integer status;
     // ----- Relacionamento Bidirecional
     @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Endereco> listaDeEnderecos;
+    private List<Endereco> enderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public Pessoa() {}
@@ -94,11 +94,11 @@ public final class Pessoa implements Serializable {
         this.status = status;
     }
 
-    public List<Endereco> getListaDeEnderecos() {
-        return listaDeEnderecos;
+    public List<Endereco> getEnderecos() {
+        return enderecos;
     }
 
-    public void setListaDeEnderecos(List<Endereco> listaDeEnderecos) {
-        this.listaDeEnderecos = listaDeEnderecos;
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
     }
 }

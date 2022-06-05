@@ -59,6 +59,7 @@ public final class PessoaServiceImpl implements PessoaService {
 
         converterPessoaDtoEntradaParaPessoa();
         salvarPessoa();
+        incluirCodigoPessoaEmEnderecos();
         buscarTodasPessoasParaRetornar();
         converterListaDePessoasParaListaDePessoasDeSaida();
 
@@ -71,6 +72,10 @@ public final class PessoaServiceImpl implements PessoaService {
 
         private void salvarPessoa() {
             pessoaRepository.saveAndFlush(pessoaSalva);
+        }
+
+        private void incluirCodigoPessoaEmEnderecos() {
+            pessoaSalva.getEnderecos().forEach(endereco -> endereco.setPessoa(pessoaSalva));
         }
 
         private void buscarTodasPessoasParaRetornar() {

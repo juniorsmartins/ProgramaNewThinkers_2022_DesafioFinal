@@ -29,7 +29,7 @@ public final class Endereco implements Serializable {
     @JoinColumn(name = "codigo_bairro", referencedColumnName = "codigo_bairro", nullable = false)
     private Bairro bairro;
     @ManyToOne
-    @JoinColumn(name = "codigo_pessoa", referencedColumnName = "codigo_pessoa", nullable = false)
+    @JoinColumn(name = "codigo_pessoa", referencedColumnName = "codigo_pessoa")
     private Pessoa pessoa;
 
     // ---------- CONSTRUTORES ---------- //
