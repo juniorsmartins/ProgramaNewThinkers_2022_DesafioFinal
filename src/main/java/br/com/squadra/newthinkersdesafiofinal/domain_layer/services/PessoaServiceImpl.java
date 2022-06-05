@@ -80,16 +80,16 @@ public final class PessoaServiceImpl implements PessoaService {
         }
 
         private void buscarTodasPessoasParaRetornar() {
-            listaDePessoasSalvas = pessoaRepository.findAll()
-                    .stream()
-                    .sorted((pes1, pes2) -> pes2.getCodigoPessoa().compareTo(pes1.getCodigoPessoa()))
-                    .toList();
+            listaDePessoasSalvas = pessoaRepository.findAll();
         }
 
         private void converterListaDePessoasParaListaDePessoasDeSaida() {
-            listaDePessoasDeSaida = listaDePessoasSalvas
+            listaDePessoasDeSaida = (listaDePessoasSalvas
                     .stream()
                     .map(PessoaDtoSaida::new)
+                    .toList())
+                    .stream()
+                    .sorted((pes1, pes2) -> pes2.getCodigoPessoa().compareTo(pes1.getCodigoPessoa()))
                     .toList();
         }
 
