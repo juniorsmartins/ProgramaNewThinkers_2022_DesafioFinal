@@ -3,6 +3,9 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public final class PessoaDtoSaida {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
@@ -14,6 +17,7 @@ public final class PessoaDtoSaida {
     @JsonIgnore
     private String senha;
     private Integer status;
+    private List<EnderecoDtoSaida> enderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoSaida() {}
@@ -25,6 +29,11 @@ public final class PessoaDtoSaida {
         setLogin(pessoa.getLogin());
         setSenha(pessoa.getSenha());
         setStatus(pessoa.getStatus());
+        if(pessoa.getEnderecos() != null)
+            setEnderecos(pessoa.getEnderecos()
+                    .stream()
+                    .map(EnderecoDtoSaida::new)
+                    .collect(Collectors.toList()));
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -82,5 +91,13 @@ public final class PessoaDtoSaida {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<EnderecoDtoSaida> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<EnderecoDtoSaida> enderecos) {
+        this.enderecos = enderecos;
     }
 }
