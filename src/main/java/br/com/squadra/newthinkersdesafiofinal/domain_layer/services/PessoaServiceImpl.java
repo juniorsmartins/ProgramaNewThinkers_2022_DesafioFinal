@@ -19,7 +19,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,37 +175,6 @@ public final class PessoaServiceImpl implements PessoaService {
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
     }
-
-        /*private void atualizaEnderecos() {
-            var listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
-
-            for(EnderecoDtoEntrada enderecoAtual : pessoaDeEntrada.getEnderecos()) {
-                var enderecoDescartado = true;
-                for(Endereco enderecoDoDatabase : pessoaSalva.getEnderecos()) {
-                    if(enderecoDoDatabase.getCodigoEndereco() == enderecoAtual.getCodigoEndereco()) {
-                        enderecoDoDatabase.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
-                        enderecoDoDatabase.setCep(enderecoAtual.getCep());
-                        enderecoDoDatabase.setNomeRua(enderecoAtual.getNomeRua());
-                        enderecoDoDatabase.setNumero(enderecoAtual.getNumero());
-                        enderecoDoDatabase.setComplemento(enderecoAtual.getComplemento());
-                        enderecoDescartado = false;
-                    }
-                }
-                if(enderecoAtual.getCodigoEndereco() == null) {
-                    Endereco enderecoNovo = new Endereco();
-                    enderecoNovo.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
-                    enderecoNovo.setCep(enderecoAtual.getCep());
-                    enderecoNovo.setNomeRua(enderecoAtual.getNomeRua());
-                    enderecoNovo.setNumero(enderecoAtual.getNumero());
-                    enderecoNovo.setComplemento(enderecoAtual.getComplemento());
-                    listaDeEnderecosNovosParaAdicionar.add(enderecoNovo);
-                }
-                if(enderecoDescartado == true)
-                    enderecoRepository.deleteById(enderecoDoDatabase.getCodigoEndereco());
-            }
-            listaDeEnderecosNovosParaAdicionar.forEach(enderecoNovo ->
-                    pessoaSalva.getEnderecos().add((Endereco) enderecoNovo));
-        }*/
 
     private void atualizaEnderecos() {
         List<Endereco> listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
