@@ -1,6 +1,5 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado;
 
-import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Endereco;
 
 public final class EnderecoDtoSaidaDetalhado {
@@ -11,8 +10,8 @@ public final class EnderecoDtoSaidaDetalhado {
     private String nomeRua;
     private Integer numero;
     private String complemento;
-    private BairroDtoSaida bairro;
     private Long codigoPessoa;
+    private BairroDtoSaidaDetalhado bairro;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoSaidaDetalhado() {}
@@ -22,7 +21,7 @@ public final class EnderecoDtoSaidaDetalhado {
         setNomeRua(endereco.getNomeRua());
         setNumero(endereco.getNumero());
         setComplemento(endereco.getComplemento());
-        setBairro(new BairroDtoSaida(endereco.getBairro()));
+        setBairro(new BairroDtoSaidaDetalhado(endereco.getBairro()));
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
@@ -66,11 +65,11 @@ public final class EnderecoDtoSaidaDetalhado {
         this.complemento = complemento;
     }
 
-    public BairroDtoSaida getBairro() {
+    public BairroDtoSaidaDetalhado getBairro() {
         return bairro;
     }
 
-    public void setBairro(BairroDtoSaida bairro) {
+    public void setBairro(BairroDtoSaidaDetalhado bairro) {
         this.bairro = bairro;
     }
 
