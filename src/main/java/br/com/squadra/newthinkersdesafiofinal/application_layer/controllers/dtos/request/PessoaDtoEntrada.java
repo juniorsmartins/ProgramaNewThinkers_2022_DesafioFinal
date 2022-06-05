@@ -39,9 +39,9 @@ public final class PessoaDtoEntrada {
     @Schema(description = "Lista de Endereços", type = "List<Endereco>", example = "{\n" +
             "      \"codigoBairro\": 1,\n" +
             "      \"cep\": \"12345-678\",\n" +
-            "      \"nomeRua\": \"RUA DAS FLORES\",\n" +
+            "      \"nomeRua\": \"Rua Das Flores\",\n" +
             "      \"numero\": \"123\",\n" +
-            "      \"complemento\": \"CASA\"\n" +
+            "      \"complemento\": \"Casa\"\n" +
             "    }")
     private List<EnderecoDtoEntrada> enderecos;
 

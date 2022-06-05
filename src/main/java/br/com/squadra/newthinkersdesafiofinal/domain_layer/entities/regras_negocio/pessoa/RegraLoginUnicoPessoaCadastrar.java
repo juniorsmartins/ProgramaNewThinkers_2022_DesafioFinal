@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class RegraLoginUnicoCadastrar implements IRegrasPessoaCadastrar {
+public final class RegraLoginUnicoPessoaCadastrar implements IRegrasPessoaCadastrar {
 
     @Autowired
     private PessoaRepository pessoaRepository;

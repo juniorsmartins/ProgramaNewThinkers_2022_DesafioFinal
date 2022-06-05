@@ -153,10 +153,6 @@ public final class PessoaServiceImpl implements PessoaService {
                         .CODIGOPESSOA_NAO_ENCONTRADO));
     }
 
-        private void converterPessoaParaPessoaDtoSaida() {
-            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
-        }
-
     // ---------- Atualizar
     @Override
     public List<PessoaDtoSaida> atualizar(PessoaDtoEntradaAtualizar pessoaDtoEntrada) {

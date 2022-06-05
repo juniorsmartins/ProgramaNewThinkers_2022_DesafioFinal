@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
-public class ControleDeExcecoes {
+public final class ControleDeExcecoes {
 
     @Autowired
     private MessageSource messageInternacionalizada;
@@ -46,21 +46,4 @@ public class ControleDeExcecoes {
         });
         return ResponseEntity.badRequest().body(errosDeValidacao.get(0));
     }
-
-    /*@ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ApiErrors> handlerMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
-
-        List<ApiErrors> errosDeValidacao = new ArrayList<>();
-        List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
-
-        fieldErrors.forEach(erro -> {
-            String mensagem = messageInternacionalizada.getMessage(erro, LocaleContextHolder.getLocale());
-            ApiErrors erroPersonalizadoParaRetorno = new ApiErrors(
-                    HttpStatus.BAD_REQUEST.toString(), erro.getCode(), erro.getField(), mensagem);
-            errosDeValidacao.add(erroPersonalizadoParaRetorno);
-        });
-        return errosDeValidacao;
-    }*/
-
 }

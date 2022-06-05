@@ -6,6 +6,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class PessoaDtoEntradaAtualizar {
@@ -39,6 +40,14 @@ public final class PessoaDtoEntradaAtualizar {
     @Max(value = 2, message = "{campo.status.tamanho}")
     @Min(value = 1, message = "{campo.status.tamanho}")
     private Integer status;
+    @Schema(description = "Lista de Endereços", type = "List<Endereco>", example = "{\n" +
+            "      \"codigoBairro\": 1,\n" +
+            "      \"cep\": \"12345-678\",\n" +
+            "      \"nomeRua\": \"Rua Das Flores\",\n" +
+            "      \"numero\": \"123\",\n" +
+            "      \"complemento\": \"Casa\"\n" +
+            "    }")
+    private List<EnderecoDtoEntrada> enderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoEntradaAtualizar() {}
@@ -98,5 +107,13 @@ public final class PessoaDtoEntradaAtualizar {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<EnderecoDtoEntrada> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<EnderecoDtoEntrada> enderecos) {
+        this.enderecos = enderecos;
     }
 }
