@@ -21,7 +21,7 @@ public final class RegraCodigoBairroValidoParaPessoaAtualizar implements IRegras
             pessoaDtoEntradaAtualizar.getEnderecos()
                     .stream()
                     .map(endereco -> {
-                        if(bairroRepository.findById(endereco.getCodigoBairro()).isPresent()) {
+                        if(!bairroRepository.findById(endereco.getCodigoBairro()).isPresent()) {
                             throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO);
                         }
                         return endereco;

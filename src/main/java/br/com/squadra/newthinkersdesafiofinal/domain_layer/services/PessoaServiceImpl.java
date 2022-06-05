@@ -1,5 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.EnderecoDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
@@ -9,17 +10,17 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negoc
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Endereco;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.MunicipioRepository;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
-import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,6 +36,8 @@ public final class PessoaServiceImpl implements PessoaService {
     private MunicipioRepository municipioRepository;
     @Autowired
     private BairroRepository bairroRepository;
+    @Autowired
+    private EnderecoRepository enderecoRepository;
     @Autowired
     private ModelMapper modelMapper;
     // ---------- Atributos p/estilo pessoal de Clean Code
@@ -164,12 +167,80 @@ public final class PessoaServiceImpl implements PessoaService {
         return pessoaRepository.findById(pessoaDtoEntrada.getCodigoPessoa())
                 .map(pessoa -> {
                     pessoaSalva = pessoa;
+                    atualizaEnderecos();
                     atualizarPessoa();
+                    incluirCodigoPessoaEmEnderecos();
                     buscarTodasPessoasParaRetornar();
                     converterListaDePessoasParaListaDePessoasDeSaida();
                     return listaDePessoasDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
+    }
+
+        /*private void atualizaEnderecos() {
+            var listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
+
+            for(EnderecoDtoEntrada enderecoAtual : pessoaDeEntrada.getEnderecos()) {
+                var enderecoDescartado = true;
+                for(Endereco enderecoDoDatabase : pessoaSalva.getEnderecos()) {
+                    if(enderecoDoDatabase.getCodigoEndereco() == enderecoAtual.getCodigoEndereco()) {
+                        enderecoDoDatabase.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
+                        enderecoDoDatabase.setCep(enderecoAtual.getCep());
+                        enderecoDoDatabase.setNomeRua(enderecoAtual.getNomeRua());
+                        enderecoDoDatabase.setNumero(enderecoAtual.getNumero());
+                        enderecoDoDatabase.setComplemento(enderecoAtual.getComplemento());
+                        enderecoDescartado = false;
+                    }
+                }
+                if(enderecoAtual.getCodigoEndereco() == null) {
+                    Endereco enderecoNovo = new Endereco();
+                    enderecoNovo.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
+                    enderecoNovo.setCep(enderecoAtual.getCep());
+                    enderecoNovo.setNomeRua(enderecoAtual.getNomeRua());
+                    enderecoNovo.setNumero(enderecoAtual.getNumero());
+                    enderecoNovo.setComplemento(enderecoAtual.getComplemento());
+                    listaDeEnderecosNovosParaAdicionar.add(enderecoNovo);
+                }
+                if(enderecoDescartado == true)
+                    enderecoRepository.deleteById(enderecoDoDatabase.getCodigoEndereco());
+            }
+            listaDeEnderecosNovosParaAdicionar.forEach(enderecoNovo ->
+                    pessoaSalva.getEnderecos().add((Endereco) enderecoNovo));
+        }*/
+
+    private void atualizaEnderecos() {
+        var listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
+
+        for(Endereco enderecoDoDatabase : pessoaSalva.getEnderecos()) {
+            var enderecoDescartado = true;
+            for(EnderecoDtoEntrada enderecoAtual : pessoaDeEntrada.getEnderecos()) {
+                if(enderecoDoDatabase.getCodigoEndereco() == enderecoAtual.getCodigoEndereco()
+                        && enderecoAtual.getCodigoEndereco() != null) {
+                    enderecoDoDatabase.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
+                    enderecoDoDatabase.setCep(enderecoAtual.getCep());
+                    enderecoDoDatabase.setNomeRua(enderecoAtual.getNomeRua());
+                    enderecoDoDatabase.setNumero(enderecoAtual.getNumero());
+                    enderecoDoDatabase.setComplemento(enderecoAtual.getComplemento());
+                    enderecoDescartado = false;
+                }
+                if(enderecoAtual.getCodigoEndereco() == null) {
+                    Endereco enderecoNovo = new Endereco();
+                    enderecoNovo.setBairro(bairroRepository.findById(enderecoAtual.getCodigoBairro()).get());
+                    enderecoNovo.setCep(enderecoAtual.getCep());
+                    enderecoNovo.setNomeRua(enderecoAtual.getNomeRua());
+                    enderecoNovo.setNumero(enderecoAtual.getNumero());
+                    enderecoNovo.setComplemento(enderecoAtual.getComplemento());
+                    enderecoRepository.saveAndFlush(enderecoNovo);
+                    enderecoNovo.setPessoa(pessoaRepository.findById(pessoaDeEntrada.getCodigoPessoa()).get());
+                    enderecoAtual.setCodigoEndereco(enderecoNovo.getCodigoEndereco());
+                    listaDeEnderecosNovosParaAdicionar.add(enderecoNovo);
+                }
+            }
+            if(enderecoDescartado == true)
+                pessoaSalva.getEnderecos()
+        }
+        listaDeEnderecosNovosParaAdicionar.forEach(enderecoNovo ->
+                pessoaSalva.getEnderecos().add((Endereco) enderecoNovo));
     }
 
         private void atualizarPessoa() {

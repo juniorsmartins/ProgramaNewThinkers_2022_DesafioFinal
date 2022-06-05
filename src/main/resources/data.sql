@@ -17,6 +17,8 @@ INSERT INTO tb_bairro(nome, status, codigo_municipio)
     VALUES('Centro', 1, 2);
 INSERT INTO tb_bairro(nome, status, codigo_municipio)
     VALUES('Primavera', 2, 1);
+INSERT INTO tb_bairro(nome, status, codigo_municipio)
+    VALUES('Alameda Leste', 1, 1);
 
 INSERT INTO tb_endereco(cep, nome_rua, numero, complemento, codigo_bairro, codigo_pessoa)
     VALUES('78020-400', 'Rua Comandante Costa', 1550, 'Use interfone', 2, 1);
