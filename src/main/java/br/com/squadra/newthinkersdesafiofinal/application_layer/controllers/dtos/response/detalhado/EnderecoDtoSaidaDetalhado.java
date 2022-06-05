@@ -1,6 +1,7 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Endereco;
 
 public final class EnderecoDtoSaidaDetalhado {
 
@@ -10,11 +11,19 @@ public final class EnderecoDtoSaidaDetalhado {
     private String nomeRua;
     private Integer numero;
     private String complemento;
-    private BairroDtoSaida codigoBairro;
+    private BairroDtoSaida bairro;
     private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoSaidaDetalhado() {}
+    public EnderecoDtoSaidaDetalhado(Endereco endereco) {
+        setCodigoEndereco(endereco.getCodigoEndereco());
+        setCep(endereco.getCep());
+        setNomeRua(endereco.getNomeRua());
+        setNumero(endereco.getNumero());
+        setComplemento(endereco.getComplemento());
+        setBairro(new BairroDtoSaida(endereco.getBairro()));
+    }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public Long getCodigoEndereco() {
@@ -57,12 +66,12 @@ public final class EnderecoDtoSaidaDetalhado {
         this.complemento = complemento;
     }
 
-    public BairroDtoSaida getCodigoBairro() {
-        return codigoBairro;
+    public BairroDtoSaida getBairro() {
+        return bairro;
     }
 
-    public void setCodigoBairro(BairroDtoSaida codigoBairro) {
-        this.codigoBairro = codigoBairro;
+    public void setBairro(BairroDtoSaida bairro) {
+        this.bairro = bairro;
     }
 
     public Long getCodigoPessoa() {

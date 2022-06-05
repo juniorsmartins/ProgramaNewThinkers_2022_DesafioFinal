@@ -1,5 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado;
 
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
@@ -18,6 +19,20 @@ public final class PessoaDtoSaidaDetalhado {
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoSaidaDetalhado() {}
+    public PessoaDtoSaidaDetalhado(Pessoa pessoa) {
+        setCodigoPessoa(pessoa.getCodigoPessoa());
+        setNome(pessoa.getNome());
+        setSobrenome(pessoa.getSobrenome());
+        setIdade(pessoa.getIdade());
+        setLogin(pessoa.getLogin());
+        setSenha(pessoa.getSenha());
+        setStatus(pessoa.getStatus());
+        if(pessoa.getEnderecos() != null)
+            setEnderecos(pessoa.getEnderecos()
+                    .stream()
+                    .map(EnderecoDtoSaidaDetalhado::new)
+                    .toList());
+    }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //
     public Long getCodigoPessoa() {

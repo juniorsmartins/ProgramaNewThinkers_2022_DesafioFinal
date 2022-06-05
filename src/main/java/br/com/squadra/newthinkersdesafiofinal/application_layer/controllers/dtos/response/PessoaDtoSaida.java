@@ -2,7 +2,6 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +32,7 @@ public final class PessoaDtoSaida {
             setEnderecos(pessoa.getEnderecos()
                     .stream()
                     .map(EnderecoDtoSaida::new)
-                    .collect(Collectors.toList()));
+                    .toList());
     }
 
     // ---------- MÉTODOS GETTERS E SETTERS ---------- //

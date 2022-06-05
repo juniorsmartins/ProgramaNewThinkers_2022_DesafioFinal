@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado.PessoaDtoSaidaDetalhado;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
@@ -40,6 +41,7 @@ public final class PessoaServiceImpl implements PessoaService {
     private PessoaDtoEntrada pessoaDeEntrada;
     private Pessoa pessoaSalva;
     private PessoaDtoSaida pessoaDeSaida;
+    private PessoaDtoSaidaDetalhado pessoaDeSaidaDetalhado;
     private List<Pessoa> listaDePessoasSalvas;
     private List<PessoaDtoSaida> listaDePessoasDeSaida;
     private ExampleMatcher matcher;
@@ -106,8 +108,8 @@ public final class PessoaServiceImpl implements PessoaService {
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
             pessoaSalva = (Pessoa) pessoaDoDatabase.get();
 
-            converterPessoaParaPessoaDtoSaida();
-            return ResponseEntity.ok().body(pessoaDeSaida);
+            converterPessoaParaPessoaDtoSaidaDetalhada();
+            return ResponseEntity.ok().body(pessoaDeSaidaDetalhado);
         }
 
         if(filtros.getNome() != null || filtros.getSobrenome() != null
@@ -134,8 +136,8 @@ public final class PessoaServiceImpl implements PessoaService {
                             .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
         }
 
-        private void converterPessoaParaPessoaDtoSaida() {
-            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
+        private void converterPessoaParaPessoaDtoSaidaDetalhada() {
+            pessoaDeSaidaDetalhado = modelMapper.map(pessoaSalva, PessoaDtoSaidaDetalhado.class);
         }
 
     // ---------- Consultar
@@ -150,6 +152,10 @@ public final class PessoaServiceImpl implements PessoaService {
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
     }
+
+        private void converterPessoaParaPessoaDtoSaida() {
+            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
+        }
 
     // ---------- Atualizar
     @Override
