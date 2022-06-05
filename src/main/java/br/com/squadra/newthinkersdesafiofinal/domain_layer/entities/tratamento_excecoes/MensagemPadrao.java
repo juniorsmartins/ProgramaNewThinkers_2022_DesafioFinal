@@ -12,5 +12,6 @@ public final class MensagemPadrao {
     public static final String NOME_NAO_UNICO = "Nome - Recurso único já cadastrado no database.";
     public static final String NOME_NAO_UNICO_NO_MUNICIPIO = "Nome - Recurso único já cadastrado neste municípío.";
     public static final String SIGLA_NAO_UNICA = "Sigla - Recurso único já cadastrado no database.";
+    public static final String LOGIN_NAO_UNICO = "Login - Recurso único já cadastrado no database.";
     public static final String RECURSO_NAO_ENCONTRADO = "Recurso não encontrado!";
 }

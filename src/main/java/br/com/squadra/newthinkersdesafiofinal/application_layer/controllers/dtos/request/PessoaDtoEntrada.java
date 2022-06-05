@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class PessoaDtoEntrada {
@@ -18,7 +19,7 @@ public final class PessoaDtoEntrada {
     @NotBlank(message = "{campo.sobrenome.naonuloandnaovazio}")
     @Length(max = 256, message = "{campo.sobrenome.tamanhoMaximo256}")
     private String sobrenome;
-    @Schema(description = "Anos", type = "Integer", example = "32", required = true)
+    @Schema(description = "Anos de vida", type = "Integer", example = "32", required = true)
     @NotNull(message = "{campo.idade.naonulo}")
     @Max(value = 150, message = "{campo.idade.valorMaximo}")
     private Integer idade;
@@ -35,6 +36,14 @@ public final class PessoaDtoEntrada {
     @Max(value = 2, message = "{campo.status.tamanho}")
     @Min(value = 1, message = "{campo.status.tamanho}")
     private Integer status;
+    @Schema(description = "Lista de Endereços", type = "List<Endereco>", example = "{\n" +
+            "      \"codigoBairro\": 1,\n" +
+            "      \"cep\": \"12345-678\",\n" +
+            "      \"nomeRua\": \"RUA DAS FLORES\",\n" +
+            "      \"numero\": \"123\",\n" +
+            "      \"complemento\": \"CASA\"\n" +
+            "    }")
+    private List<EnderecoDtoEntrada> enderecos;
 
     // ---------- CONSTRUTORES ---------- //
     public PessoaDtoEntrada() {}
@@ -94,5 +103,13 @@ public final class PessoaDtoEntrada {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public List<EnderecoDtoEntrada> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<EnderecoDtoEntrada> enderecos) {
+        this.enderecos = enderecos;
     }
 }

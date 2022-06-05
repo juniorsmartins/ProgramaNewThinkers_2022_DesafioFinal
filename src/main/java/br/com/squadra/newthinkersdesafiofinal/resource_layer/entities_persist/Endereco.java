@@ -1,7 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import org.hibernate.annotations.SQLDelete;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -26,7 +25,7 @@ public final class Endereco implements Serializable {
     @Column(name = "complemento", length = 20)
     private String complemento;
     @Column(name = "status", length = 3, nullable = false)
-    private Integer status;
+    private Integer status; // revogar status
     // ----- Relacionamento Bidirecional
     @ManyToOne
     @JoinColumn(name = "codigo_bairro", referencedColumnName = "codigo_bairro", nullable = false)

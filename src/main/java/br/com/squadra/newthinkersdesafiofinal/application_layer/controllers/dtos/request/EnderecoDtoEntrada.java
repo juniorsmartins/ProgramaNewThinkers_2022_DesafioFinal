@@ -32,7 +32,6 @@ public final class EnderecoDtoEntrada {
     @NotNull
     private Long codigoBairro;
     @Schema(description = "Chave Identificadora", type = "Long", example = "17")
-    @NotNull
     private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //

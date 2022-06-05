@@ -1,7 +1,10 @@
 package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaCadastrar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
@@ -16,8 +19,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @Service
@@ -42,6 +43,11 @@ public final class PessoaServiceImpl implements PessoaService {
     private List<Pessoa> listaDePessoasSalvas;
     private List<PessoaDtoSaida> listaDePessoasDeSaida;
     private ExampleMatcher matcher;
+    // ---------- Regras de Negócio
+    @Autowired
+    private List<IRegrasPessoaCadastrar> listaDeRegrasDeCadastrar;
+    @Autowired
+    private List<IRegrasPessoaAtualizar> listaDeRegrasDeAtualizar;
 
     // ---------- MÉTODOS DE SERVIÇO ---------- //
     // ---------- Cadastrar
@@ -49,7 +55,7 @@ public final class PessoaServiceImpl implements PessoaService {
         pessoaDeEntrada = pessoaDtoEntrada;
 
         // Tratamento de regras de negócio
-        // ???? inserir regras
+        listaDeRegrasDeCadastrar.forEach(regra -> regra.validar(pessoaDeEntrada));
 
         converterPessoaDtoEntradaParaPessoa();
         salvarPessoa();
@@ -88,17 +94,18 @@ public final class PessoaServiceImpl implements PessoaService {
         // Example - pega campos populados para criar filtros
         Example example = Example.of(modelMapper.map(filtros, Pessoa.class), matcher);
 
-        if(filtros.getCodigoPessoa() != null) {
+        if(filtros.getCodigoPessoa() != null || filtros.getLogin() != null) {
             var pessoaDoDatabase = pessoaRepository.findOne(example);
             if(!pessoaDoDatabase.isPresent())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOPESSOA_NAO_ENCONTRADO);
+                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
             pessoaSalva = (Pessoa) pessoaDoDatabase.get();
 
             converterPessoaParaPessoaDtoSaida();
             return ResponseEntity.ok().body(pessoaDeSaida);
         }
 
-        if(filtros.getNome() != null || filtros.getSobrenome() != null || filtros.getStatus() != null) {
+        if(filtros.getNome() != null || filtros.getSobrenome() != null
+                || filtros.getStatus() != null || filtros.getIdade() != null) {
             listaDePessoasSalvas = pessoaRepository.findAll(example);
             if(listaDePessoasSalvas.isEmpty())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
@@ -126,28 +133,35 @@ public final class PessoaServiceImpl implements PessoaService {
         }
 
     // ---------- Consultar
+    @Override
     public PessoaDtoSaida consultar(Long codigoPessoa) {
 
-        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
-        if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-        pessoaSalva = pessoaDoDatabase.get();
-
-        converterPessoaParaPessoaDtoSaida();
-
-        return ResponseEntity.ok().body(pessoaDeSaida);
+        return pessoaRepository.findById(codigoPessoa)
+                .map(pessoa -> {
+                    pessoaSalva = pessoa;
+                    converterPessoaParaPessoaDtoSaida();
+                    return pessoaDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
+                        .CODIGOPESSOA_NAO_ENCONTRADO));
     }
 
     // ---------- Atualizar
-    public List<PessoaDtoSaida> atualizar(PessoaDtoEntrada pessoaDtoEntrada) {
-        pessoaDeEntrada = pessoaDtoEntrada;
+    @Override
+    public List<PessoaDtoSaida> atualizar(PessoaDtoEntradaAtualizar pessoaDtoEntrada) {
+        pessoaDeEntrada = modelMapper.map(pessoaDtoEntrada, PessoaDtoEntrada.class);
 
-        pessoaSalva = pessoaRepository.findById(codigoPessoa).get();
+        // Tratamento de regras de negócio
+        listaDeRegrasDeAtualizar.forEach(regra -> regra.validar(pessoaDtoEntrada));
 
-        atualizarPessoa();
-        converterPessoaParaPessoaDtoSaida();
-
-        return ResponseEntity.ok().body(pessoaDeSaida);
+        return pessoaRepository.findById(pessoaDtoEntrada.getCodigoPessoa())
+                .map(pessoa -> {
+                    pessoaSalva = pessoa;
+                    atualizarPessoa();
+                    buscarTodasPessoasParaRetornar();
+                    converterListaDePessoasParaListaDePessoasDeSaida();
+                    return listaDePessoasDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
+                        .CODIGOPESSOA_NAO_ENCONTRADO));
     }
 
         private void atualizarPessoa() {
@@ -156,16 +170,20 @@ public final class PessoaServiceImpl implements PessoaService {
             pessoaSalva.setIdade(pessoaDeEntrada.getIdade());
             pessoaSalva.setLogin(pessoaDeEntrada.getLogin());
             pessoaSalva.setSenha(pessoaDeEntrada.getSenha());
+            pessoaSalva.setStatus(pessoaDeEntrada.getStatus());
         }
 
     // ---------- Deletar
+    @Override
     public List<PessoaDtoSaida> deletar(Long codigoPessoa) {
 
-        var pessoaDoDatabase = pessoaRepository.findById(codigoPessoa);
-        if(!pessoaDoDatabase.isPresent())
-            return ResponseEntity.badRequest().body(MensagemPadrao.ID_NAO_ENCONTRADO);
-
-        pessoaRepository.deleteById(codigoPessoa);
-        return ResponseEntity.ok().body(MensagemPadrao.ID_DELETADO);
+        return pessoaRepository.findById(codigoPessoa)
+                .map(pessoa -> {
+                    pessoaRepository.delete(pessoa);
+                    buscarTodasPessoasParaRetornar();
+                    converterListaDePessoasParaListaDePessoasDeSaida();
+                    return listaDePessoasDeSaida;
+                }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
+                        .CODIGOPESSOA_NAO_ENCONTRADO));
     }
 }
