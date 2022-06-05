@@ -2,9 +2,9 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.br.CPF;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
@@ -14,25 +14,23 @@ public final class EnderecoDtoEntrada {
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoEndereco;
     @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
-    @NotNull @NotEmpty @Length(max = 10)
+    @NotBlank(message = "{campo.cep.naonuloandnaovazio}")
+    @CPF(message = "{campo.cep.formato}")
     private String cep;
+    @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
+    @NotNull(message = "{campo.codigo-bairro.naonulo}")
+    private Long codigoBairro;
     @Schema(description = "Denominação", type = "String", example = "Rua Eliza Michelete Vicente", required = true)
-    @NotBlank @Length(max = 256)
+    @NotBlank(message = "{campo.nomerua.naonuloandnaovazio}")
+    @Length(max = 256, message = "{campo.nomerua.tamanho}")
     private String nomeRua;
     @Schema(description = "Número", type = "Integer", example = "2158", required = true)
-    @NotNull @Max(99999)
+    @NotNull(message = "{campo.numero.naonulo}")
+    @Max(value = 99999, message = "{campo.numero.tamanho}")
     private Integer numero;
     @Schema(description = "Informações adicionais", type = "String", example = "Entrada pela lateral")
-    @Length(max = 20)
+    @Length(max = 20, message = "{campo.complemento.tamanho}")
     private String complemento;
-    @Schema(description = "Status 1 para Ativado e 0 para Desativado.", type = "Long", example = "1")
-    @NotNull @Max(1)
-    private Integer status;
-    @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
-    @NotNull
-    private Long codigoBairro;
-    @Schema(description = "Chave Identificadora", type = "Long", example = "17")
-    private Long codigoPessoa;
 
     // ---------- CONSTRUTORES ---------- //
     public EnderecoDtoEntrada() {}
@@ -78,27 +76,11 @@ public final class EnderecoDtoEntrada {
         this.complemento = complemento;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Long getCodigoBairro() {
         return codigoBairro;
     }
 
     public void setCodigoBairro(Long codigoBairro) {
         this.codigoBairro = codigoBairro;
-    }
-
-    public Long getCodigoPessoa() {
-        return codigoPessoa;
-    }
-
-    public void setCodigoPessoa(Long codigoPessoa) {
-        this.codigoPessoa = codigoPessoa;
     }
 }

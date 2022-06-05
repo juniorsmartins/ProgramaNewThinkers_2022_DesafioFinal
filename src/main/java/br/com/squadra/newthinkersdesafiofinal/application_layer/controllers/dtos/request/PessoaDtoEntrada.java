@@ -13,11 +13,11 @@ public final class PessoaDtoEntrada {
     private Long codigoPessoa;
     @Schema(description = "Denominação pessoal", type = "String", example = "Andrew", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
-    @Length(max = 256, message = "{campo.nome.tamanhoMaximo256}")
+    @Length(max = 256, message = "{campo.nome.tamanhoMaximo}")
     private String nome;
     @Schema(description = "Denominação familiar", type = "String", example = "Hunt", required = true)
     @NotBlank(message = "{campo.sobrenome.naonuloandnaovazio}")
-    @Length(max = 256, message = "{campo.sobrenome.tamanhoMaximo256}")
+    @Length(max = 256, message = "{campo.sobrenome.tamanhoMaximo}")
     private String sobrenome;
     @Schema(description = "Anos de vida", type = "Integer", example = "32", required = true)
     @NotNull(message = "{campo.idade.naonulo}")

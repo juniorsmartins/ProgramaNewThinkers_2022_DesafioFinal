@@ -10,7 +10,6 @@ public final class EnderecoDtoSaida {
     private String nomeRua;
     private Integer numero;
     private String complemento;
-    private Integer status;
     private Long codigoBairro;
     private Long codigoPessoa;
 
@@ -22,7 +21,6 @@ public final class EnderecoDtoSaida {
         setNomeRua(endereco.getNomeRua());
         setNumero(endereco.getNumero());
         setComplemento(endereco.getComplemento());
-        setStatus(endereco.getStatus());
         setCodigoBairro(endereco.getBairro().getCodigoBairro());
         setCodigoPessoa(endereco.getPessoa().getCodigoPessoa());
     }
@@ -66,14 +64,6 @@ public final class EnderecoDtoSaida {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public Long getCodigoBairro() {
