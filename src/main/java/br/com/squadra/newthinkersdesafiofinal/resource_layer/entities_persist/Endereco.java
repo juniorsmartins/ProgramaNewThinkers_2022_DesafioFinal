@@ -1,12 +1,10 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
-import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_endereco")
-@SQLDelete(sql = "UPDATE tb_endereco SET status = 2 WHERE codigo_endereco = ?;")
 public final class Endereco implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //

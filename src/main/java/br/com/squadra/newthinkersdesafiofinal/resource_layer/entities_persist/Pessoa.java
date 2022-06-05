@@ -1,7 +1,6 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import org.hibernate.annotations.SQLDelete;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
