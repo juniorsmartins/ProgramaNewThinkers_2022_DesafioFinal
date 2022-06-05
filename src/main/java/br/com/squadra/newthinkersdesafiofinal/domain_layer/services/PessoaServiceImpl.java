@@ -209,7 +209,8 @@ public final class PessoaServiceImpl implements PessoaService {
         }*/
 
     private void atualizaEnderecos() {
-        var listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
+        List<Endereco> listaDeEnderecosNovosParaAdicionar = new ArrayList<>();
+        List<Endereco> listaDeEnderecosVelhosParaDeletar = new ArrayList<>();
 
         for(Endereco enderecoDoDatabase : pessoaSalva.getEnderecos()) {
             var enderecoDescartado = true;
@@ -236,11 +237,23 @@ public final class PessoaServiceImpl implements PessoaService {
                     listaDeEnderecosNovosParaAdicionar.add(enderecoNovo);
                 }
             }
-            if(enderecoDescartado == true)
-                pessoaSalva.getEnderecos()
+            if(enderecoDescartado == true) {
+                listaDeEnderecosVelhosParaDeletar.add(enderecoDoDatabase);
+            }
         }
-        listaDeEnderecosNovosParaAdicionar.forEach(enderecoNovo ->
-                pessoaSalva.getEnderecos().add((Endereco) enderecoNovo));
+
+        if(!listaDeEnderecosVelhosParaDeletar.isEmpty()) {
+            listaDeEnderecosVelhosParaDeletar.forEach(enderecoVelho -> {
+                pessoaSalva.getEnderecos().remove(enderecoVelho);
+                enderecoRepository.delete(enderecoVelho);
+            });
+        }
+
+        if(!listaDeEnderecosNovosParaAdicionar.isEmpty()) {
+            listaDeEnderecosNovosParaAdicionar.forEach(enderecoNovo ->
+                    pessoaSalva.getEnderecos().add(enderecoNovo));
+            pessoaRepository.saveAndFlush(pessoaSalva);
+        }
     }
 
         private void atualizarPessoa() {
