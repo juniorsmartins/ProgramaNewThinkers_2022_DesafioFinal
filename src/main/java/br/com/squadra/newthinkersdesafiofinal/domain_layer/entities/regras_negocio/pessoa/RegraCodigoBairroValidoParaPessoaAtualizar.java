@@ -5,6 +5,7 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negoc
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.BairroRepository;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,15 @@ import org.springframework.stereotype.Service;
 public final class RegraCodigoBairroValidoParaPessoaAtualizar implements IRegrasPessoaAtualizar {
 
     @Autowired
+    private PessoaRepository pessoaRepository;
+    @Autowired
     private BairroRepository bairroRepository;
 
     @Override
     public void validar(PessoaDtoEntradaAtualizar pessoaDtoEntradaAtualizar) {
+
+        if(!pessoaRepository.findById(pessoaDtoEntradaAtualizar.getCodigoPessoa()).isPresent())
+            throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOPESSOA_NAO_ENCONTRADO);
 
         if(pessoaDtoEntradaAtualizar.getEnderecos() != null)
             pessoaDtoEntradaAtualizar.getEnderecos()

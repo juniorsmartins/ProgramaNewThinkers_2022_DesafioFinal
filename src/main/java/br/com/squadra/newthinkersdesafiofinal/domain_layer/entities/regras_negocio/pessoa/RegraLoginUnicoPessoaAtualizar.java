@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_nego
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
+import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RegrasDeNegocioVioladasException;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,10 @@ public final class RegraLoginUnicoPessoaAtualizar implements IRegrasPessoaAtuali
 
     @Override
     public void validar(PessoaDtoEntradaAtualizar pessoaDtoEntradaAtualizar) {
+
+        if(!pessoaRepository.findById(pessoaDtoEntradaAtualizar.getCodigoPessoa()).isPresent())
+            throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOPESSOA_NAO_ENCONTRADO);
+
         var pessoaDoDatabase = pessoaRepository.findByLogin(pessoaDtoEntradaAtualizar.getLogin());
         if(pessoaDoDatabase.isPresent()) {
             if(pessoaDoDatabase.get().getCodigoPessoa() != pessoaDtoEntradaAtualizar.getCodigoPessoa())
