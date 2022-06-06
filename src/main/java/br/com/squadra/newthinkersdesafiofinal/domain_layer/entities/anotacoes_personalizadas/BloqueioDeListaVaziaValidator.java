@@ -4,7 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class NotEmptyListValidator implements ConstraintValidator<NotEmptyList, List> {
+public class BloqueioDeListaVaziaValidator implements ConstraintValidator<NotEmptyList, List> {
 
     @Override
     public void initialize(NotEmptyList constraintAnnotation) {

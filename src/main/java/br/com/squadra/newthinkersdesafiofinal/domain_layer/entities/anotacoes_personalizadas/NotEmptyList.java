@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME) // Executada em tempo de execução
 @Target(ElementType.FIELD) // Onde será usada a anotação
-@Constraint(validatedBy = NotEmptyListValidator.class) // Diz que é uma anotação de valiadação
+@Constraint(validatedBy = BloqueioDeListaVaziaValidator.class) // Diz que é uma anotação de valiadação
 public @interface NotEmptyList {
     String message() default "Lista - Preenchimento obrigatório! Não pode estar vazia.";
     Class<?>[] groups() default {};
