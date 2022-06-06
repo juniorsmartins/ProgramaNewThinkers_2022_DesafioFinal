@@ -35,13 +35,13 @@ public final class ControleDeExcecoes {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handlerMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
 
-        List<ApiErrors> errosDeValidacao = new ArrayList<>();
+        List<ApiErrorsValidation> errosDeValidacao = new ArrayList<>();
         List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();
 
         fieldErrors.forEach(erro -> {
             String mensagem = messageInternacionalizada.getMessage(erro, LocaleContextHolder.getLocale());
-            ApiErrors erroPersonalizadoParaRetorno = new ApiErrors(
-                    HttpStatus.BAD_REQUEST.toString(), mensagem);
+            ApiErrorsValidation erroPersonalizadoParaRetorno = new ApiErrorsValidation(
+                    HttpStatus.BAD_REQUEST.toString(), mensagem, erro.getField(), erro.getCode());
             errosDeValidacao.add(erroPersonalizadoParaRetorno);
         });
         return ResponseEntity.badRequest().body(errosDeValidacao.get(0));

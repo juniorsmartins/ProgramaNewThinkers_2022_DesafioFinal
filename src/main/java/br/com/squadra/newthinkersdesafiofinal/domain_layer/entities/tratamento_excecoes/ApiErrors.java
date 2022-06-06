@@ -2,8 +2,6 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import java.util.Arrays;
-import java.util.List;
 
 @Data
 @Schema(description = "Classe para personalizar retorno de exceções.")
