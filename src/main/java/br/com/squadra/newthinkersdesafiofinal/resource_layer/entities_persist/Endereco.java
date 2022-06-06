@@ -9,13 +9,14 @@ public final class Endereco implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-    private static final String ENDERECO_SEQUENCE_NAME = "ENDERECO_SEQUENCE_ID";
+/*    private static final String ENDERECO_SEQUENCE_NAME = "ENDERECO_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+/*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ENDERECO_SEQUENCE_NAME)
-    @SequenceGenerator(name = ENDERECO_SEQUENCE_NAME, sequenceName = ENDERECO_SEQUENCE_NAME,
-            initialValue = 1, allocationSize = 20)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_SEQUENCE_NAME")
+    @SequenceGenerator(name = "ENDERECO_SEQUENCE_NAME", sequenceName = "ENDERECO_SEQ_NAME",
+            initialValue = 1, allocationSize = 1)
     @Column(name = "codigo_endereco", nullable = false)
     private Long codigoEndereco;
     @Column(name = "cep", length = 10, nullable = false)

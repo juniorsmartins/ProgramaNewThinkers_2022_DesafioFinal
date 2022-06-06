@@ -12,13 +12,14 @@ public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-    private static final String UF_SEQUENCE_NAME = "UF_SEQUENCE_ID";
+    /*private static final String UF_SEQUENCE_NAME = "UF_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+/*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = UF_SEQUENCE_NAME)
-    @SequenceGenerator(name = UF_SEQUENCE_NAME, sequenceName = UF_SEQUENCE_NAME,
-            initialValue = 1, allocationSize = 20)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UF_SEQUENCE_NAME")
+    @SequenceGenerator(name = "UF_SEQUENCE_NAME", sequenceName = "UF_SEQ_NAME",
+            initialValue = 1, allocationSize = 1)
     @Column(name = "Codigo_UF", nullable = false)
     private Long codigoUF;
     @Column(name = "nome", length = 60, nullable = false, unique = true)
