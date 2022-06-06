@@ -8,6 +8,7 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negoc
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.MensagemPadrao;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.tratamento_excecoes.RecursoNaoEncontradoException;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.UfService;
+import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Municipio;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Uf;
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.repositories.UfRepository;
 import org.modelmapper.ModelMapper;
@@ -16,7 +17,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +39,7 @@ public final class UfServiceImpl implements UfService {
     private UfDtoSaida ufDeSaida;
     private List<Uf> listaDeUfsSalvas;
     private List<UfDtoSaida> listaDeUfsDeSaida;
-    private ExampleMatcher matcher;
+    private Example exampleFiltro;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasUfCadastrar> listaDeRegrasDeCadastrar;
@@ -81,35 +86,22 @@ public final class UfServiceImpl implements UfService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(UfDtoEntrada filtros) {
+    public ResponseEntity<?> listar(UfDtoEntrada ufDtoEntrada) {
+        ufDeEntrada = ufDtoEntrada;
 
-        if(filtros.getCodigoUF() != null || filtros.getNome() != null || filtros.getSigla() != null) {
-            var ufFiltro = modelMapper.map(filtros, Uf.class);
+        criarExampleConfiguradoPorExampleMatcher();
+        listaDeUfsSalvas = ufRepository.findAll(exampleFiltro);
 
-            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-            ExampleMatcher matcher = ExampleMatcher
-                    .matching()
-                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
-                    .withIgnoreNullValues()
-                    .withStringMatcher(ExampleMatcher
-                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+        if(listaDeUfsSalvas.isEmpty())
+            return ResponseEntity.ok().body(new ArrayList<>());
 
-            // Example - pega campos populados para criar filtros
-            Example example = Example.of(ufFiltro, matcher);
-
-            var ufDoDatabase = ufRepository.findOne(example);
-            if(!ufDoDatabase.isPresent())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO);
-            ufSalva = (Uf) ufDoDatabase.get();
-
-            converterUfParaUfDtoSaida();
-            return ResponseEntity.ok().body(ufDeSaida);
+        if(ufDeEntrada.getCodigoUF() != null || ufDeEntrada.getNome() != null
+                || ufDeEntrada.getSigla() != null) {
+            converterListaDeUfsParaListaDeUfsDeSaida();
+            return ResponseEntity.ok().body(listaDeUfsDeSaida.get(0));
         }
 
-        if(filtros.getStatus() != null) {
-            listaDeUfsSalvas = ufRepository.findByStatus(filtros.getStatus());
-            if(listaDeUfsSalvas.isEmpty())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+        if(ufDeEntrada.getStatus() != null) {
             converterListaDeUfsParaListaDeUfsDeSaida();
             return ResponseEntity.ok().body(listaDeUfsDeSaida);
         }
@@ -118,6 +110,18 @@ public final class UfServiceImpl implements UfService {
         converterListaDeUfsParaListaDeUfsDeSaida();
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
+
+        private void criarExampleConfiguradoPorExampleMatcher() {
+            // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
+            ExampleMatcher matcher = ExampleMatcher
+                    .matching()
+                    .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
+                    .withIgnoreNullValues()
+                    .withStringMatcher(ExampleMatcher
+                            .StringMatcher.STARTING); // permite encontrar palavras tipo Like com Containing
+            // Example - pega campos populados para criar filtros
+            exampleFiltro = Example.of(modelMapper.map(ufDeEntrada, Uf.class), matcher);
+        }
 
         private void converterUfParaUfDtoSaida() {
             ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);

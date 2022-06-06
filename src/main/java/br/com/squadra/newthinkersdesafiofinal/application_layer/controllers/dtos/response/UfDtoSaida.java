@@ -6,8 +6,8 @@ public final class UfDtoSaida {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     private Long codigoUF;
-    private String nome;
     private String sigla;
+    private String nome;
     private Integer status;
 
     // ---------- CONSTRUTORES ---------- //

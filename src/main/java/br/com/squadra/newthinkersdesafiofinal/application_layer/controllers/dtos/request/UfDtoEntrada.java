@@ -13,14 +13,14 @@ public final class UfDtoEntrada {
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoUF;
-    @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
-    @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
-    @Length(max = 60, message = "{campo.nome.tamanho}")
-    private String nome;
     @Schema(description = "Abreviatura da denominação", type = "String", example = "PR", required = true)
     @NotBlank(message = "{campo.sigla.naonuloandnaovazio}")
     @Length(min = 2, max = 2, message = "{campo.sigla.tamanho}")
     private String sigla;
+    @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
+    @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
+    @Length(max = 60, message = "{campo.nome.tamanho}")
+    private String nome;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
     @NotNull(message = "{campo.status.obrigatorio}")
     @Max(value = 2, message = "{campo.status.tamanho}")

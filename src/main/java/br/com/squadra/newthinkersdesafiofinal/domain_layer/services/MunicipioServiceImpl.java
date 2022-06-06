@@ -91,7 +91,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
         // Example - pega campos populados para criar filtros
         Example example = Example.of(modelMapper.map(filtros, Municipio.class), matcher);
 
-        if(filtros.getCodigoMunicipio() != null || filtros.getNome() != null) {
+        if(filtros.getCodigoMunicipio() != null) {
             var municipioDoDatabase = municipioRepository.findOne(example);
             if(!municipioDoDatabase.isPresent())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
@@ -101,7 +101,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
             return ResponseEntity.ok().body(municipioDeSaida);
         }
 
-        if(filtros.getCodigoUF() != null || filtros.getStatus() != null) {
+        if(filtros.getCodigoUF() != null || filtros.getStatus() != null || filtros.getNome() != null) {
             listaDeMunicipiosSalvos = municipioRepository.findAll(example);
             if(listaDeMunicipiosSalvos.isEmpty())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
