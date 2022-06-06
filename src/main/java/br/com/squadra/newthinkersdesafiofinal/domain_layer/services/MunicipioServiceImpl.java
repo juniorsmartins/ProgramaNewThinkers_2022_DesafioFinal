@@ -18,6 +18,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +40,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
     private Uf ufVerificada;
     private List<Municipio> listaDeMunicipiosSalvos;
     private List<MunicipioDtoSaida> listaDeMunicipiosDeSaida;
-    private ExampleMatcher matcher;
+    private Example exampleFiltro;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasMunicipioCadastrar> listaDeRegrasDeCadastrar;
@@ -85,26 +87,22 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
+    public ResponseEntity<?> listar(MunicipioDtoEntrada municipioDtoEntrada) {
+        municipioDeEntrada = municipioDtoEntrada;
 
-        criarExampleMatcherParaConfigurarFiltros();
-        // Example - pega campos populados para criar filtros
-        Example example = Example.of(modelMapper.map(filtros, Municipio.class), matcher);
+        criarExampleConfiguradoPorExampleMatcher();
+        listaDeMunicipiosSalvos = municipioRepository.findAll(exampleFiltro);
 
-        if(filtros.getCodigoMunicipio() != null) {
-            var municipioDoDatabase = municipioRepository.findOne(example);
-            if(!municipioDoDatabase.isPresent())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
-            municipioSalvo = (Municipio) municipioDoDatabase.get();
+        if(listaDeMunicipiosSalvos.isEmpty())
+            return ResponseEntity.ok().body(new ArrayList<>());
 
-            converterMunicipioParaMunicipioDtoSaida();
-            return ResponseEntity.ok().body(municipioDeSaida);
+        if(municipioDeEntrada.getCodigoMunicipio() != null) {
+            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida.get(0));
         }
 
-        if(filtros.getCodigoUF() != null || filtros.getStatus() != null || filtros.getNome() != null) {
-            listaDeMunicipiosSalvos = municipioRepository.findAll(example);
-            if(listaDeMunicipiosSalvos.isEmpty())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+        if(municipioDeEntrada.getCodigoUF() != null || municipioDeEntrada.getStatus() != null
+                || municipioDeEntrada.getNome() != null) {
             converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
             return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
         }
@@ -114,14 +112,16 @@ public final class MunicipioServiceImpl implements MunicipioService {
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
-        private void criarExampleMatcherParaConfigurarFiltros() {
+        private void criarExampleConfiguradoPorExampleMatcher() {
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-            matcher = ExampleMatcher
+            ExampleMatcher matcher = ExampleMatcher
                     .matching()
                     .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
                     .withIgnoreNullValues()
                     .withStringMatcher(ExampleMatcher
-                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+                            .StringMatcher.STARTING); // permite encontrar palavras tipo Like com Containing
+            // Example - pega campos populados para criar filtros
+            exampleFiltro = Example.of(modelMapper.map(municipioDeEntrada, Municipio.class), matcher);
         }
 
         private void converterMunicipioParaMunicipioDtoSaida() {

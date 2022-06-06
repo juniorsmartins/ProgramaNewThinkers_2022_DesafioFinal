@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class EnderecoDtoEntrada {
@@ -15,9 +16,11 @@ public final class EnderecoDtoEntrada {
     private Long codigoEndereco;
     @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
     @NotBlank(message = "{campo.cep.naonuloandnaovazio}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private String cep;
     @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
     @NotNull(message = "{campo.codigo-bairro.naonulo}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private Long codigoBairro;
     @Schema(description = "Denominação", type = "String", example = "Rua Eliza Michelete Vicente", required = true)
     @NotBlank(message = "{campo.nomerua.naonuloandnaovazio}")
@@ -26,6 +29,7 @@ public final class EnderecoDtoEntrada {
     @Schema(description = "Número", type = "Integer", example = "2158", required = true)
     @NotNull(message = "{campo.numero.naonulo}")
     @Max(value = 99999, message = "{campo.numero.tamanho}")
+    @Positive(message = "{campo.numbers.numeropositivo}")
     private Integer numero;
     @Schema(description = "Informações adicionais", type = "String", example = "Entrada pela lateral")
     @Length(max = 20, message = "{campo.complemento.tamanho}")

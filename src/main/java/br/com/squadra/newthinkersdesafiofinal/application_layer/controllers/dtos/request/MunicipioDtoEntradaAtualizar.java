@@ -2,21 +2,23 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Normalized;
+import org.springframework.format.annotation.NumberFormat;
+
+import javax.validation.constraints.*;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class MunicipioDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    @Schema(description = "Chave Identificadora", type = "Long", example = "18", required = true)
-    @NotNull(message = "{campo.codigo-uf.naonulo}")
-    private Long codigoUF;
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     @NotNull(message = "{campo.codigo-municipio.naonulo}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private Long codigoMunicipio;
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18", required = true)
+    @NotNull(message = "{campo.codigo-uf.naonulo}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
+    private Long codigoUF;
     @Schema(description = "Denominação", type = "String", example = "Londrina", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
     @Length(max = 256, message = "{campo.nome.nome-municipio-tamanho}")

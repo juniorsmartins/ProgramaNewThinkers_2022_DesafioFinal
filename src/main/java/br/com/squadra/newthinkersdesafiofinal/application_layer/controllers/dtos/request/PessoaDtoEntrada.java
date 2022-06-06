@@ -23,6 +23,7 @@ public final class PessoaDtoEntrada {
     @Schema(description = "Anos de vida", type = "Integer", example = "32", required = true)
     @NotNull(message = "{campo.idade.naonulo}")
     @Max(value = 150, message = "{campo.idade.valorMaximo}")
+    @Positive(message = "{campo.numbers.numeropositivo}")
     private Integer idade;
     @Schema(description = "Identificação", type = "String", example = "huntandrew", required = true)
     @NotBlank(message = "{campo.login.naonuloandnaovazio}")

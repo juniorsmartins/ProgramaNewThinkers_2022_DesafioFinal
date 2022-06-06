@@ -11,11 +11,11 @@ import javax.validation.constraints.NotNull;
 public final class MunicipioDtoEntrada {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
+    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
+    private Long codigoMunicipio;
     @Schema(description = "Chave Identificadora", type = "Long", example = "18", required = true)
     @NotNull(message = "{campo.codigo-uf.naonulo}")
     private Long codigoUF;
-    @Schema(description = "Chave Identificadora", type = "Long", example = "18")
-    private Long codigoMunicipio;
     @Schema(description = "Denominação", type = "String", example = "Londrina", required = true)
     @NotBlank(message = "{campo.nome.naonuloandnaovazio}")
     @Length(max = 256, message = "{campo.nome.tamanhoMaximo256}")

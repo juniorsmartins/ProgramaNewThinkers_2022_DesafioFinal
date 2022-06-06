@@ -2,10 +2,8 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import javax.validation.constraints.*;
 
 @Schema(description = "Classe de transporte e validação de dados de entrada.")
 public final class BairroDtoEntrada {
@@ -13,6 +11,7 @@ public final class BairroDtoEntrada {
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     @Schema(description = "Chave Identificadora", type = "Long", example = "10", required = true)
     @NotNull(message = "{campo.codigo-municipio.naonulo}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private Long codigoMunicipio;
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoBairro;
