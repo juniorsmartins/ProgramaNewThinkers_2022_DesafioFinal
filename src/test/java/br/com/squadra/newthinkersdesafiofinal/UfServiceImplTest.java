@@ -13,7 +13,7 @@ public class UfServiceImplTest {
     private UfServiceImpl ufService;
 
     @Test
-    public void testeUfService() {
+    public void testarSeConsultarDeUfServiceRetornaErroPorCodigo() {
 
     }
 }

@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class NewThinkersDesafioFinalApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void newThinkersDesafioFinalApplication() {
+		NewThinkersDesafioFinalApplication.main(new String[]{});
 	}
 
 }
