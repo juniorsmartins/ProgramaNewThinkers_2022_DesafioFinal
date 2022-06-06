@@ -13,9 +13,13 @@ public final class Municipio implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
+    private static final String MUNICIPIO_SEQUENCE_NAME = "UF_SEQUENCE_ID";
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = MUNICIPIO_SEQUENCE_NAME)
+    @SequenceGenerator(name = MUNICIPIO_SEQUENCE_NAME, sequenceName = MUNICIPIO_SEQUENCE_NAME,
+            initialValue = 1, allocationSize = 20)
     @Column(name = "codigo_municipio", nullable = false)
     private Long codigoMunicipio;
     @Column(name = "nome", length = 256, nullable = false, unique = true)

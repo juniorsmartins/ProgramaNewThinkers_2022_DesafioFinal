@@ -12,9 +12,13 @@ public final class Pessoa implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
+    private static final String PESSOA_SEQUENCE_NAME = "PESSOA_SEQUENCE_ID";
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = PESSOA_SEQUENCE_NAME)
+    @SequenceGenerator(name = PESSOA_SEQUENCE_NAME, sequenceName = PESSOA_SEQUENCE_NAME,
+            initialValue = 1, allocationSize = 20)
     @Column(name = "codigo_pessoa", nullable = false)
     private Long codigoPessoa;
     @Column(name = "nome", length = 256, nullable = false)
