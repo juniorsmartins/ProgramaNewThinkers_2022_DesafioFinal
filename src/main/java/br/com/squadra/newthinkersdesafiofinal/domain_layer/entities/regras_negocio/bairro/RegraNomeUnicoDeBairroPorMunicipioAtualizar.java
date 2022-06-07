@@ -36,11 +36,9 @@ public class RegraNomeUnicoDeBairroPorMunicipioAtualizar implements IRegrasBairr
                 .findByMunicipio_codigoMunicipio(municipioPorCodigo.get().getCodigoMunicipio());
 
         // checagem sobre o nome, lança exceção se já houver nome de bairro igual no mesmo município
-        for(Bairro bairro : listaDeBairrosPorMunicipio) {
-            if (bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome())) {
+        for(Bairro bairro : listaDeBairrosPorMunicipio)
+            if (bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome()))
                 if(bairro.getCodigoBairro() != bairroDtoEntrada.getCodigoBairro())
                     throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
-            }
-        }
     }
 }
