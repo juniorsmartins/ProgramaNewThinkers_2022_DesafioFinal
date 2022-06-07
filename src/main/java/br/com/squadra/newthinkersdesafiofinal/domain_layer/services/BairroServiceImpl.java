@@ -121,7 +121,7 @@ public final class BairroServiceImpl implements BairroService {
                     .withStringMatcher(ExampleMatcher
                             .StringMatcher.STARTING); // permite encontrar palavras tipo Like com Containing
             // Example - pega campos populados para criar filtros
-            exampleFiltro = Example.of(modelMapper.map(bairroDeEntrada, Municipio.class), matcher);
+            exampleFiltro = Example.of(modelMapper.map(bairroDeEntrada, Bairro.class), matcher);
         }
 
     // ---------- Consultar
