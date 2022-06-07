@@ -9,7 +9,6 @@ public final class Endereco implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-/*    private static final String ENDERECO_SEQUENCE_NAME = "ENDERECO_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
 /*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/

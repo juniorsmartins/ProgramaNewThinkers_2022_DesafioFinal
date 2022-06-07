@@ -12,7 +12,6 @@ public final class Bairro implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-    /*private static final String BAIRRO_SEQUENCE_NAME = "BAIRRO_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
 /*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/

@@ -13,7 +13,6 @@ public final class Municipio implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-    /*private static final String MUNICIPIO_SEQUENCE_NAME = "MUNICIPIO_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
 /*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/

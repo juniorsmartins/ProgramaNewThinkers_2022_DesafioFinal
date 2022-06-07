@@ -46,7 +46,7 @@ public final class PessoaServiceImpl implements PessoaService {
     private PessoaDtoSaidaDetalhado pessoaDeSaidaDetalhado;
     private List<Pessoa> listaDePessoasSalvas;
     private List<PessoaDtoSaida> listaDePessoasDeSaida;
-    private ExampleMatcher matcher;
+    private Example exampleFiltro;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasPessoaCadastrar> listaDeRegrasDeCadastrar;
@@ -98,14 +98,17 @@ public final class PessoaServiceImpl implements PessoaService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar(PessoaDtoEntrada filtros) {
+    public ResponseEntity<?> listar(PessoaDtoEntrada pessoaDtoEntrada) {
+        pessoaDeEntrada = pessoaDtoEntrada;
 
-        criarExampleMatcherParaConfigurarFiltros();
-        // Example - pega campos populados para criar filtros
-        Example example = Example.of(modelMapper.map(filtros, Pessoa.class), matcher);
+        criarExampleConfiguradoPorExampleMatcher();
+        listaDePessoasSalvas = pessoaRepository.findAll(exampleFiltro);
 
-        if(filtros.getCodigoPessoa() != null || filtros.getLogin() != null) {
-            var pessoaDoDatabase = pessoaRepository.findOne(example);
+        if(listaDePessoasSalvas.isEmpty())
+            return ResponseEntity.ok().body(new ArrayList<>());
+
+        if(pessoaDeEntrada.getCodigoPessoa() != null || pessoaDeEntrada.getLogin() != null) {
+            var pessoaDoDatabase = pessoaRepository.findOne(exampleFiltro);
             if(!pessoaDoDatabase.isPresent())
                 throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
             pessoaSalva = (Pessoa) pessoaDoDatabase.get();
@@ -114,11 +117,8 @@ public final class PessoaServiceImpl implements PessoaService {
             return ResponseEntity.ok().body(pessoaDeSaidaDetalhado);
         }
 
-        if(filtros.getNome() != null || filtros.getSobrenome() != null
-                || filtros.getStatus() != null || filtros.getIdade() != null) {
-            listaDePessoasSalvas = pessoaRepository.findAll(example);
-            if(listaDePessoasSalvas.isEmpty())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+        if(pessoaDeEntrada.getNome() != null || pessoaDeEntrada.getSobrenome() != null
+                || pessoaDeEntrada.getStatus() != null || pessoaDeEntrada.getIdade() != null) {
             converterListaDePessoasParaListaDePessoasDeSaida();
             return ResponseEntity.ok().body(listaDePessoasDeSaida);
         }
@@ -128,14 +128,16 @@ public final class PessoaServiceImpl implements PessoaService {
         return ResponseEntity.ok().body(listaDePessoasDeSaida);
     }
 
-        private void criarExampleMatcherParaConfigurarFiltros() {
+        private void criarExampleConfiguradoPorExampleMatcher() {
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-            matcher = ExampleMatcher
+            ExampleMatcher matcher = ExampleMatcher
                     .matching()
                     .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
                     .withIgnoreNullValues()
                     .withStringMatcher(ExampleMatcher
-                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
+                            .StringMatcher.STARTING); // permite encontrar palavras tipo Like com Containing
+            // Example - pega campos populados para criar filtros
+            exampleFiltro = Example.of(modelMapper.map(pessoaDeEntrada, Pessoa.class), matcher);
         }
 
         private void converterPessoaParaPessoaDtoSaidaDetalhada() {

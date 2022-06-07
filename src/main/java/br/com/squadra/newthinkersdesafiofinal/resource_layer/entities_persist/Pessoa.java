@@ -12,7 +12,6 @@ public final class Pessoa implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-/*    private static final String PESSOA_SEQUENCE_NAME = "PESSOA_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
 /*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
@@ -35,7 +34,7 @@ public final class Pessoa implements Serializable {
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pessoa", fetch = FetchType.EAGER)
     private List<Endereco> enderecos;
 
     // ---------- CONSTRUTORES ---------- //

@@ -12,7 +12,6 @@ public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
-    /*private static final String UF_SEQUENCE_NAME = "UF_SEQUENCE_ID";*/
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
 /*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
