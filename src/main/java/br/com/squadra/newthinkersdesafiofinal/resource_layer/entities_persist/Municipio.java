@@ -23,7 +23,7 @@ public final class Municipio implements Serializable {
             initialValue = 1, allocationSize = 1)
     @Column(name = "codigo_municipio", nullable = false)
     private Long codigoMunicipio;
-    @Column(name = "nome", length = 256, nullable = false, unique = true)
+    @Column(name = "nome", length = 256, nullable = false)
     private String nome;
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;

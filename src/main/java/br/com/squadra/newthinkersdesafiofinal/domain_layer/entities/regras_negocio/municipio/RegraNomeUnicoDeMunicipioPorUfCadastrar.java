@@ -31,11 +31,11 @@ public final class RegraNomeUnicoDeMunicipioPorUfCadastrar implements IRegrasMun
             throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO);
 
         // busca municipios por uf
-        var listaDeMunicipiosPorUf = municipioRepository
-                .findByUf_codigoUf(ufPorCodigo.get().getCodigoUF());
+        var listaDeMunicipiosPorUF = municipioRepository
+                .findByUf_codigoUF(ufPorCodigo.get().getCodigoUF());
 
         // checagem sobre o nome, lança exceção se já houver nome de município na mesma UF
-        for(Municipio municipio : listaDeMunicipiosPorUf)
+        for(Municipio municipio : listaDeMunicipiosPorUF)
             if(municipio.getNome().equalsIgnoreCase(municipioDtoEntrada.getNome()))
                 throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NA_UF);
     }
