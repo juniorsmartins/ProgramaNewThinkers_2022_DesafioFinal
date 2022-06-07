@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.MunicipioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,8 +50,8 @@ public class MunicipioController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
-    public ResponseEntity<?> listar(MunicipioDtoEntrada filtros) {
-        return municipioService.listar(filtros);
+    public ResponseEntity<?> listar(MunicipioDtoEntradaListar municipioDtoEntradaListar) {
+        return municipioService.listar(municipioDtoEntradaListar);
     }
 
     // ----- Consultar Por Id

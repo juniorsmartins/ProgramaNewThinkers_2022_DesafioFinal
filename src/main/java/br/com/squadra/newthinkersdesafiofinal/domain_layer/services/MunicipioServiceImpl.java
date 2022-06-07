@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.MunicipioDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.MunicipioDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasMunicipioCadastrar;
@@ -87,8 +88,8 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(MunicipioDtoEntrada municipioDtoEntrada) {
-        municipioDeEntrada = municipioDtoEntrada;
+    public ResponseEntity<?> listar(MunicipioDtoEntradaListar municipioDtoEntradaListar) {
+        municipioDeEntrada = modelMapper.map(municipioDtoEntradaListar, MunicipioDtoEntrada.class);
 
         criarExampleConfiguradoPorExampleMatcher();
         listaDeMunicipiosSalvos = municipioRepository.findAll(exampleFiltro);
