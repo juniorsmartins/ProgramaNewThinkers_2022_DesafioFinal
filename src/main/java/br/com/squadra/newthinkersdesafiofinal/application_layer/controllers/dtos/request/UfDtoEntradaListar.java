@@ -13,7 +13,7 @@ public final class UfDtoEntradaListar {
     @Schema(description = "Denominação", type = "String", example = "Paraná", required = true)
     private String nome;
     @Schema(description = "Status 1 para Ativado e 2 para Desativado.", type = "Long", example = "1")
-    private Integer status;
+    private String status;
 
     // ---------- CONSTRUTORES ---------- //
     public UfDtoEntradaListar() {}
@@ -43,11 +43,11 @@ public final class UfDtoEntradaListar {
         this.sigla = sigla;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

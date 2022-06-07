@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.BairroService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,8 +50,8 @@ public class BairroController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
-    public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
-        return bairroService.listar(filtros);
+    public ResponseEntity<?> listar(BairroDtoEntradaListar bairroDtoEntradaListar) {
+        return bairroService.listar(bairroDtoEntradaListar);
     }
 
     // ----- Consultar Por Id

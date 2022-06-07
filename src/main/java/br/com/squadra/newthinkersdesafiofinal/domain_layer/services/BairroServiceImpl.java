@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.BairroDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.BairroDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasBairroCadastrar;
@@ -87,8 +88,8 @@ public final class BairroServiceImpl implements BairroService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(BairroDtoEntrada bairroDtoEntrada) {
-        bairroDeEntrada = bairroDtoEntrada;
+    public ResponseEntity<?> listar(BairroDtoEntradaListar bairroDtoEntradaListar) {
+        bairroDeEntrada = modelMapper.map(bairroDtoEntradaListar, BairroDtoEntrada.class);
 
         criarExampleConfiguradoPorExampleMatcher();
         listaDeBairrosSalvos = bairroRepository.findAll(exampleFiltro);
