@@ -21,19 +21,27 @@ public final class ControleDeExcecoes {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiErrorsPersonalizadas handlerRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
+    public ApiErrorsPersonalizadas excecaoRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
         return new ApiErrorsPersonalizadas(HttpStatus.NOT_FOUND.toString(), recursoNaoEncontradoException.getMessage());
     }
 
     @ExceptionHandler(RegrasDeNegocioVioladasException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiErrorsPersonalizadas handlerRegrasDeNegocioVioladasException(RegrasDeNegocioVioladasException regrasDeNegocioVioladasException) {
-        return new ApiErrorsPersonalizadas(HttpStatus.CONFLICT.toString(), regrasDeNegocioVioladasException.getMessage());
+    public ApiErrorsPersonalizadas excecaoRegrasDeNegocioVioladasException(RegrasDeNegocioVioladasException regrasDeNegocioVioladasException) {
+        return new ApiErrorsPersonalizadas(HttpStatus.CONFLICT.toString(),
+                regrasDeNegocioVioladasException.getMessage());
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public ApiErrorsPersonalizadas excecaoNaConversaoDeValoresEntreTipos(NumberFormatException numberFormatException) {
+        return new ApiErrorsPersonalizadas(HttpStatus.NOT_ACCEPTABLE.toString(),
+                MensagemPadrao.CODIGO_COM_FORMATO_INVALIDO);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> handlerMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public ResponseEntity<?> excecaoMethodNotValidException(MethodArgumentNotValidException methodArgumentNotValidException) {
 
         List<ApiErrorsValidation> errosDeValidacao = new ArrayList<>();
         List<FieldError> fieldErrors = methodArgumentNotValidException.getBindingResult().getFieldErrors();

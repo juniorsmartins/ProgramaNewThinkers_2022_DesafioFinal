@@ -13,4 +13,5 @@ public final class MensagemPadrao {
     public static final String SIGLA_NAO_UNICA = "Sigla - Recurso único já cadastrado no database.";
     public static final String LOGIN_NAO_UNICO = "Login - Recurso único já cadastrado no database.";
     public static final String RECURSO_NAO_ENCONTRADO = "Recurso não encontrado no banco de dados!";
+    public static final String CODIGO_COM_FORMATO_INVALIDO = "Código - Digite apenas números. Não são permitidas letras.";
 }

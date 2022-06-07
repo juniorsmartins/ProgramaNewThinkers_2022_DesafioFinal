@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.UfService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,8 +50,8 @@ public class UfController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
-    public ResponseEntity<?> listar(UfDtoEntrada filtros) {
-        return ufService.listar(filtros);
+    public ResponseEntity<?> listar(UfDtoEntradaListar ufDtoEntradaListar) {
+        return ufService.listar(ufDtoEntradaListar);
     }
 
     // ----- Consultar Por Id

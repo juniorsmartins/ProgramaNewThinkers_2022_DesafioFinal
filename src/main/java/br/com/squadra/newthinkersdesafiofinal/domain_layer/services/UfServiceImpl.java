@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.UfDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.UfDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasUfAtualizar;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasUfCadastrar;
@@ -86,8 +87,8 @@ public final class UfServiceImpl implements UfService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(UfDtoEntrada ufDtoEntrada) {
-        ufDeEntrada = ufDtoEntrada;
+    public ResponseEntity<?> listar(UfDtoEntradaListar ufDtoEntradaListar) {
+        ufDeEntrada = modelMapper.map(ufDtoEntradaListar, UfDtoEntrada.class);
 
         criarExampleConfiguradoPorExampleMatcher();
         listaDeUfsSalvas = ufRepository.findAll(exampleFiltro);

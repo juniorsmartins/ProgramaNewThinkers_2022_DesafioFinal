@@ -10,6 +10,8 @@ import java.util.Locale;
 @Configuration
 public class MensagensConfig {
 
+    // Padronização de mensagens via messages.properties
+
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
