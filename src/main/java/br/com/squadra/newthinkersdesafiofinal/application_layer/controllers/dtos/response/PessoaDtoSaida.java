@@ -3,7 +3,6 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist.Pessoa;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class PessoaDtoSaida {
 
@@ -16,6 +15,7 @@ public final class PessoaDtoSaida {
     @JsonIgnore
     private String senha;
     private Integer status;
+    @JsonIgnore
     private List<EnderecoDtoSaida> enderecos;
 
     // ---------- CONSTRUTORES ---------- //

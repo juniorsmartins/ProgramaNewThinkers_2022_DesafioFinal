@@ -175,7 +175,8 @@ public final class MunicipioServiceImpl implements MunicipioService {
 
         return municipioRepository.findById(codigoMunicipio)
                 .map(municipio -> {
-                    municipioRepository.delete(municipio);
+                    /*municipioRepository.delete(municipio);*/
+                    municipio.setStatus(2);
                     buscarTodosMunicipiosParaRetornar();
                     converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
                     return listaDeMunicipiosDeSaida;

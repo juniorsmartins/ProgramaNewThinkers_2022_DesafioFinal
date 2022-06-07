@@ -107,14 +107,18 @@ public final class PessoaServiceImpl implements PessoaService {
         if(listaDePessoasSalvas.isEmpty())
             return ResponseEntity.ok().body(new ArrayList<>());
 
-        if(pessoaDeEntrada.getCodigoPessoa() != null || pessoaDeEntrada.getLogin() != null) {
+        if(pessoaDeEntrada.getCodigoPessoa() != null) {
             var pessoaDoDatabase = pessoaRepository.findOne(exampleFiltro);
-            if(!pessoaDoDatabase.isPresent())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
             pessoaSalva = (Pessoa) pessoaDoDatabase.get();
-
             converterPessoaParaPessoaDtoSaidaDetalhada();
             return ResponseEntity.ok().body(pessoaDeSaidaDetalhado);
+        }
+
+        if(pessoaDeEntrada.getLogin() != null) {
+            var pessoaDoDatabase = pessoaRepository.findOne(exampleFiltro);
+            pessoaSalva = (Pessoa) pessoaDoDatabase.get();
+            convertePessoaParaPessoaDtoSaida();
+            return ResponseEntity.ok().body(pessoaDeSaida);
         }
 
         if(pessoaDeEntrada.getNome() != null || pessoaDeEntrada.getSobrenome() != null
@@ -142,6 +146,10 @@ public final class PessoaServiceImpl implements PessoaService {
 
         private void converterPessoaParaPessoaDtoSaidaDetalhada() {
             pessoaDeSaidaDetalhado = modelMapper.map(pessoaSalva, PessoaDtoSaidaDetalhado.class);
+        }
+
+        private void convertePessoaParaPessoaDtoSaida() {
+            pessoaDeSaida = modelMapper.map(pessoaSalva, PessoaDtoSaida.class);
         }
 
     // ---------- Consultar

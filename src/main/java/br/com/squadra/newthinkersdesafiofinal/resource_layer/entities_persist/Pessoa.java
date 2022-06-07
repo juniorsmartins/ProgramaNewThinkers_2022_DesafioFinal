@@ -7,14 +7,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_pessoa")
-@SQLDelete(sql = "UPDATE tb_pessoa SET status = 2 WHERE codigo_pessoa = ?;")
+// OBS: não usei soft delete para mostrar delete em cascata de Pessoa com Endereço
+/*@SQLDelete(sql = "UPDATE tb_pessoa SET status = 2 WHERE codigo_pessoa = ?;")*/
 public final class Pessoa implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-/*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
+/*    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PESSOA_SEQUENCE_NAME")
     @SequenceGenerator(name = "PESSOA_SEQUENCE_NAME", sequenceName = "PESSOA_SEQ_NAME",
@@ -34,7 +35,7 @@ public final class Pessoa implements Serializable {
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToMany(mappedBy = "pessoa", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "pessoa", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Endereco> enderecos;
 
     // ---------- CONSTRUTORES ---------- //

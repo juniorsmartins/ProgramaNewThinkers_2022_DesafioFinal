@@ -7,14 +7,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_bairro")
-@SQLDelete(sql = "UPDATE tb_bairro SET status = 2 WHERE codigo_bairro = ?;")
+/*@SQLDelete(sql = "UPDATE tb_bairro SET status = 2 WHERE codigo_bairro = ?;")*/
 public final class Bairro implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-/*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
+/*    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BAIRRO_SEQUENCE_NAME")
     @SequenceGenerator(name = "BAIRRO_SEQUENCE_NAME", sequenceName = "BAIRRO_SEQ_NAME",
@@ -29,7 +29,7 @@ public final class Bairro implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
     private Municipio municipio;
-    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bairro", /*cascade = {CascadeType.ALL}, orphanRemoval = true,*/ fetch = FetchType.LAZY)
     private List<Endereco> listaDeEnderecos;
 
     // ---------- CONSTRUTORES ---------- //
