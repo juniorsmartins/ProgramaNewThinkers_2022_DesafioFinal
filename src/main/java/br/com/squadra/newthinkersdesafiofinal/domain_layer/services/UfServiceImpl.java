@@ -123,10 +123,6 @@ public final class UfServiceImpl implements UfService {
             exampleFiltro = Example.of(modelMapper.map(ufDeEntrada, Uf.class), matcher);
         }
 
-        private void converterUfParaUfDtoSaida() {
-            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
-        }
-
     // ---------- Consultar
     @Override
     public UfDtoSaida consultar(Long codigoUF) {
@@ -138,6 +134,10 @@ public final class UfServiceImpl implements UfService {
                     return ufDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
     }
+
+        private void converterUfParaUfDtoSaida() {
+            ufDeSaida = modelMapper.map(ufSalva, UfDtoSaida.class);
+        }
 
     // ---------- Atualizar
     @Override

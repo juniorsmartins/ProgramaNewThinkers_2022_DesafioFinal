@@ -18,6 +18,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +40,7 @@ public final class BairroServiceImpl implements BairroService {
     private Municipio municipioVerificado;
     private List<Bairro> listaDeBairrosSalvos;
     private List<BairroDtoSaida> listaDeBairrosDeSaida;
-    private ExampleMatcher matcher;
+    private Example exampleFiltro;
     // ---------- Regras de Negócio
     @Autowired
     private List<IRegrasBairroCadastrar> listaDeRegrasDeCadastrar;
@@ -85,26 +87,22 @@ public final class BairroServiceImpl implements BairroService {
 
     // ---------- Listar
     @Override
-    public ResponseEntity<?> listar(BairroDtoEntrada filtros) {
+    public ResponseEntity<?> listar(BairroDtoEntrada bairroDtoEntrada) {
+        bairroDeEntrada = bairroDtoEntrada;
 
-        criarExampleMatcherParaConfigurarFiltros();
-        // Example - pega campos populados para criar filtros
-        Example example = Example.of(modelMapper.map(filtros, Bairro.class), matcher);
+        criarExampleConfiguradoPorExampleMatcher();
+        listaDeBairrosSalvos = bairroRepository.findAll(exampleFiltro);
 
-        if(filtros.getCodigoBairro() != null) {
-            var bairroDoDatabase = bairroRepository.findOne(example);
-            if(!bairroDoDatabase.isPresent())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO);
-            bairroSalvo = (Bairro) bairroDoDatabase.get();
+        if(listaDeBairrosSalvos.isEmpty())
+            return ResponseEntity.ok().body(new ArrayList<>());
 
-            converterBairroParaBairroDtoSaida();
-            return ResponseEntity.ok().body(bairroDeSaida);
+        if(bairroDeEntrada.getCodigoBairro() != null) {
+            converterListaDeBairrosParaListaDeBairrosDeSaida();
+            return ResponseEntity.ok().body(listaDeBairrosDeSaida.get(0));
         }
 
-        if(filtros.getCodigoMunicipio() != null || filtros.getStatus() != null || filtros.getNome() != null) {
-            listaDeBairrosSalvos = bairroRepository.findAll(example);
-            if(listaDeBairrosSalvos.isEmpty())
-                throw new RecursoNaoEncontradoException(MensagemPadrao.RECURSO_NAO_ENCONTRADO);
+        if(bairroDeEntrada.getCodigoMunicipio() != null || bairroDeEntrada.getNome() != null
+                || bairroDeEntrada.getStatus() != null) {
             converterListaDeBairrosParaListaDeBairrosDeSaida();
             return ResponseEntity.ok().body(listaDeBairrosDeSaida);
         }
@@ -114,18 +112,16 @@ public final class BairroServiceImpl implements BairroService {
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
 
-        private void criarExampleMatcherParaConfigurarFiltros() {
+        private void criarExampleConfiguradoPorExampleMatcher() {
             // ExampleMatcher - permite configurar condições para serem aplicadas nos filtros
-            matcher = ExampleMatcher
+            ExampleMatcher matcher = ExampleMatcher
                     .matching()
                     .withIgnoreCase() // Ignore caixa alta ou baixa - quando String
                     .withIgnoreNullValues()
                     .withStringMatcher(ExampleMatcher
-                            .StringMatcher.CONTAINING); // permite encontrar palavras tipo Like com Containing
-        }
-
-        private void converterBairroParaBairroDtoSaida() {
-            bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
+                            .StringMatcher.STARTING); // permite encontrar palavras tipo Like com Containing
+            // Example - pega campos populados para criar filtros
+            exampleFiltro = Example.of(modelMapper.map(bairroDeEntrada, Municipio.class), matcher);
         }
 
     // ---------- Consultar
@@ -139,6 +135,10 @@ public final class BairroServiceImpl implements BairroService {
                     return bairroDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO));
     }
+
+        private void converterBairroParaBairroDtoSaida() {
+            bairroDeSaida = modelMapper.map(bairroSalvo, BairroDtoSaida.class);
+        }
 
     // ---------- Atualizar
     @Override

@@ -124,10 +124,6 @@ public final class MunicipioServiceImpl implements MunicipioService {
             exampleFiltro = Example.of(modelMapper.map(municipioDeEntrada, Municipio.class), matcher);
         }
 
-        private void converterMunicipioParaMunicipioDtoSaida() {
-            municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);
-        }
-
     // ---------- Consultar
     @Override
     public MunicipioDtoSaida consultar(Long codigoMunicipio) {
@@ -139,6 +135,10 @@ public final class MunicipioServiceImpl implements MunicipioService {
                     return municipioDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }
+
+        private void converterMunicipioParaMunicipioDtoSaida() {
+            municipioDeSaida = modelMapper.map(municipioSalvo, MunicipioDtoSaida.class);
+        }
 
     // ---------- Atualizar
     @Override
