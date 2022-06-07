@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD) // Onde será usada a anotação
 @Constraint(validatedBy = BloqueioDeListaVaziaValidator.class) // Diz que é uma anotação de valiadação
 public @interface NotEmptyList {
-    String message() default "Lista - Preenchimento obrigatório! Não pode estar vazia.";
+    String message() default "Endereço - Preenchimento obrigatório! Não pode estar nulo ou vazio.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

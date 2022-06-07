@@ -3,6 +3,8 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dto
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.anotacoes_personalizadas.NotEmptyList;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
+
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public final class PessoaDtoEntrada {
             "      \"numero\": \"123\",\n" +
             "      \"complemento\": \"Casa\"\n" +
             "    }")
-    @NotEmptyList
+    @NotEmptyList @Valid
     private List<EnderecoDtoEntrada> enderecos;
 
     // ---------- CONSTRUTORES ---------- //
