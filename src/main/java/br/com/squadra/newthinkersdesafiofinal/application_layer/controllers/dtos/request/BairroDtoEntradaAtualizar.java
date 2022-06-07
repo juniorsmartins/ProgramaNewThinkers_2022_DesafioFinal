@@ -9,14 +9,14 @@ import javax.validation.constraints.*;
 public final class BairroDtoEntradaAtualizar {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-    @Schema(description = "Chave Identificadora", type = "Long", example = "10", required = true)
-    @NotNull(message = "{campo.codigo-municipio.naonulo}")
-    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
-    private Long codigoMunicipio;
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     @NotNull(message = "{campo.codigo-bairro.naonulo}")
     @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private Long codigoBairro;
+    @Schema(description = "Chave Identificadora", type = "Long", example = "10", required = true)
+    @NotNull(message = "{campo.codigo-municipio.naonulo}")
+    @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
+    private Long codigoMunicipio;
     @Schema(description = "Denominação", type = "String", example = "Centro Sul", required = true)
     @NotBlank(message = "{anotacao.notblank.padrao}")
     @Length(max = 256, message = "{campo.nome.nome-municipio-tamanho}")

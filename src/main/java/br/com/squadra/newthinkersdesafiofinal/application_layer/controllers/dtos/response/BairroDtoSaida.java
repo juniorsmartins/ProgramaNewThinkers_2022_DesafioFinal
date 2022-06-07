@@ -6,9 +6,9 @@ public final class BairroDtoSaida {
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
     private Long codigoBairro;
+    private Long codigoMunicipio;
     private String nome;
     private Integer status;
-    private Long codigoMunicipio;
 
     // ---------- CONSTRUTORES ---------- //
     public BairroDtoSaida() {}
