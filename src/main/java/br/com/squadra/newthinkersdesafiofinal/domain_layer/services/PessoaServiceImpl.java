@@ -3,6 +3,7 @@ package br.com.squadra.newthinkersdesafiofinal.domain_layer.services;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.EnderecoDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado.PessoaDtoSaidaDetalhado;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.regras_negocio.IRegrasPessoaAtualizar;
@@ -98,8 +99,8 @@ public final class PessoaServiceImpl implements PessoaService {
         }
 
     // ---------- Listar
-    public ResponseEntity<?> listar(PessoaDtoEntrada pessoaDtoEntrada) {
-        pessoaDeEntrada = pessoaDtoEntrada;
+    public ResponseEntity<?> listar(PessoaDtoEntradaListar pessoaDtoEntradaListar) {
+        pessoaDeEntrada = modelMapper.map(pessoaDtoEntradaListar, PessoaDtoEntrada.class);
 
         criarExampleConfiguradoPorExampleMatcher();
         listaDePessoasSalvas = pessoaRepository.findAll(exampleFiltro);

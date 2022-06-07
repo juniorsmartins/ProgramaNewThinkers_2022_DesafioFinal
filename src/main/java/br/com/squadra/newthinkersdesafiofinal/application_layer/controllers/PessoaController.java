@@ -2,6 +2,7 @@ package br.com.squadra.newthinkersdesafiofinal.application_layer.controllers;
 
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntrada;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaAtualizar;
+import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.request.PessoaDtoEntradaListar;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.PessoaDtoSaida;
 import br.com.squadra.newthinkersdesafiofinal.application_layer.controllers.dtos.response.detalhado.PessoaDtoSaidaDetalhado;
 import br.com.squadra.newthinkersdesafiofinal.domain_layer.portas.PessoaService;
@@ -50,8 +51,8 @@ public class PessoaController {
             @ApiResponse(responseCode = "404", description = "Not Found - Recurso não encontrado!")
     })
     @GetMapping
-    public ResponseEntity<?> listar(PessoaDtoEntrada filtros) {
-        return pessoaService.listar(filtros);
+    public ResponseEntity<?> listar(PessoaDtoEntradaListar pessoaDtoEntradaListar) {
+        return pessoaService.listar(pessoaDtoEntradaListar);
     }
 
     // ----- Consultar Por Id
