@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 @Schema(description = "Classe para personalizar retorno de exceções.")
-public class ApiErrors {
+public class ApiErrorsPersonalizadas {
 
     @Schema(description = "Código Http", type = "String", example = "400 BAD_REQUEST")
     private String status;
     @Schema(description = "Explicação padrão", type = "String", example = "não deve estar em branco.")
     private String mensagem;
 
-    public ApiErrors(String status, String mensagem) {
+    public ApiErrorsPersonalizadas(String status, String mensagem) {
         this.status = status;
         this.mensagem = mensagem;
     }

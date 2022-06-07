@@ -21,14 +21,14 @@ public final class ControleDeExcecoes {
 
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiErrors handlerRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
-        return new ApiErrors(HttpStatus.NOT_FOUND.toString(), recursoNaoEncontradoException.getMessage());
+    public ApiErrorsPersonalizadas handlerRecursoNaoEncontradoException(RecursoNaoEncontradoException recursoNaoEncontradoException) {
+        return new ApiErrorsPersonalizadas(HttpStatus.NOT_FOUND.toString(), recursoNaoEncontradoException.getMessage());
     }
 
     @ExceptionHandler(RegrasDeNegocioVioladasException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiErrors handlerRegrasDeNegocioVioladasException(RegrasDeNegocioVioladasException regrasDeNegocioVioladasException) {
-        return new ApiErrors(HttpStatus.CONFLICT.toString(), regrasDeNegocioVioladasException.getMessage());
+    public ApiErrorsPersonalizadas handlerRegrasDeNegocioVioladasException(RegrasDeNegocioVioladasException regrasDeNegocioVioladasException) {
+        return new ApiErrorsPersonalizadas(HttpStatus.CONFLICT.toString(), regrasDeNegocioVioladasException.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

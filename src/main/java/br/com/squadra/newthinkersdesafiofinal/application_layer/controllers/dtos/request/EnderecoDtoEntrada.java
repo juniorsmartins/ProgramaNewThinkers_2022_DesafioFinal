@@ -15,7 +15,7 @@ public final class EnderecoDtoEntrada {
     @Schema(description = "Chave Identificadora", type = "Long", example = "18")
     private Long codigoEndereco;
     @Schema(description = "Código de Endereçamento Postal", type = "String", example = "86044-648", required = true)
-    @NotBlank(message = "{campo.cep.naonuloandnaovazio}")
+    @NotBlank(message = "{anotacao.notblank.padrao}")
     @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private String cep;
     @Schema(description = "Chave Identificadora", type = "Long", example = "15", required = true)
@@ -23,11 +23,11 @@ public final class EnderecoDtoEntrada {
     @Positive(message = "{campo.codigo-qualquer.numeropositivo}")
     private Long codigoBairro;
     @Schema(description = "Denominação", type = "String", example = "Rua Eliza Michelete Vicente", required = true)
-    @NotBlank(message = "{campo.nomerua.naonuloandnaovazio}")
+    @NotBlank(message = "{anotacao.notblank.padrao}")
     @Length(max = 256, message = "{campo.nomerua.tamanho}")
     private String nomeRua;
     @Schema(description = "Número", type = "Integer", example = "2158", required = true)
-    @NotNull(message = "{campo.numero.naonulo}")
+    @NotNull(message = "{anotacao.notnull.padrao}")
     @Max(value = 99999, message = "{campo.numero.tamanho}")
     @Positive(message = "{campo.numbers.numeropositivo}")
     private Integer numero;
