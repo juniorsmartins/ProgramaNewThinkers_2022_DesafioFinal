@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeUnicoMunicipioAtualizar implements IRegrasMunicipioAtualizar {
+public final class RegraNomeUnicoMunicipioAtualizar implements IRegrasMunicipioAtualizar {
 
     @Autowired
     private MunicipioRepository municipioRepository;

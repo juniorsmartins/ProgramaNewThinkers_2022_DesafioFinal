@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasBairroCadastrar {
+public class RegraNomeUnicoDeBairroPorMunicipioCadastrar implements IRegrasBairroCadastrar {
 
     @Autowired
     private MunicipioRepository municipioRepository;
@@ -36,9 +36,8 @@ public class RegraNomeDeBairroUnicoNoMesmoMunicipioCadastrar implements IRegrasB
                 .findByMunicipio_codigoMunicipio(municipioPorCodigo.get().getCodigoMunicipio());
 
         // checagem sobre o nome, lança exceção se já houver nome de bairro no database no mesmo município
-        for(Bairro bairro : listaDeBairrosPorMunicipio) {
+        for(Bairro bairro : listaDeBairrosPorMunicipio)
             if(bairro.getNome().equalsIgnoreCase(bairroDtoEntrada.getNome()))
                 throw new RegrasDeNegocioVioladasException(MensagemPadrao.NOME_NAO_UNICO_NO_MUNICIPIO);
-        }
     }
 }

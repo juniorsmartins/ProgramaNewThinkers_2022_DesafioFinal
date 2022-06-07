@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RegraNomeDeBairroUnicoNoMesmoMunicipioAtualizar implements IRegrasBairroAtualizar {
+public class RegraNomeUnicoDeBairroPorMunicipioAtualizar implements IRegrasBairroAtualizar {
 
     @Autowired
     private MunicipioRepository municipioRepository;
