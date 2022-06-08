@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -60,7 +61,7 @@ public final class UfServiceImpl implements UfService {
         converterUfDtoEntradaParaUf();
         salvarUf();
         buscarTodasUfsParaRetornar();
-        converterListaDeUfsParaListaDeUfsDeSaida();
+        converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
         return listaDeUfsDeSaida;
     }
 
@@ -73,16 +74,14 @@ public final class UfServiceImpl implements UfService {
         }
 
         private void buscarTodasUfsParaRetornar() {
-            listaDeUfsSalvas = ufRepository.findAll()
-                    .stream()
-                    .sorted((uf1, uf2) -> uf2.getCodigoUF().compareTo(uf1.getCodigoUF()))
-                    .toList();
+            listaDeUfsSalvas = ufRepository.findAll();
         }
 
-        private void converterListaDeUfsParaListaDeUfsDeSaida() {
+        private void converterListaDeUfsParaListaDeUfsDeSaidaOrdenada() {
             listaDeUfsDeSaida = listaDeUfsSalvas
                     .stream()
                     .map(UfDtoSaida::new)
+                    .sorted(Comparator.comparing(UfDtoSaida::getCodigoUF).reversed())
                     .toList();
         }
 
@@ -97,19 +96,12 @@ public final class UfServiceImpl implements UfService {
         if(listaDeUfsSalvas.isEmpty())
             return ResponseEntity.ok().body(new ArrayList<>());
 
+        converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
+
         if(ufDeEntrada.getCodigoUF() != null || ufDeEntrada.getNome() != null
-                || ufDeEntrada.getSigla() != null) {
-            converterListaDeUfsParaListaDeUfsDeSaida();
-            return ResponseEntity.ok().body(listaDeUfsDeSaida.get(0));
-        }
+                || ufDeEntrada.getSigla() != null)
+            return ResponseEntity.ok().body(listaDeUfsDeSaida.stream().limit(1));
 
-        if(ufDeEntrada.getStatus() != null) {
-            converterListaDeUfsParaListaDeUfsDeSaida();
-            return ResponseEntity.ok().body(listaDeUfsDeSaida);
-        }
-
-        buscarTodasUfsParaRetornar();
-        converterListaDeUfsParaListaDeUfsDeSaida();
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }
 
@@ -155,7 +147,7 @@ public final class UfServiceImpl implements UfService {
                     ufDoDatabase.setStatus(ufDtoEntrada.getStatus());
                     ufRepository.saveAndFlush(ufDoDatabase);
                     buscarTodasUfsParaRetornar();
-                    converterListaDeUfsParaListaDeUfsDeSaida();
+                    converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeUfsDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
     }
@@ -169,7 +161,7 @@ public final class UfServiceImpl implements UfService {
                     /*ufRepository.delete(uf);*/
                     uf.setStatus(2);
                     buscarTodasUfsParaRetornar();
-                    converterListaDeUfsParaListaDeUfsDeSaida();
+                    converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeUfsDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOUF_NAO_ENCONTRADO));
     }

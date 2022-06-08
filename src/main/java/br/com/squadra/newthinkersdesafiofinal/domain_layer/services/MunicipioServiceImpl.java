@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -60,7 +61,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
         converterMunicipioDtoEntradaParaMunicipio();
         salvarMunicipio();
         buscarTodosMunicipiosParaRetornar();
-        converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+        converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada();
         return listaDeMunicipiosDeSaida;
     }
 
@@ -73,16 +74,14 @@ public final class MunicipioServiceImpl implements MunicipioService {
         }
 
         private void buscarTodosMunicipiosParaRetornar() {
-            listaDeMunicipiosSalvos = municipioRepository.findAll()
-                    .stream()
-                    .sorted((m1, m2) -> m2.getCodigoMunicipio().compareTo(m1.getCodigoMunicipio()))
-                    .toList();
+            listaDeMunicipiosSalvos = municipioRepository.findAll();
         }
 
-        private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaida() {
+        private void converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada() {
             listaDeMunicipiosDeSaida = listaDeMunicipiosSalvos
                     .stream()
                     .map(MunicipioDtoSaida::new)
+                    .sorted(Comparator.comparing(MunicipioDtoSaida::getCodigoMunicipio).reversed())
                     .toList();
         }
 
@@ -97,19 +96,11 @@ public final class MunicipioServiceImpl implements MunicipioService {
         if(listaDeMunicipiosSalvos.isEmpty())
             return ResponseEntity.ok().body(new ArrayList<>());
 
-        if(municipioDeEntrada.getCodigoMunicipio() != null) {
-            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida.get(0));
-        }
+        converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada();
 
-        if(municipioDeEntrada.getCodigoUF() != null || municipioDeEntrada.getStatus() != null
-                || municipioDeEntrada.getNome() != null) {
-            converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
-            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
-        }
+        if(municipioDeEntrada.getCodigoMunicipio() != null)
+            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida.stream().limit(1));
 
-        buscarTodosMunicipiosParaRetornar();
-        converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }
 
@@ -155,7 +146,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
                     disponibilizarUfVerificada();
                     atualizarMunicipio();
                     buscarTodosMunicipiosParaRetornar();
-                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada();
                     return listaDeMunicipiosDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }
@@ -179,7 +170,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
                     /*municipioRepository.delete(municipio);*/
                     municipio.setStatus(2);
                     buscarTodosMunicipiosParaRetornar();
-                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaida();
+                    converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada();
                     return listaDeMunicipiosDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOMUNICIPIO_NAO_ENCONTRADO));
     }

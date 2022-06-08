@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -60,7 +61,7 @@ public final class BairroServiceImpl implements BairroService {
         converterBairroDtoEntradaParaBairro();
         salvarBairro();
         buscarTodosBairrosParaRetornar();
-        converterListaDeBairrosParaListaDeBairrosDeSaida();
+        converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
         return listaDeBairrosDeSaida;
     }
 
@@ -73,16 +74,14 @@ public final class BairroServiceImpl implements BairroService {
         }
 
         private void buscarTodosBairrosParaRetornar() {
-            listaDeBairrosSalvos = bairroRepository.findAll()
-                    .stream()
-                    .sorted((b1, b2) -> b2.getCodigoBairro().compareTo(b1.getCodigoBairro()))
-                    .toList();
+            listaDeBairrosSalvos = bairroRepository.findAll();
         }
 
-        private void converterListaDeBairrosParaListaDeBairrosDeSaida() {
+        private void converterListaDeUfsParaListaDeUfsDeSaidaOrdenada() {
             listaDeBairrosDeSaida = listaDeBairrosSalvos
                     .stream()
                     .map(BairroDtoSaida::new)
+                    .sorted(Comparator.comparing(BairroDtoSaida::getCodigoBairro))
                     .toList();
         }
 
@@ -97,19 +96,11 @@ public final class BairroServiceImpl implements BairroService {
         if(listaDeBairrosSalvos.isEmpty())
             return ResponseEntity.ok().body(new ArrayList<>());
 
-        if(bairroDeEntrada.getCodigoBairro() != null) {
-            converterListaDeBairrosParaListaDeBairrosDeSaida();
-            return ResponseEntity.ok().body(listaDeBairrosDeSaida.get(0));
-        }
+        converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
 
-        if(bairroDeEntrada.getCodigoMunicipio() != null || bairroDeEntrada.getNome() != null
-                || bairroDeEntrada.getStatus() != null) {
-            converterListaDeBairrosParaListaDeBairrosDeSaida();
-            return ResponseEntity.ok().body(listaDeBairrosDeSaida);
-        }
+        if(bairroDeEntrada.getCodigoBairro() != null)
+            return ResponseEntity.ok().body(listaDeBairrosDeSaida.stream().limit(1));
 
-        buscarTodosBairrosParaRetornar();
-        converterListaDeBairrosParaListaDeBairrosDeSaida();
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
 
@@ -155,7 +146,7 @@ public final class BairroServiceImpl implements BairroService {
                     disponibilizarMunicipioVerificado();
                     atualizarBairro();
                     buscarTodosBairrosParaRetornar();
-                    converterListaDeBairrosParaListaDeBairrosDeSaida();
+                    converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeBairrosDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO));
     }
@@ -178,7 +169,7 @@ public final class BairroServiceImpl implements BairroService {
                     /*bairroRepository.delete(bairro);*/
                     bairro.setStatus(2);
                     buscarTodosBairrosParaRetornar();
-                    converterListaDeBairrosParaListaDeBairrosDeSaida();
+                    converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeBairrosDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao.CODIGOBAIRRO_NAO_ENCONTRADO));
     }
