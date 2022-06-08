@@ -81,7 +81,7 @@ public final class BairroServiceImpl implements BairroService {
             listaDeBairrosDeSaida = listaDeBairrosSalvos
                     .stream()
                     .map(BairroDtoSaida::new)
-                    .sorted(Comparator.comparing(BairroDtoSaida::getCodigoBairro))
+                    .sorted(Comparator.comparing(BairroDtoSaida::getCodigoBairro).reversed())
                     .toList();
         }
 

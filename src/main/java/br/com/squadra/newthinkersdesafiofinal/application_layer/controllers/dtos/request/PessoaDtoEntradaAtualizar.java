@@ -4,6 +4,7 @@ import br.com.squadra.newthinkersdesafiofinal.domain_layer.entities.anotacoes_pe
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public final class PessoaDtoEntradaAtualizar {
             "      \"numero\": \"123\",\n" +
             "      \"complemento\": \"Casa\"\n" +
             "    }")
-    @NotEmptyList(message = "{anotacao.notblank.padrao}")
+    @NotEmptyList(message = "{anotacao.notblank.padrao}") @Valid
     private List<EnderecoDtoEntrada> enderecos;
 
     // ---------- CONSTRUTORES ---------- //

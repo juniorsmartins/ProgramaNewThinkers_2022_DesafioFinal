@@ -47,7 +47,7 @@ public final class PessoaDtoEntrada {
             "      \"numero\": \"123\",\n" +
             "      \"complemento\": \"Casa\"\n" +
             "    }")
-    @NotEmptyList @Valid
+    @NotEmptyList(message = "{anotacao.notblank.padrao}") @Valid
     private List<EnderecoDtoEntrada> enderecos;
 
     // ---------- CONSTRUTORES ---------- //

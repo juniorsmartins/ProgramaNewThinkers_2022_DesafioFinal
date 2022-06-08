@@ -66,7 +66,7 @@ public final class PessoaServiceImpl implements PessoaService {
         salvarPessoa();
         incluirCodigoPessoaEmEnderecos();
         buscarTodasPessoasParaRetornar();
-        converterListaDePessoasParaListaDePessoasDeSaida();
+        converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();
 
         return listaDePessoasDeSaida;
     }
@@ -88,7 +88,7 @@ public final class PessoaServiceImpl implements PessoaService {
             listaDePessoasSalvas = pessoaRepository.findAll();
         }
 
-        private void converterListaDePessoasParaListaDePessoasDeSaida() {
+        private void converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada() {
             listaDePessoasDeSaida = (listaDePessoasSalvas
                     .stream()
                     .map(PessoaDtoSaida::new)
@@ -109,27 +109,12 @@ public final class PessoaServiceImpl implements PessoaService {
             return ResponseEntity.ok().body(new ArrayList<>());
 
         if(pessoaDeEntrada.getCodigoPessoa() != null) {
-            var pessoaDoDatabase = pessoaRepository.findOne(exampleFiltro);
-            pessoaSalva = (Pessoa) pessoaDoDatabase.get();
+            pessoaSalva = listaDePessoasSalvas.get(0);
             converterPessoaParaPessoaDtoSaidaDetalhada();
             return ResponseEntity.ok().body(pessoaDeSaidaDetalhado);
         }
 
-        if(pessoaDeEntrada.getLogin() != null) {
-            var pessoaDoDatabase = pessoaRepository.findOne(exampleFiltro);
-            pessoaSalva = (Pessoa) pessoaDoDatabase.get();
-            convertePessoaParaPessoaDtoSaida();
-            return ResponseEntity.ok().body(pessoaDeSaida);
-        }
-
-        if(pessoaDeEntrada.getNome() != null || pessoaDeEntrada.getSobrenome() != null
-                || pessoaDeEntrada.getStatus() != null || pessoaDeEntrada.getIdade() != null) {
-            converterListaDePessoasParaListaDePessoasDeSaida();
-            return ResponseEntity.ok().body(listaDePessoasDeSaida);
-        }
-
-        buscarTodasPessoasParaRetornar();
-        converterListaDePessoasParaListaDePessoasDeSaida();
+        converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();
         return ResponseEntity.ok().body(listaDePessoasDeSaida);
     }
 
@@ -181,7 +166,7 @@ public final class PessoaServiceImpl implements PessoaService {
                     atualizarPessoa();
                     incluirCodigoPessoaEmEnderecos();
                     buscarTodasPessoasParaRetornar();
-                    converterListaDePessoasParaListaDePessoasDeSaida();
+                    converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();
                     return listaDePessoasDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
@@ -252,7 +237,7 @@ public final class PessoaServiceImpl implements PessoaService {
                 .map(pessoa -> {
                     pessoaRepository.delete(pessoa);
                     buscarTodasPessoasParaRetornar();
-                    converterListaDePessoasParaListaDePessoasDeSaida();
+                    converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();
                     return listaDePessoasDeSaida;
                 }).orElseThrow(() -> new RecursoNaoEncontradoException(MensagemPadrao
                         .CODIGOPESSOA_NAO_ENCONTRADO));
