@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Schema(description = "Classe para personalizar retorno de exceções.")
-public class ApiErrorsValidation {
+public final class ApiErrorsValidation {
 
     @Schema(description = "Código Http", type = "String", example = "400 BAD_REQUEST")
     private String status;
