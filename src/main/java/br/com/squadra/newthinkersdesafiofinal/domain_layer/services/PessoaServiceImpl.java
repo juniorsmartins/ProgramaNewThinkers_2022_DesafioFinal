@@ -235,7 +235,8 @@ public final class PessoaServiceImpl implements PessoaService {
 
         return pessoaRepository.findById(codigoPessoa)
                 .map(pessoa -> {
-                    pessoa.setStatus(2);
+                    pessoa.getEnderecos().removeAll(pessoa.getEnderecos());
+                    pessoaRepository.delete(pessoa);
                     buscarTodasPessoasParaRetornar();
                     converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();
                     return listaDePessoasDeSaida;

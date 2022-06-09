@@ -26,7 +26,7 @@ public final class Bairro implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
     private Municipio municipio;
-    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL, CascadeType.PERSIST}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Endereco> endereco;
 
     // ---------- CONSTRUTORES ---------- //

@@ -152,17 +152,7 @@ public final class UfServiceImpl implements UfService {
 
         return ufRepository.findById(codigoUF)
                 .map(uf -> {
-                    uf.setStatus(2);
-                    uf.getMunicipio().forEach(municipio -> {
-                        if(municipio.getUf().getCodigoUF() == uf.getCodigoUF()) {
-                            municipio.setStatus(2);
-                            municipio.getBairro().forEach(bairro -> {
-                                if (bairro.getMunicipio().getCodigoMunicipio() == municipio.getCodigoMunicipio()) {
-                                    bairro.setStatus(2);
-                                }
-                            });
-                        }
-                    });
+                    ufRepository.delete(uf);
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeUfsDeSaida;
