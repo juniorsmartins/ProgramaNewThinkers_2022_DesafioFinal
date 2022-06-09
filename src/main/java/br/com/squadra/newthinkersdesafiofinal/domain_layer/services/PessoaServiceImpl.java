@@ -235,7 +235,6 @@ public final class PessoaServiceImpl implements PessoaService {
 
         return pessoaRepository.findById(codigoPessoa)
                 .map(pessoa -> {
-/*                    pessoaRepository.delete(pessoa);*/
                     pessoa.setStatus(2);
                     buscarTodasPessoasParaRetornar();
                     converterListaDePessoasParaListaDePessoasDeSaidaOrdanizada();

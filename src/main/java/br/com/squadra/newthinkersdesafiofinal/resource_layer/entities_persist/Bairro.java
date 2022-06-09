@@ -1,13 +1,11 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
-import org.hibernate.annotations.SQLDelete;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_bairro")
-/*@SQLDelete(sql = "UPDATE tb_bairro SET status = 2 WHERE codigo_bairro = ?;")*/
 public final class Bairro implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
