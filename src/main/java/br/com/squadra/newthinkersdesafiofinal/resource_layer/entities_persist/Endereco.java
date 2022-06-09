@@ -11,7 +11,6 @@ public final class Endereco implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-/*    @Id @GeneratedValue(strategy = GenerationType.AUTO)*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ENDERECO_SEQUENCE_NAME")
     @SequenceGenerator(name = "ENDERECO_SEQUENCE_NAME", sequenceName = "ENDERECO_SEQ_NAME",

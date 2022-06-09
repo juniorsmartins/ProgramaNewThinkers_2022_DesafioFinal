@@ -152,8 +152,7 @@ public final class UfServiceImpl implements UfService {
 
         return ufRepository.findById(codigoUF)
                 .map(uf -> {
-                    /*ufRepository.delete(uf);*/
-                    uf.setStatus(2);
+                    ufRepository.delete(uf);
                     buscarTodasUfsParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeUfsDeSaida;

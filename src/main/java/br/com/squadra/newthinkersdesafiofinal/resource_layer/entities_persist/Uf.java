@@ -7,14 +7,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_uf")
-/*@SQLDelete(sql = "UPDATE tb_uf SET status = 2 WHERE codigo_UF = ?;")*/
+@SQLDelete(sql = "UPDATE tb_uf SET status = 2 WHERE codigo_UF = ?;")
 public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
     private static final Long serialVersionUID = 1L;
 
     // ---------- ATRIBUTOS DE INSTÂNCIA ---------- //
-/*    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)*/
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UF_SEQUENCE_NAME")
     @SequenceGenerator(name = "UF_SEQUENCE_NAME", sequenceName = "UF_SEQ_NAME",
@@ -28,7 +27,7 @@ public final class Uf implements Serializable {
     @Column(name = "status", length = 3, nullable = false)
     private Integer status;
     // ----- Relacionamento Bidirecional
-    @OneToMany(mappedBy = "uf", /*cascade = {CascadeType.ALL}, orphanRemoval = true,*/ fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "uf", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Municipio> municipio;
 
     // ---------- CONSTRUTORES ---------- //
