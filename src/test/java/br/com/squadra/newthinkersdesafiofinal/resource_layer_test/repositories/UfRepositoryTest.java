@@ -22,25 +22,42 @@ public class UfRepositoryTest {
     public UfRepository ufRepository;
 
     @Test
-    public void testeNegativo_ParaBuscarUFPorNomeDoDatabase() {
-        String nomeUF = "Vila Real";
-        Optional<Uf> ufPorNome = ufRepository.findByNome(nomeUF);
-        Assert.assertNotSame(Uf.class, ufPorNome);
-    }
-
-    @Test
     public void testePositivo_ParaBuscarUFPorNomeDoDatabase() {
         String nomeUF = "Rio Grande do Sul";
-        Uf ufPorNome = ufRepository.findByNome(nomeUF).get();
+        Optional<Uf> ufPorNome = ufRepository.findByNome(nomeUF);
         Assert.assertNotNull(ufPorNome);
-        Assert.assertEquals(nomeUF, ufPorNome.getNome());
+        Assert.assertEquals(nomeUF, ufPorNome.get().getNome());
     }
 
     @Test
     public void testePositivo_ParaBuscarUFPorSiglaDoDatabase() {
         String siglaUF = "RS";
-        Uf ufPorSigla = ufRepository.findBySigla(siglaUF).get();
+        Optional<Uf> ufPorSigla = ufRepository.findBySigla(siglaUF);
         Assert.assertNotNull(ufPorSigla);
-        Assert.assertEquals(siglaUF, ufPorSigla.getSigla());
+        Assert.assertEquals(siglaUF, ufPorSigla.get().getSigla());
     }
+
+/*
+  outra abordagem
+
+  @Autowired
+  private TestEntityManager em;
+
+  @Test
+  public void testeX() {
+    String ufNome = "Acre";
+
+    Uf uf = new Uf();
+    uf.setNome(ufNome);
+    uf.setSigla("AC");
+    em.persist(uf);
+
+    Uf ufTest = ufRepository.findByName(ufNome);
+    Assert.assertNotNull(ufTest);
+    Assert.assertEquals(ufNome, ufTest.getNome());
+
+  }
+
+
+*/
 }
