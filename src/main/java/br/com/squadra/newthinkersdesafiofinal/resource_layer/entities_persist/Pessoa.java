@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_pessoa")
+/*@SQLDelete(sql = "UPDATE tb_pessoa SET status = 2 WHERE codigo_pessoa = ?;")*/
 public final class Pessoa implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //

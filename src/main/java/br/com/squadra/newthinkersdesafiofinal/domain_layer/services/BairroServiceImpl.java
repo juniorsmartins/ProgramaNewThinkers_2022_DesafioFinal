@@ -165,7 +165,8 @@ public final class BairroServiceImpl implements BairroService {
 
         return bairroRepository.findById(codigoBairro)
                 .map(bairro -> {
-                    bairroRepository.delete(bairro);
+/*                    bairroRepository.delete(bairro);*/
+                    bairro.setStatus(2);
                     buscarTodosBairrosParaRetornar();
                     converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
                     return listaDeBairrosDeSaida;

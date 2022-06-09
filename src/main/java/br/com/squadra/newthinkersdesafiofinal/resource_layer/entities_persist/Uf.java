@@ -1,13 +1,15 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLDeleteAll;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_uf")
-@SQLDelete(sql = "UPDATE tb_uf SET status = 2 WHERE codigo_UF = ?;")
+/*@SQLDeleteAll(sql = "UPDATE tb_uf SET status = 2 WHERE codigo_UF = ?;")*/
 public final class Uf implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //

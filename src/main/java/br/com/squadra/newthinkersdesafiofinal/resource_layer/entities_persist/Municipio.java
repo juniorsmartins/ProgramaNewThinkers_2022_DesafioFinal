@@ -1,14 +1,13 @@
 package br.com.squadra.newthinkersdesafiofinal.resource_layer.entities_persist;
 
 import org.hibernate.annotations.SQLDelete;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "tb_municipio")
-@SQLDelete(sql = "UPDATE tb_municipio SET status = 2 WHERE codigo_municipio = ?;")
+/*@SQLDelete(sql = "UPDATE tb_municipio SET status = 2 WHERE codigo_municipio = ?;")*/
 public final class Municipio implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
@@ -30,7 +29,7 @@ public final class Municipio implements Serializable {
     @JoinColumn(name = "codigo_uf", referencedColumnName = "codigo_uf", nullable = false)
     private Uf uf;
     @OneToMany(mappedBy = "municipio", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Bairro> listaDeBairros;
+    private List<Bairro> bairro;
 
     // ---------- CONSTRUTORES ---------- //
     public Municipio() {}
@@ -68,11 +67,11 @@ public final class Municipio implements Serializable {
         this.uf = uf;
     }
 
-    public List<Bairro> getListaDeBairros() {
-        return listaDeBairros;
+    public List<Bairro> getBairro() {
+        return bairro;
     }
 
-    public void setListaDeBairros(List<Bairro> listaDeBairros) {
-        this.listaDeBairros = listaDeBairros;
+    public void setBairro(List<Bairro> bairro) {
+        this.bairro = bairro;
     }
 }

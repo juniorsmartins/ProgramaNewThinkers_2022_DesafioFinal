@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_bairro")
-@SQLDelete(sql = "UPDATE tb_bairro SET status = 2 WHERE codigo_bairro = ?;")
+/*@SQLDelete(sql = "UPDATE tb_bairro SET status = 2 WHERE codigo_bairro = ?;")*/
 public final class Bairro implements Serializable {
 
     // ---------- ATRIBUTOS DE CLASSE ---------- //
@@ -28,8 +28,8 @@ public final class Bairro implements Serializable {
     @ManyToOne
     @JoinColumn(name = "codigo_municipio", referencedColumnName = "codigo_municipio", nullable = false)
     private Municipio municipio;
-    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = false, fetch = FetchType.LAZY)
-    private List<Endereco> listaDeEnderecos;
+    @OneToMany(mappedBy = "bairro", cascade = {CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Endereco> endereco;
 
     // ---------- CONSTRUTORES ---------- //
     public Bairro() {}
@@ -67,11 +67,11 @@ public final class Bairro implements Serializable {
         this.municipio = municipio;
     }
 
-    public List<Endereco> getListaDeEnderecos() {
-        return listaDeEnderecos;
+    public List<Endereco> getEndereco() {
+        return endereco;
     }
 
-    public void setListaDeEnderecos(List<Endereco> listaDeEnderecos) {
-        this.listaDeEnderecos = listaDeEnderecos;
+    public void setEndereco(List<Endereco> endereco) {
+        this.endereco = endereco;
     }
 }
