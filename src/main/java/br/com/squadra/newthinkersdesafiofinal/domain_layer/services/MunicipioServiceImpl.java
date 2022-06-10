@@ -98,7 +98,7 @@ public final class MunicipioServiceImpl implements MunicipioService {
         converterListaDeMunicipiosParaListaDeMunicipiosDeSaidaOrdenada();
 
         if(municipioDeEntrada.getCodigoMunicipio() != null)
-            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida.stream().limit(1));
+            return ResponseEntity.ok().body(listaDeMunicipiosDeSaida.get(0));
 
         return ResponseEntity.ok().body(listaDeMunicipiosDeSaida);
     }

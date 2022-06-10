@@ -94,7 +94,7 @@ public final class UfServiceImpl implements UfService {
 
         if(ufDeEntrada.getCodigoUF() != null || ufDeEntrada.getNome() != null
                 || ufDeEntrada.getSigla() != null)
-            return ResponseEntity.ok().body(listaDeUfsDeSaida.stream().limit(1));
+            return ResponseEntity.ok().body(listaDeUfsDeSaida.get(0));
 
         return ResponseEntity.ok().body(listaDeUfsDeSaida);
     }

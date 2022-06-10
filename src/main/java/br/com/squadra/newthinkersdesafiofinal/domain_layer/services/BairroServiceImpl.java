@@ -98,7 +98,7 @@ public final class BairroServiceImpl implements BairroService {
         converterListaDeUfsParaListaDeUfsDeSaidaOrdenada();
 
         if(bairroDeEntrada.getCodigoBairro() != null)
-            return ResponseEntity.ok().body(listaDeBairrosDeSaida.stream().limit(1));
+            return ResponseEntity.ok().body(listaDeBairrosDeSaida.get(0));
 
         return ResponseEntity.ok().body(listaDeBairrosDeSaida);
     }
