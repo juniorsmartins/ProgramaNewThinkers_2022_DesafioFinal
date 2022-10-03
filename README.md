@@ -5,5 +5,5 @@ A fábrica de software, Squadra Digital promoveu processo seletivo para seu prog
 
 Na trilha de Java, o desafio final consistia em entregar uma APIRest de cadastro de UF (Unidade Federativa), Município, Bairro, Pessoa e Endereço. Esse desafio pedia requisitos específico, os quais valiam pontos, e formavam a nota dos participantes. Assim, os competidores com as maiores notas tiveram a oportunidade de serem contratados. 
 
-Fiquei classificado em primeiro lugar com a maior nota entre todos os desenvolvedores de software da trilha de Java. O que me deixou bastante contente com o resultado!
+Me classifiquei em primeiro lugar! Obtive a maior nota entre todos os desenvolvedores de ambas as trilhas. 
 
